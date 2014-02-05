@@ -5,41 +5,37 @@
 ## Scenario settings
 Scenario.name = Foules_scenario
 
-# Define 6 different node groups
-Scenario.nrofHostGroups = 6
-
-# Configuration pour les groupes de noeuds
-Group.nrOfOffices = 1 
-Group.workDayLength = 3600 
-Group.probGoShoppingAfterWork = 1 
-Group.nrOfMeetingSpots = 2
-Group.officeWaitTimeParetoCoeff = 0.5 
-# probabilité que l'employé attend 
-Group.officeMinWaitTime = 10 
-Group.officeMaxWaitTime = 60
-Group.officeSize = 100 
+# Group nodes settings
 Group.nrofHosts = 0 
-Group.timeDiffSTD = 7200 
+
+# Pedestrians settings
+Group1.nrOfOffices = 1 
+Group1.workDayLength = 3600 
+Group1.probGoShoppingAfterWork = 1 
+Group1.nrOfMeetingSpots = 2
+Group1.officeWaitTimeParetoCoeff = 0.5 
+Group1.officeMinWaitTime = 10 
+Group1.officeMaxWaitTime = 60
+Group1.officeSize = 100 
+Group1.timeDiffSTD = 7200 
 # Standard deviation for the normal distribution controlling
 # differences in schedules nodes have
 
-# ils doivent attendre d'etre au moins deux 
-# pour pouvoir quitter leur POI et aller faire du shopping !
-Group.minGroupSize = 2
-Group.maxGroupSize = 2
-Group.minAfterShoppingStopTime = 3600 
-Group.maxAfterShoppingStopTime = 3600
+# Group size is 2
+# They go shopping for 2 hours
+Group1.minGroupSize = 2
+Group1.maxGroupSize = 2
+Group1.minAfterShoppingStopTime = 3600 
+Group1.maxAfterShoppingStopTime = 3600
 
-# Configuration des pietons
 Group1.nrofHosts = 60
 Events1.hosts = 0,59
 Group1.movementModel = WorkingDayMovement 
-# mode wdm 
 Group1.busControlSystemNr = 1 
 Group1.ownCarProb = 0 
 Group1.shoppingControlSystemNr = 1 
 
-# Configuration des trams 
+# Tram settings
 Group4.movementModel = BusMovement
 Group4.nrofInterfaces = 1 
 Group4.busControlSystemNr = 1 
@@ -49,6 +45,3 @@ Group5.busControlSystemNr = 1
 
 Group6.movementModel = BusMovement  
 Group6.busControlSystemNr = 1
-
-
-

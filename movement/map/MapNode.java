@@ -25,6 +25,8 @@ public class MapNode implements Comparable<MapNode> {
 	private Vector<MapNode> neighbors;
 	// bit mask of map node's types or 0 if no type's are defined
 	private int type;
+	// true if the node is closed
+	private boolean isClosed;
 	
 	/**
 	 * Constructor. Creates a map node to a location.
@@ -34,6 +36,7 @@ public class MapNode implements Comparable<MapNode> {
 		this.location = location;
 		this.neighbors = new Vector<MapNode>();
 		type = 0;
+		isClosed = false;
 	}
 	
 	/**
@@ -109,6 +112,11 @@ public class MapNode implements Comparable<MapNode> {
 		if (!this.neighbors.contains(node) && node != this) {
 			this.neighbors.add(node);
 		}		
+
+		// TODO : uncomment this to close all intersection
+//		if (this.neighbors.size() > 2){
+//			isClosed = true;
+//		}
 	}
 	
 	/**
@@ -143,4 +151,11 @@ public class MapNode implements Comparable<MapNode> {
 		return this.getLocation().compareTo((o).getLocation());
 	}
 	
+	/**
+	 * Returns true if this node is closed, else false
+	 * @return True if this node is closed
+	 */
+	public boolean isClosed() {		
+		return this.isClosed;
+	}
 }

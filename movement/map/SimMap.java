@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import core.Coord;
 
@@ -15,6 +16,10 @@ import core.Coord;
  * A simulation map for node movement.
  */
 public class SimMap implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Coord minBound;
 	private Coord maxBound;
 	/** list representation of the map for efficient list-returning */
@@ -35,6 +40,23 @@ public class SimMap implements Serializable {
 		this.nodesMap = nodes;
 		this.isMirrored = false;
 		setBounds();
+		int compteur = 50;
+		Random r = new Random();
+		for(int i=0; i<this.nodes.size();i++){
+			MapNode n = this.nodes.get(i);
+			Coord d = n.getLocation();
+			d.init(n);
+		}
+		while(compteur != 0){
+			MapNode mn = this.nodes.get(r.nextInt(this.nodes.size()));
+			if(mn.isClosed()){
+				continue;	
+			}
+			mn.close();
+			compteur--;
+		}
+		
+		
 	}
 	
 	/**

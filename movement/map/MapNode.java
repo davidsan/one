@@ -158,4 +158,8 @@ public class MapNode implements Comparable<MapNode> {
 	public boolean isClosed() {		
 		return this.isClosed;
 	}
+	
+	public void close(){
+		this.isClosed = true;
+	}
 }

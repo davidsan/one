@@ -36,7 +36,7 @@ public class PlayField extends JPanel {
 	private World w;
 	private DTNSimGUI gui;
 	
-	private Color bgColor = Color.BLACK;
+	private Color bgColor = Color.WHITE;
 	
 	private List<PlayFieldGraphic> overlayGraphics;
 	private boolean autoClearOverlay;	// automatically clear overlay graphics

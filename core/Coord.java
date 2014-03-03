@@ -4,8 +4,6 @@
  */
 package core;
 
-import movement.map.MapNode;
-
 /**
  * Class to hold 2D coordinates and perform simple arithmetics and
  * transformations
@@ -13,7 +11,6 @@ import movement.map.MapNode;
 public class Coord implements Cloneable, Comparable<Coord> {
 	private double x;
 	private double y;
-	private MapNode mapnode;
 	
 	/**
 	 * Constructor.
@@ -22,10 +19,6 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 */
 	public Coord(double x, double y) {
 		setLocation(x,y);
-	}
-	
-	public void init(MapNode mn){
-		mapnode = mn;
 	}
 	
 	/**
@@ -64,14 +57,10 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The distance between this and another coordinate
 	 */
 	public double distance(Coord other) {
-		if(mapnode.isClosed()){
-			return Double.MAX_VALUE;
-		}else{
-			double dx = this.x - other.x;
-			double dy = this.y - other.y;
-			
-			return Math.sqrt(dx*dx + dy*dy);
-		}
+		double dx = this.x - other.x;
+		double dy = this.y - other.y;
+		
+		return Math.sqrt(dx*dx + dy*dy);
 	}
 
 	/**
@@ -80,16 +69,11 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The square distance between this and another coordinate
 	 */
 	public double distance2(Coord other) {
-		if(mapnode.isClosed()){
-			return Double.MAX_VALUE;
-		}else{
-			double dx = this.x - other.x;
-			double dy = this.y - other.y;
-			
-			return (dx*dx + dy*dy);
-		}
+		double dx = this.x - other.x;
+		double dy = this.y - other.y;
+		
+		return (dx*dx + dy*dy);
 	}
-	
 
 	/**
 	 * Returns the angle (in radians) from this coord to the given coord

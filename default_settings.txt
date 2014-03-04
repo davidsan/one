@@ -29,7 +29,7 @@ highspeedInterface.transmitSpeed = 10M
 highspeedInterface.transmitRange = 1000
 
 # Define 6 different node groups
-Scenario.nrofHostGroups = 6
+Scenario.nrofHostGroups = 1
 
 ## Group-specific settings:
 # groupID : Group's identifier. Used as the prefix of host names
@@ -68,7 +68,7 @@ Group.nrofHosts = 40
 
 # group1 (pedestrians) specific settings
 Group1.groupID = p
-
+Group1.nrofHosts = 2
 # group2 specific settings
 Group2.groupID = c
 # cars can drive only on roads
@@ -122,7 +122,7 @@ Events1.interval = 25,35
 # Message sizes (500kB - 1MB)
 Events1.size = 500k,1M
 # range of message source/destination addresses
-Events1.hosts = 0,126
+Events1.hosts = 0,2
 # Message ID prefix
 Events1.prefix = M
 

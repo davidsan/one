@@ -1,0 +1,14 @@
+## Test scenario using ..
+
+Scenario.name = PSTL
+
+Group.movementModel = EvacuationCenterMovement
+
+# Define POI data files
+
+#PointsOfInterestEvac.poiFile = data/ParkPOIs.wkt
+#PointsOfInterestEvac.poiFile = data/CentralPOIs.wkt
+#PointsOfInterestEvac.poiFile = data/WestPOIs.wkt
+#PointsOfInterestEvac.poiFile = data/shops.wkt
+
+#PointsOfInterestEvac.poiFile = data/pstl.wkt

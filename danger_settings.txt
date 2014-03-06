@@ -18,7 +18,7 @@ Group1.nrofHosts = 100
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
 Group1.nrofInterfaces = 1
-
+Group1.prewarnedProb = 0.5
 
 ## Message creation parameters
 # How many event generators

@@ -10,6 +10,8 @@ import core.Settings;
 /**
  * Map based movement model that uses Dijkstra's algorithm to find shortest
  * paths between two random map nodes and Points Of Interest
+ * 
+ * @author Virginie Collombon, David San
  */
 public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
         SwitchableMovement {

@@ -9,11 +9,11 @@ Scenario.nrofHostGroups = 2
 # si nrofHostsGroups vaut 1, la carte n'est plus affichée !
 
 
-## Group and movement model specific settings                         |
+## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
 
-# group1 (pedestrians) specific settings                              |
+# group1 (pedestrians) specific settings
 Group1.nrofHosts = 100
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
@@ -24,8 +24,8 @@ Group1.nrofInterfaces = 1
 # How many event generators
 Events.nrof = 0
 
-                                                                      |
-## Movement model settings                                            |
+
+## Movement model settings
 # seed for movement models' pseudo random number generator (default = 0)
 MovementModel.rngSeed = 1
 # World's size for Movement Models
@@ -34,7 +34,7 @@ MovementModel.worldSize = 10000, 8000
 MovementModel.warmup = 0
 
 
-## Map based movement -movement model specific settings               |
+## Map based movement -movement model specific settings
 MapBasedMovement.nrofMapFiles = 1
 MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
 

@@ -1,14 +1,43 @@
-## Test scenario using ..
+#
+# Settings for DangerMovement
+#
 
-Scenario.name = PSTL
+Scenario.name = danger_scenario
+Scenario.endTime = 700k
+Scenario.nrofHostGroups = 2 
+# FIXME : Un seul groupe dans la simulation
+# si nrofHostsGroups vaut 1, la carte n'est plus affichée !
 
-Group.movementModel = EvacuationCenterMovement
 
-# Define POI data files
+## Group and movement model specific settings                         |
+# Common settings for all groups     
+Group.nrofHosts = 0
 
-#PointsOfInterestEvac.poiFile = data/ParkPOIs.wkt
-#PointsOfInterestEvac.poiFile = data/CentralPOIs.wkt
-#PointsOfInterestEvac.poiFile = data/WestPOIs.wkt
-#PointsOfInterestEvac.poiFile = data/shops.wkt
+# group1 (pedestrians) specific settings                              |
+Group1.nrofHosts = 100
+Group1.movementModel = DangerMovement
+Group1.interface1 = btInterface
+Group1.nrofInterfaces = 1
 
-#PointsOfInterestEvac.poiFile = data/pstl.wkt
+
+## Message creation parameters
+# How many event generators
+Events.nrof = 0
+
+                                                                      |
+## Movement model settings                                            |
+# seed for movement models' pseudo random number generator (default = 0)
+MovementModel.rngSeed = 1
+# World's size for Movement Models
+MovementModel.worldSize = 10000, 8000
+# How long time to move hosts in the world before real simulation
+MovementModel.warmup = 0
+
+
+## Map based movement -movement model specific settings               |
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
+
+
+## Points of Interest for the evacuation centers
+PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt

@@ -2,13 +2,28 @@ package movement;
 
 import core.Settings;
 
+/**
+ * A Class to model movement at the evacuation center. Nodes stay at the
+ * evacuation center.
+ * 
+ * @author Virginie Collombon, David San
+ */
 public class EvacuationCenterMovement extends MapBasedMovement implements
         SwitchableMovement {
-
+	/**
+	 * Creates a new instance of EvacuationCenterMovement
+	 * 
+	 * @param settings
+	 */
 	public EvacuationCenterMovement(Settings settings) {
 		super(settings);
 	}
 
+	/**
+	 * Creates a new instance of EvacuationCenterMovement from a prototype
+	 * 
+	 * @param proto
+	 */
 	protected EvacuationCenterMovement(EvacuationCenterMovement mbm) {
 		super(mbm);
 	}
@@ -16,8 +31,6 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	@Override
 	public Path getPath() {
 		Path p = new Path(0);
-		p.addWaypoint(lastMapNode.getLocation());
-		System.err.println("qsdqsdqs");
 		return p;
 	}
 

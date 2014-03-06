@@ -1,7 +1,3 @@
-/* 
- * Copyright 2010 Aalto University, ComNet
- * Released under GPLv3. See LICENSE.txt for details. 
- */
 package movement;
 
 import java.util.List;
@@ -40,7 +36,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	 * Copyconstructor.
 	 * 
 	 * @param mbm
-	 *            The ShortestPathMapBasedMovement prototype to base the new
+	 *            The ShortestPathMapBasedPoiMovement prototype to base the new
 	 *            object to
 	 */
 	protected ShortestPathMapBasedPoiMovement(
@@ -53,20 +49,20 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	@Override
 	public Path getPath() {
 		Path p = new Path(generateSpeed());
-		MapNode to = pois.selectDestination(lastMapNode, pathFinder);
 
+		MapNode to = pois.selectDestination(lastMapNode, pathFinder);
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
-		// this assertion should never fire if the map is checked in read phase
+		// this assertion should never fire if the map is checked in read
+		// phase
 		assert nodePath.size()>0 : "No path from "+lastMapNode+" to "+to
 		        +". The simulation map isn't fully connected";
 
-		for (MapNode node : nodePath) { // create a Path from the shortest path
+		for (MapNode node : nodePath) {
+			// create a Path from the shortest path
 			p.addWaypoint(node.getLocation());
 		}
-		System.err.println("qcsqdqs");
 		lastMapNode = to;
-
 		return p;
 	}
 
@@ -74,5 +70,4 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	public ShortestPathMapBasedPoiMovement replicate() {
 		return new ShortestPathMapBasedPoiMovement(this);
 	}
-
 }

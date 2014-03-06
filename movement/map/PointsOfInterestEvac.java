@@ -1,7 +1,3 @@
-/* 
- * Copyright 2014 VIVI
- * Released under GPLv3. See LICENSE.txt for details. 
- */
 package movement.map;
 
 import input.WKTReader;
@@ -14,20 +10,20 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
-import util.Tuple;
 import core.Coord;
 import core.Settings;
 import core.SettingsError;
 
 /**
  * Handler for points of interest data.
+ * 
+ * @author Virginie Collombon, David San
  */
 public class PointsOfInterestEvac {
 	/** Points Of Interest settings namespace ({@value} ) */
 	public static final String POI_NS = "PointsOfInterestEvac";
-	/** Points Of Interest file path -prefix id ({@value} ) */
+	/** Points Of Interest file path ({@value} ) */
 	public static final String POI_FILE_S = "poiFile";
 
 	/** map whose points all POIs are */
@@ -66,8 +62,9 @@ public class PointsOfInterestEvac {
 	 * is less than 1.0 and the drawn random probability is bigger than the sum,
 	 * a random MapNode is selected from the SimMap.
 	 * 
-	 * @param pathFinder
+	 * 
 	 * @param lastMapNode
+	 * @param pathFinder
 	 * 
 	 * @return A destination among POIs or all MapNodes
 	 */
@@ -78,32 +75,27 @@ public class PointsOfInterestEvac {
 		for (Iterator<MapNode> it = poiLists.iterator(); it.hasNext();) {
 			MapNode poi = (MapNode) it.next();
 
-			// calculer son dijkstra
+			// compute Dijkstra path
 			List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode,
 			        poi);
 
-			// stocker dans une priority queue
+			// compute the path's distance
 			Double distance = 0.0;
 			for (int i = 0; i<nodePath.size()-1; i++) {
 				MapNode gauche = nodePath.get(i);
 				MapNode droite = nodePath.get(i+1);
 				distance += gauche.getLocation().distance(droite.getLocation());
-				hm.put(distance, poi);
 			}
-;
+			hm.put(distance, poi);
 		}
-
-		// retourner le POI le plus proche
-		Set<Double> keys = hm.keySet();
-		List<Double> sorted = new ArrayList<Double>(keys);
-		Collections.sort(sorted);
-		System.err.println("0 is :"+sorted.get(0)+" and last is "+sorted.get(sorted.size()-1));
-		return hm.get(sorted.get(0));
+		// return the closest POI from the list
+		Double min = Collections.min(hm.keySet());
+		return hm.get(min);
 	}
 
 	/**
-	 * Reads POI selections and their probabilities from given Settings and
-	 * stores them to <CODE>poiLists</CODE> and <CODE>poiProbs</CODE>.
+	 * Reads POI selections from given Settings and stores them to
+	 * <CODE>poiLists</CODE>.
 	 * 
 	 * @param s
 	 *            The settings file where group specific settings are read
@@ -118,11 +110,9 @@ public class PointsOfInterestEvac {
 	}
 
 	/**
-	 * Reads POIs from a file <CODE>{@value POI_FILE_S} + index</CODE> defined
-	 * in Settings' namespace {@value POI_NS}.
+	 * Reads POIs from a file <CODE>{@value POI_FILE_S}</CODE> defined in
+	 * Settings' namespace {@value POI_NS}.
 	 * 
-	 * @param index
-	 *            The index of the POI file
 	 * @param offset
 	 *            Offset of map data
 	 * @return A list of MapNodes read from the POI file
@@ -138,13 +128,13 @@ public class PointsOfInterestEvac {
 		File poiFile = null;
 		List<Coord> coords = null;
 		try {
-			poiFile = new File(fileSettings.getSetting(POI_FILE_S));// +index));
+			poiFile = new File(fileSettings.getSetting(POI_FILE_S));
 			coords = reader.readPoints(poiFile);
 		} catch (IOException ioe) {
 			throw new SettingsError("Couldn't read POI-data from file '"
 			        +poiFile+"' defined in setting "
-			        +fileSettings.getFullPropertyName(POI_FILE_S)// +index)
-			        +" (cause: "+ioe.getMessage()+")");
+			        +fileSettings.getFullPropertyName(POI_FILE_S)+" (cause: "
+			        +ioe.getMessage()+")");
 		}
 
 		if (coords.size()==0) {

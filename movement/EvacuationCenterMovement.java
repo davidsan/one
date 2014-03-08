@@ -39,4 +39,9 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 		return new EvacuationCenterMovement(this);
 	}
 
+	@Override
+	protected double generateWaitTime() {
+		return Double.MAX_VALUE;
+	}
+
 }

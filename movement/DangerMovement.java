@@ -80,17 +80,17 @@ public class DangerMovement extends ExtendedMovementModel {
 	public boolean newOrders() {
 		switch (mode) {
 		case HOME_MODE:
-			System.err.println("Dans HOME_MODE");
 			Collection<Message> messages = host.getMessageCollection();
-			for (Iterator iterator = messages.iterator(); iterator.hasNext();) {
+			for (Iterator<Message> iterator = messages.iterator(); iterator
+			        .hasNext();) {
 				Message m = (Message) iterator.next();
-				//si message est de type danger
-				if (m.getId().toLowerCase().contains(prefix.toLowerCase()) && 
-						!(m.getFrom().equals(host))){
-						System.err.println(" HOME_MODE --> EVAC");
-						mode = SHORT_MODE;
-						setCurrentMovementModel(shortMM);
-						break;
+				// si message est de type danger
+				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
+				        &&!(m.getFrom().equals(host))) {
+					// System.err.println(" HOME_MODE --> EVAC");
+					mode = SHORT_MODE;
+					setCurrentMovementModel(shortMM);
+					break;
 				}
 			}
 			break;
@@ -101,7 +101,6 @@ public class DangerMovement extends ExtendedMovementModel {
 				Coord coordEvac = p.getCoords().get(p.getCoords().size()-1);
 
 				if (coordLastMapNode.compareTo(coordEvac)==0) {
-					// System.out.println("Switch vers EVAC_MODE");
 					evacMM.getPath();
 					mode = EVAC_MODE;
 					setCurrentMovementModel(evacMM);
@@ -109,7 +108,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case EVAC_MODE:
-			// System.err.println("Dans EVAC_MODE");
 			break;
 		default:
 			break;

@@ -40,7 +40,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
-		if (rng.nextDouble()<prewarnedProb) {
+		if (rng.nextDouble()>prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
 		} else {
@@ -62,7 +62,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		prewarnedProb = proto.prewarnedProb;
 		prefix = proto.prefix;
-		if (rng.nextDouble()<prewarnedProb) {
+		if (rng.nextDouble()>prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
 		} else {

@@ -1,6 +1,10 @@
 package movement;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import core.Coord;
+import core.Message;
 import core.Settings;
 
 /**
@@ -77,7 +81,18 @@ public class DangerMovement extends ExtendedMovementModel {
 		switch (mode) {
 		case HOME_MODE:
 			System.err.println("Dans HOME_MODE");
-
+			Collection<Message> messages = host.getMessageCollection();
+			for (Iterator iterator = messages.iterator(); iterator.hasNext();) {
+				Message m = (Message) iterator.next();
+				//si message est de type danger
+				if (m.getId().toLowerCase().contains(prefix.toLowerCase()) && 
+						!(m.getFrom().equals(host))){
+						System.err.println(" HOME_MODE --> EVAC");
+						mode = SHORT_MODE;
+						setCurrentMovementModel(shortMM);
+						break;
+				}
+			}
 			break;
 		case SHORT_MODE:
 			if (shortMM.isReady()) {

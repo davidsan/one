@@ -13,6 +13,7 @@ import core.Settings;
 public class DangerMovement extends ExtendedMovementModel {
 
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
+	public static final String MESSAGE_ID_PREFIX_S = "prefix";
 
 	private HomeMovement homeMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
@@ -25,6 +26,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	private int mode;
 
 	private double prewarnedProb;
+	private String prefix;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -37,6 +39,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
+		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
 		if (rng.nextDouble()<prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
@@ -58,6 +61,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		prewarnedProb = proto.prewarnedProb;
+		prefix = proto.prefix;
 		if (rng.nextDouble()<prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);

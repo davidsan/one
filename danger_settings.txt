@@ -16,22 +16,24 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
+Group.router = EpidemicRouter
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 50
+Group1.nrofHosts = 100
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
-Group1.prewarnedProb = 0.5
+Group1.prewarnedProb = 0.05	
 Group1.bufferSize = 50M
+Group1.prefix = DANGER
 
 ## Message creation parameters
 # How many event generators
 Events.nrof = 1
 Events1.class = DangerMessageGenerator
-Events1.hosts = 0, 49
-Events1.tohosts = 0, 49
-Events1.prefix = D
+Events1.hosts = 0, 99
+Events1.tohosts = 0, 99
+Events1.prefix = DANGER
 Events1.interval = 0
 
 

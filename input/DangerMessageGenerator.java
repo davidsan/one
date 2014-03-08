@@ -13,7 +13,6 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 
 	private int currentFrom;
 	private int currentTo;
-	public static final String DANGER_MESSAGE_ID = "DANGER";
 
 	public DangerMessageGenerator(Settings s) {
 		super(s);
@@ -32,21 +31,20 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 	 */
 	public ExternalEvent nextEvent() {
 		int responseSize = 0; /* no responses requested */
-
+		int from, to;
 		/* compute from and to */
-		if (currentFrom==hostRange[1]&&currentTo==toHostRange[1]) {
+		if (currentFrom>hostRange[1]||currentTo>hostRange[1]) {
 			this.nextEventsTime = Double.MAX_VALUE; /* no messages left */
 			return new ExternalEvent(Double.MAX_VALUE);
 		}
+		from = currentFrom;
+		to = currentTo;
 
 		currentTo++;
 		currentFrom++;
 
-		// System.err.println("Danger :"+currentFrom+" -> "+currentTo);
-
-		MessageCreateEvent mce = new MessageCreateEvent(currentFrom, currentTo,
-		        DANGER_MESSAGE_ID, drawMessageSize(), responseSize,
-		        this.nextEventsTime);
+		MessageCreateEvent mce = new MessageCreateEvent(from, to, getID(),
+		        drawMessageSize(), responseSize, this.nextEventsTime);
 
 		return mce;
 	}

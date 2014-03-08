@@ -13,6 +13,7 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 
 	private int currentFrom;
 	private int currentTo;
+	public static final String DANGER_MESSAGE_ID = "DANGER";
 
 	public DangerMessageGenerator(Settings s) {
 		super(s);
@@ -44,7 +45,8 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 		// System.err.println("Danger :"+currentFrom+" -> "+currentTo);
 
 		MessageCreateEvent mce = new MessageCreateEvent(currentFrom, currentTo,
-		        "DANGER", drawMessageSize(), responseSize, this.nextEventsTime);
+		        DANGER_MESSAGE_ID, drawMessageSize(), responseSize,
+		        this.nextEventsTime);
 
 		return mce;
 	}

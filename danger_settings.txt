@@ -11,7 +11,7 @@ Scenario.nrofHostGroups = 2
 # Wifi interface 
 wifiInterface.type = SimpleBroadcastInterface
 wifiInterface.transmitSpeed = 1M
-wifiInterface.transmitRange = 100
+wifiInterface.transmitRange = 200
 
 ## Group and movement model specific settings
 # Common settings for all groups     
@@ -19,7 +19,7 @@ Group.nrofHosts = 0
 Group.router = EpidemicRouter
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 100
+Group1.nrofHosts = 40
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
@@ -31,8 +31,8 @@ Group1.prefix = DANGER
 # How many event generators
 Events.nrof = 1
 Events1.class = DangerMessageGenerator
-Events1.hosts = 0, 99
-Events1.tohosts = 0, 99
+Events1.hosts = 0, 39
+Events1.tohosts = 0, 39
 Events1.prefix = DANGER
 Events1.interval = 0
 

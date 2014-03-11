@@ -47,7 +47,7 @@ public class PointsOfInterestEvac {
 	 *            The random number generator to use
 	 */
 	public PointsOfInterestEvac(SimMap parentMap, int[] okMapNodeTypes,
-	        Settings settings, Random rng) {
+			Settings settings, Random rng) {
 		this.poiLists = new ArrayList<MapNode>();
 
 		this.map = parentMap;
@@ -69,7 +69,7 @@ public class PointsOfInterestEvac {
 	 * @return A destination among POIs or all MapNodes
 	 */
 	public MapNode selectDestination(MapNode lastMapNode,
-	        DijkstraPathFinder pathFinder) {
+			DijkstraPathFinder pathFinder) {
 		HashMap<Double, MapNode> hm = new HashMap<Double, MapNode>();
 
 		for (Iterator<MapNode> it = poiLists.iterator(); it.hasNext();) {
@@ -77,13 +77,13 @@ public class PointsOfInterestEvac {
 
 			// compute Dijkstra path
 			List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode,
-			        poi);
+					poi);
 
 			// compute the path's distance
 			Double distance = 0.0;
-			for (int i = 0; i<nodePath.size()-1; i++) {
+			for (int i = 0; i < nodePath.size() - 1; i++) {
 				MapNode gauche = nodePath.get(i);
-				MapNode droite = nodePath.get(i+1);
+				MapNode droite = nodePath.get(i + 1);
 				distance += gauche.getLocation().distance(droite.getLocation());
 			}
 			hm.put(distance, poi);
@@ -132,13 +132,14 @@ public class PointsOfInterestEvac {
 			coords = reader.readPoints(poiFile);
 		} catch (IOException ioe) {
 			throw new SettingsError("Couldn't read POI-data from file '"
-			        +poiFile+"' defined in setting "
-			        +fileSettings.getFullPropertyName(POI_FILE_S)+" (cause: "
-			        +ioe.getMessage()+")");
+					+ poiFile + "' defined in setting "
+					+ fileSettings.getFullPropertyName(POI_FILE_S)
+					+ " (cause: " + ioe.getMessage() + ")");
 		}
 
-		if (coords.size()==0) {
-			throw new SettingsError("Read a POI group of size 0 from "+poiFile);
+		if (coords.size() == 0) {
+			throw new SettingsError("Read a POI group of size 0 from "
+					+ poiFile);
 		}
 
 		for (Coord c : coords) {
@@ -150,16 +151,16 @@ public class PointsOfInterestEvac {
 			c.translate(offset.getX(), offset.getY());
 
 			MapNode node = map.getNodeByCoord(c);
-			if (node!=null) {
-				if (okMapNodeTypes!=null&&!node.isType(okMapNodeTypes)) {
-					throw new SettingsError("POI "+node+" from file "+poiFile
-					        +" is on a part of the map that is not "
-					        +"allowed for this movement model");
+			if (node != null) {
+				if (okMapNodeTypes != null && !node.isType(okMapNodeTypes)) {
+					throw new SettingsError("POI " + node + " from file "
+							+ poiFile + " is on a part of the map that is not "
+							+ "allowed for this movement model");
 				}
 				nodes.add(node);
 			} else {
-				throw new SettingsError("No MapNode in SimMap at location "+c
-				        +" (after translation) from file "+poiFile);
+				throw new SettingsError("No MapNode in SimMap at location " + c
+						+ " (after translation) from file " + poiFile);
 			}
 		}
 

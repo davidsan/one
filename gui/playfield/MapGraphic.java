@@ -6,6 +6,7 @@ package gui.playfield;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.List;
 
 import movement.map.MapNode;
 import movement.map.SimMap;
@@ -48,6 +49,17 @@ public class MapGraphic extends PlayFieldGraphic {
 						scale(c.getX()), scale(c.getY()));
 			}
 		}
+		// draws pois
+		List<MapNode> poisList = simMap.getPois();
+		g2.setColor(Color.MAGENTA);
+		int rayon = 50;
+		int diameter = rayon * 2;
+		for (int i = 0; i < poisList.size(); i++) {
+			c2 = poisList.get(i).getLocation();
+			g2.drawOval(scale(c2.getX() - rayon), scale(c2.getY() - rayon),
+					scale(diameter), scale(diameter));
+		}
+		g2.setColor(PATH_COLOR);
 	}
 
 }

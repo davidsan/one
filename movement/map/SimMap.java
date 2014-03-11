@@ -19,6 +19,8 @@ public class SimMap implements Serializable {
 	private Coord maxBound;
 	/** list representation of the map for efficient list-returning */
 	private ArrayList<MapNode> nodes;
+	/** list representation of the POIs for displaying */
+	private List<MapNode> pois;
 	/** hash map presentation of the map for efficient finding node by coord */
 	private Map<Coord, MapNode> nodesMap;
 	/** offset of map translations */
@@ -175,4 +177,18 @@ public class SimMap implements Serializable {
 	public String toString() {
 		return this.nodes.toString();
 	}
+
+	public void setPois(List<MapNode> pois) {
+		this.pois = pois;
+	}
+
+	/**
+	 * Returns the POI list
+	 * 
+	 * @return
+	 */
+	public List<MapNode> getPois() {
+		return pois;
+	}
+
 }

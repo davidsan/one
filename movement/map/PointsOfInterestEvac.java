@@ -106,7 +106,7 @@ public class PointsOfInterestEvac {
 	private void readPois(Settings s) {
 		Coord offset = map.getOffset();
 		poiLists = readPoisOf(offset);
-
+		map.setPois(poiLists);
 	}
 
 	/**

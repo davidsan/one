@@ -8,7 +8,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
 
-import movement.map.Accident;
 import movement.map.MapNode;
 import movement.map.SimMap;
 import core.Coord;
@@ -53,7 +52,7 @@ public class MapGraphic extends PlayFieldGraphic {
 						scale(c.getX()), scale(c.getY()));
 			}
 
-			if (n.isType(Accident.DANGER_TYPE)) {
+			if (n.isClosed()) {
 				g2.setColor(ACCIDENT_COLOR);
 				g2.fillOval(scale(c.getX() - rayonAccident), scale(c.getY()
 						- rayonAccident), scale(rayonAccident * 2),

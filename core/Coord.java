@@ -4,7 +4,6 @@
  */
 package core;
 
-import movement.map.Accident;
 import movement.map.MapNode;
 
 /**
@@ -70,7 +69,7 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The distance between this and another coordinate
 	 */
 	public double distance(Coord other) {
-		if(mapnode.isType(Accident.DANGER_TYPE)){
+		if(mapnode.isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;
@@ -85,7 +84,7 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The square distance between this and another coordinate
 	 */
 	public double distance2(Coord other) {
-		if(mapnode.isType(Accident.DANGER_TYPE)){
+		if(mapnode.isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;

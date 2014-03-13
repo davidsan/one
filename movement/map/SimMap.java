@@ -178,6 +178,11 @@ public class SimMap implements Serializable {
 		return this.nodes.toString();
 	}
 
+	
+	/**
+	 * Set the list of POIs
+	 * @param pois
+	 */
 	public void setPois(List<MapNode> pois) {
 		this.pois = pois;
 	}
@@ -185,7 +190,7 @@ public class SimMap implements Serializable {
 	/**
 	 * Returns the POI list
 	 * 
-	 * @return
+	 * @return the POI list
 	 */
 	public List<MapNode> getPois() {
 		return pois;

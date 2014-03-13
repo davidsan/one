@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.List;
 
+import movement.map.Accident;
 import movement.map.MapNode;
 import movement.map.SimMap;
 import core.Coord;
@@ -20,6 +21,10 @@ public class MapGraphic extends PlayFieldGraphic {
 	private SimMap simMap;
 	private final Color PATH_COLOR = Color.LIGHT_GRAY;
 	private final Color BG_COLOR = Color.WHITE;
+	private final Color ACCIDENT_COLOR = Color.RED;
+	private final Color POI_COLOR = Color.MAGENTA;
+	private int rayonPoi = 50;
+	private int rayonAccident = 15;
 
 	public MapGraphic(SimMap simMap) {
 		this.simMap = simMap;
@@ -30,7 +35,6 @@ public class MapGraphic extends PlayFieldGraphic {
 	@Override
 	public void draw(Graphics2D g2) {
 		Coord c, c2;
-
 		if (simMap == null) {
 			return;
 		}
@@ -48,16 +52,24 @@ public class MapGraphic extends PlayFieldGraphic {
 				g2.drawLine(scale(c2.getX()), scale(c2.getY()),
 						scale(c.getX()), scale(c.getY()));
 			}
+
+			if (n.isType(Accident.DANGER_TYPE)) {
+				g2.setColor(ACCIDENT_COLOR);
+				g2.fillOval(scale(c.getX() - rayonAccident), scale(c.getY()
+						- rayonAccident), scale(rayonAccident * 2),
+						scale(rayonAccident * 2));
+				g2.setColor(PATH_COLOR);
+			}
 		}
+
 		// draws pois
 		List<MapNode> poisList = simMap.getPois();
-		g2.setColor(Color.MAGENTA);
-		int rayon = 50;
-		int diameter = rayon * 2;
+		g2.setColor(POI_COLOR);
 		for (int i = 0; i < poisList.size(); i++) {
 			c2 = poisList.get(i).getLocation();
-			g2.drawOval(scale(c2.getX() - rayon), scale(c2.getY() - rayon),
-					scale(diameter), scale(diameter));
+			g2.drawOval(scale(c2.getX() - rayonPoi),
+					scale(c2.getY() - rayonPoi), scale(rayonPoi * 2),
+					scale(rayonPoi * 2));
 		}
 		g2.setColor(PATH_COLOR);
 	}

@@ -19,6 +19,7 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String MESSAGE_ID_PREFIX_S = "prefix";
+	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 
 	private HomeMovement homeMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
@@ -32,6 +33,7 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	private double prewarnedProb;
 	private String prefix;
+	private double selfwarnedProb;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -45,6 +47,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
+		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 		if (rng.nextDouble() > prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
@@ -67,6 +70,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		prewarnedProb = proto.prewarnedProb;
 		prefix = proto.prefix;
+		selfwarnedProb = proto.selfwarnedProb;
 		if (rng.nextDouble() > prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
@@ -91,6 +95,11 @@ public class DangerMovement extends ExtendedMovementModel {
 					setCurrentMovementModel(shortMM);
 					break;
 				}
+			}
+			if(rng.nextDouble() < selfwarnedProb){
+				mode = SHORT_MODE;
+				setCurrentMovementModel(shortMM);
+				break;
 			}
 			break;
 		case SHORT_MODE:

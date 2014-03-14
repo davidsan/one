@@ -23,9 +23,10 @@ Group1.nrofHosts = 40
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
-Group1.prewarnedProb = 1
+Group1.prewarnedProb = 0.01
 Group1.bufferSize = 50M
 Group1.prefix = DANGER
+Group1.selfwarnedProb = 0.001
 
 
 ## Message creation parameters
@@ -39,7 +40,7 @@ Events1.interval = 0
 Events2.class = AccidentGenerator
 Events2.delay = 1000
 Events2.interval = 20,60
-Events2.nrofAccidents = 200
+Events2.nrofAccidents = 50
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator (default = 0)

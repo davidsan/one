@@ -166,4 +166,8 @@ public class PointsOfInterestEvac {
 
 		return nodes;
 	}
+
+	public List<MapNode> getPoiLists() {
+		return poiLists;
+	}
 }

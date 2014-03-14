@@ -14,7 +14,7 @@ import core.Settings;
  * @author Virginie Collombon, David San
  */
 public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
-        SwitchableMovement {
+		SwitchableMovement {
 	/** the Dijkstra shortest path finder */
 	private DijkstraPathFinder pathFinder;
 
@@ -31,7 +31,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		super(settings);
 		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
-		        settings, rng);
+				settings, rng);
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	 *            object to
 	 */
 	protected ShortestPathMapBasedPoiMovement(
-	        ShortestPathMapBasedPoiMovement mbm) {
+			ShortestPathMapBasedPoiMovement mbm) {
 		super(mbm);
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
@@ -57,19 +57,31 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 		// this assertion should never fire if the map is checked in read
 		// phase
-		assert nodePath.size()>0 : "No path from "+lastMapNode+" to "+to
-		        +". The simulation map isn't fully connected";
+		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
+				+ to + ". The simulation map isn't fully connected";
 
-		for (MapNode node : nodePath) {
-			// create a Path from the shortest path
-			p.addWaypoint(node.getLocation());
+		if (nodePath.size() < 1) {
+			lastMapNode = to;
+			return p;
 		}
-		lastMapNode = to;
-		return p;
+		p.addWaypoint(nodePath.get(0).getLocation());
+		if (nodePath.size() < 2) {
+			lastMapNode = nodePath.get(0);
+			return p;
+		} else {
+			p.addWaypoint(nodePath.get(1).getLocation());
+			lastMapNode = nodePath.get(1);
+			return p;
+		}
 	}
 
 	@Override
 	public ShortestPathMapBasedPoiMovement replicate() {
 		return new ShortestPathMapBasedPoiMovement(this);
 	}
+
+	public PointsOfInterestEvac getPois() {
+		return pois;
+	}
+
 }

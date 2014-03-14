@@ -6,14 +6,14 @@ import core.Settings;
 import core.SimClock;
 
 /**
- * Danger message creation events generator. Creates danger message for every
- * nodes of the simulation.
+ * Accident events generator.
  * 
  * @author Virginie Collombon, David San
  */
 public class AccidentGenerator implements EventQueue {
 	public static final String ACCIDENT_INTERVAL_S = "interval";
 	public static final String ACCIDENT_NROF_S = "nrofAccidents";
+	public static final String ACCIDENT_DELAY_S = "delay";
 	// public static final String PROBABILITY_OF_ACCIDENT = "accidentProb";
 	// private double accidentProb = 1;
 	private double nextEventsTime = 0;
@@ -29,6 +29,7 @@ public class AccidentGenerator implements EventQueue {
 		this.rng = new Random(SimClock.getIntTime());
 		this.accidentInterval = s.getCsvInts(ACCIDENT_INTERVAL_S);
 		this.nrofAccidents = s.getInt(ACCIDENT_NROF_S);
+		this.nextEventsTime = s.getInt(ACCIDENT_DELAY_S);
 		this.count = 0;
 		if (this.accidentInterval.length == 1) {
 			this.accidentInterval = new int[] { this.accidentInterval[0],
@@ -36,7 +37,7 @@ public class AccidentGenerator implements EventQueue {
 		} else {
 			s.assertValidRange(this.accidentInterval, ACCIDENT_INTERVAL_S);
 		}
-		this.nextEventsTime = accidentInterval[0]
+		this.nextEventsTime += accidentInterval[0]
 				+ (accidentInterval[0] == accidentInterval[1] ? 0 : rng
 						.nextInt(accidentInterval[1] - accidentInterval[0]));
 	}
@@ -53,12 +54,12 @@ public class AccidentGenerator implements EventQueue {
 	}
 
 	@Override
-	public ExternalEvent nextEvent() {		
+	public ExternalEvent nextEvent() {
 		int interval = drawNextEventTimeDiff();
 		AccidentEvent ae = new AccidentEvent(this.nextEventsTime);
 		this.nextEventsTime += interval;
 		count++;
-		if(count > nrofAccidents){
+		if (count > nrofAccidents) {
 			this.nextEventsTime += Double.MAX_VALUE;
 		}
 		return ae;

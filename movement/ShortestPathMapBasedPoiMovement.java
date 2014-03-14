@@ -60,22 +60,19 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
-		// BUGBUG il faut au moins 2 mapnode pr faire un tracé, sinon ça bouge
-		// pas!
 		if (nodePath.size() < 1) {
+			lastMapNode = to;
 			return p;
 		}
 		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
-			System.err.println("Le noeud " + getHost() + ".");
-			lastMapNode = to; // BUGBUG si ça bouge pas, alors on est arrivé
+			lastMapNode = nodePath.get(0);
+			return p;
+		} else {
+			p.addWaypoint(nodePath.get(1).getLocation());
+			lastMapNode = nodePath.get(1);
 			return p;
 		}
-		// BUGBUG : on ajoute le premier coord et le deuxieme coord au path
-		p.addWaypoint(nodePath.get(1).getLocation());
-		// BUGBUG : on dit que le lastmapnode c'est le deuxieme coord
-		lastMapNode = nodePath.get(1);
-		return p;
 	}
 
 	@Override

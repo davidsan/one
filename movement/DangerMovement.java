@@ -74,7 +74,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		}
-		// mode = proto.mode;
 	}
 
 	@Override
@@ -85,10 +84,9 @@ public class DangerMovement extends ExtendedMovementModel {
 			for (Iterator<Message> iterator = messages.iterator(); iterator
 					.hasNext();) {
 				Message m = (Message) iterator.next();
-				// si message est de type danger
+				// check if it is a danger message
 				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
 						&& !(m.getFrom().equals(host))) {
-					// System.err.println(" HOME_MODE --> EVAC");
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
 					break;
@@ -97,16 +95,12 @@ public class DangerMovement extends ExtendedMovementModel {
 			break;
 		case SHORT_MODE:
 			if (shortMM.isReady()) {
-				Path p = shortMM.getPath();
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
-				// parcours des centre d'évacuations pour voir si notre 
-				// position correspond à l'un des centres
+				// check if the node is at a evac center
 				for (MapNode mn : shortMM.getPois().getPoiLists()) {
 					Coord c = mn.getLocation();
 					if (c.equals(coordLastMapNode)) {
-						// le noeud est au centre d'évacuation
-						System.err.println("Node " + getHost() + " is safe and sound !");
-						evacMM.getPath();
+						// the node is at the evacuation center
 						mode = EVAC_MODE;
 						setCurrentMovementModel(evacMM);
 					}

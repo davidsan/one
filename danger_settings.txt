@@ -23,7 +23,7 @@ Group1.nrofHosts = 40
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
-Group1.prewarnedProb = 0.20
+Group1.prewarnedProb = 1
 Group1.bufferSize = 50M
 Group1.prefix = DANGER
 
@@ -37,7 +37,8 @@ Events1.tohosts = 0, 39
 Events1.prefix = DANGER
 Events1.interval = 0
 Events2.class = AccidentGenerator
-Events2.interval = 0,0
+Events2.delay = 1000
+Events2.interval = 20,60
 Events2.nrofAccidents = 200
 
 ## Movement model settings

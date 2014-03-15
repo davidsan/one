@@ -30,7 +30,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
-		Path p = new Path(0);
+		Path p = new Path();
 		return p;
 	}
 

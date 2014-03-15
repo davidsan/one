@@ -3,6 +3,7 @@ package movement;
 import java.util.Collection;
 import java.util.Iterator;
 
+import movement.map.MapNode;
 import core.Coord;
 import core.Message;
 import core.Settings;
@@ -44,7 +45,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
-		if (rng.nextDouble()>prewarnedProb) {
+		if (rng.nextDouble() > prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
 		} else {
@@ -66,14 +67,13 @@ public class DangerMovement extends ExtendedMovementModel {
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		prewarnedProb = proto.prewarnedProb;
 		prefix = proto.prefix;
-		if (rng.nextDouble()>prewarnedProb) {
+		if (rng.nextDouble() > prewarnedProb) {
 			mode = HOME_MODE;
 			setCurrentMovementModel(homeMM);
 		} else {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		}
-		// mode = proto.mode;
 	}
 
 	@Override
@@ -82,12 +82,11 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			Collection<Message> messages = host.getMessageCollection();
 			for (Iterator<Message> iterator = messages.iterator(); iterator
-			        .hasNext();) {
+					.hasNext();) {
 				Message m = (Message) iterator.next();
-				// si message est de type danger
+				// check if it is a danger message
 				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
-				        &&!(m.getFrom().equals(host))) {
-					// System.err.println(" HOME_MODE --> EVAC");
+						&& !(m.getFrom().equals(host))) {
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
 					break;
@@ -96,14 +95,15 @@ public class DangerMovement extends ExtendedMovementModel {
 			break;
 		case SHORT_MODE:
 			if (shortMM.isReady()) {
-				Path p = shortMM.getPath();
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
-				Coord coordEvac = p.getCoords().get(p.getCoords().size()-1);
-
-				if (coordLastMapNode.compareTo(coordEvac)==0) {
-					evacMM.getPath();
-					mode = EVAC_MODE;
-					setCurrentMovementModel(evacMM);
+				// check if the node is at a evac center
+				for (MapNode mn : shortMM.getPois().getPoiLists()) {
+					Coord c = mn.getLocation();
+					if (c.equals(coordLastMapNode)) {
+						// the node is at the evacuation center
+						mode = EVAC_MODE;
+						setCurrentMovementModel(evacMM);
+					}
 				}
 			}
 			break;

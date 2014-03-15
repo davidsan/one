@@ -22,8 +22,9 @@ Group.router = EpidemicRouter
 Group1.nrofHosts = 40
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
-Group1.nrofInterfaces = 1
-Group1.prewarnedProb = 1
+Group1.nrofInterfaces = 0
+Group1.prewarnedProb = 0
+Group1.walkProb = 0.5
 Group1.bufferSize = 50M
 Group1.prefix = DANGER
 

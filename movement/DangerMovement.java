@@ -18,19 +18,24 @@ import core.Settings;
 public class DangerMovement extends ExtendedMovementModel {
 
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
+	public static final String PROBABILITY_TO_RAMDOM_WALK = "walkProb";
 	public static final String MESSAGE_ID_PREFIX_S = "prefix";
 
 	private HomeMovement homeMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
 	private EvacuationCenterMovement evacMM;
+	private ShortestPathMapBasedMovement walkMM;
 
 	private static final int HOME_MODE = 0;
 	private static final int SHORT_MODE = 1;
 	private static final int EVAC_MODE = 2;
+	private static final int RANDOM_WALK_MODE = 3;
 
 	private int mode;
 
+	private double walkProb;
 	private double prewarnedProb;
+	private double selfwarnedProb;
 	private String prefix;
 
 	/**
@@ -43,16 +48,22 @@ public class DangerMovement extends ExtendedMovementModel {
 		homeMM = new HomeMovement(settings);
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
+		walkMM = new ShortestPathMapBasedMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
+		walkProb = settings.getDouble(PROBABILITY_TO_RAMDOM_WALK);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
 		if (rng.nextDouble() > prewarnedProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
-		} else {
+			if (rng.nextDouble() > walkProb){
+				mode = HOME_MODE;
+				setCurrentMovementModel(homeMM);
+			}else{
+				mode = RANDOM_WALK_MODE;
+				setCurrentMovementModel(walkMM);
+			}
+		}else {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		}
-
 	}
 
 	/**
@@ -65,12 +76,19 @@ public class DangerMovement extends ExtendedMovementModel {
 		homeMM = new HomeMovement(proto.homeMM);
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
+		walkMM = new ShortestPathMapBasedMovement(proto.walkMM);
 		prewarnedProb = proto.prewarnedProb;
+		walkProb = proto.walkProb;
 		prefix = proto.prefix;
 		if (rng.nextDouble() > prewarnedProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
-		} else {
+			if (rng.nextDouble() > walkProb){
+				mode = HOME_MODE;
+				setCurrentMovementModel(homeMM);
+			}else{
+				mode = RANDOM_WALK_MODE;
+				setCurrentMovementModel(walkMM);
+			}
+		}else {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		}
@@ -78,9 +96,10 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	@Override
 	public boolean newOrders() {
+		Collection<Message> messages = host.getMessageCollection();
 		switch (mode) {
 		case HOME_MODE:
-			Collection<Message> messages = host.getMessageCollection();
+			//Collection<Message> messages = host.getMessageCollection();
 			for (Iterator<Message> iterator = messages.iterator(); iterator
 					.hasNext();) {
 				Message m = (Message) iterator.next();
@@ -108,6 +127,17 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case EVAC_MODE:
+			break;
+		case RANDOM_WALK_MODE:
+			for (Iterator<Message> iterator = messages.iterator(); iterator
+					.hasNext();) {
+				Message m = (Message) iterator.next();
+				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
+						&& !(m.getFrom().equals(host))) {
+					mode = SHORT_MODE;
+					break;
+				}
+			}
 			break;
 		default:
 			break;

@@ -8,10 +8,12 @@ Scenario.nrofHostGroups = 2
 # FIXME : Un seul groupe dans la simulation
 # si nrofHostsGroups vaut 1, la carte n'est plus affichée !
 
-# Wifi interface 
+# Wifi interface (802.11b or 802.11g with a stock antenna)
 wifiInterface.type = SimpleBroadcastInterface
-wifiInterface.transmitSpeed = 1M
-wifiInterface.transmitRange = 200
+# Transmit speed of 54 Mbps = 6912kBps
+wifiInterface.transmitSpeed = 6912k
+# Range 100 m (330 ft) outdoors
+wifiInterface.transmitRange = 100
 
 ## Group and movement model specific settings
 # Common settings for all groups     
@@ -23,9 +25,9 @@ Group1.nrofHosts = 40
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
-Group1.prewarnedProb = 1
 Group1.bufferSize = 50M
 Group1.prefix = DANGER
+Group1.selfwarnedProb = 0.001
 
 
 ## Message creation parameters
@@ -36,10 +38,11 @@ Events1.hosts = 0, 39
 Events1.tohosts = 0, 39
 Events1.prefix = DANGER
 Events1.interval = 0
+Events1.prewarnedProb = 0.2
 Events2.class = AccidentGenerator
 Events2.delay = 1000
 Events2.interval = 20,60
-Events2.nrofAccidents = 200
+Events2.nrofAccidents = 50
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator (default = 0)

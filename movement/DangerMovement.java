@@ -1,8 +1,5 @@
 package movement;
 
-import java.util.Collection;
-import java.util.Iterator;
-
 import movement.map.MapNode;
 import core.Coord;
 import core.Message;
@@ -17,10 +14,11 @@ import core.Settings;
  */
 public class DangerMovement extends ExtendedMovementModel {
 
-	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String MESSAGE_ID_PREFIX_S = "prefix";
+	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 
 	private HomeMovement homeMM;
+	private ShortestPathMapBasedMovement randMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
 	private EvacuationCenterMovement evacMM;
 
@@ -32,6 +30,7 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	private double prewarnedProb;
 	private String prefix;
+	private double selfwarnedProb;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -41,18 +40,14 @@ public class DangerMovement extends ExtendedMovementModel {
 	public DangerMovement(Settings settings) {
 		super(settings);
 		homeMM = new HomeMovement(settings);
+		randMM = new ShortestPathMapBasedMovement(settings);
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
-		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
-		if (rng.nextDouble() > prewarnedProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
-		} else {
-			mode = SHORT_MODE;
-			setCurrentMovementModel(shortMM);
-		}
+		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 
+		mode = HOME_MODE;
+		setCurrentMovementModel(homeMM);
 	}
 
 	/**
@@ -63,34 +58,34 @@ public class DangerMovement extends ExtendedMovementModel {
 	public DangerMovement(DangerMovement proto) {
 		super(proto);
 		homeMM = new HomeMovement(proto.homeMM);
+		randMM = new ShortestPathMapBasedMovement(proto.randMM);
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		prewarnedProb = proto.prewarnedProb;
 		prefix = proto.prefix;
-		if (rng.nextDouble() > prewarnedProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
-		} else {
-			mode = SHORT_MODE;
-			setCurrentMovementModel(shortMM);
-		}
+		selfwarnedProb = proto.selfwarnedProb;
+
+		mode = HOME_MODE;
+		setCurrentMovementModel(homeMM);
 	}
 
 	@Override
 	public boolean newOrders() {
 		switch (mode) {
 		case HOME_MODE:
-			Collection<Message> messages = host.getMessageCollection();
-			for (Iterator<Message> iterator = messages.iterator(); iterator
-					.hasNext();) {
-				Message m = (Message) iterator.next();
-				// check if it is a danger message
-				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
-						&& !(m.getFrom().equals(host))) {
+			// check for danger message
+			for (Message m : this.host.getMessageCollection()) {
+				if (m.getId().toLowerCase().contains(prefix.toLowerCase())) {
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
 					break;
 				}
+			}
+			// selfwarn
+			if (rng.nextDouble() < selfwarnedProb) {
+				mode = SHORT_MODE;
+				setCurrentMovementModel(shortMM);
+				break;
 			}
 			break;
 		case SHORT_MODE:

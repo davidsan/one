@@ -1,5 +1,8 @@
 package input;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import core.Settings;
 import core.SettingsError;
 
@@ -11,17 +14,26 @@ import core.SettingsError;
  */
 public class DangerMessageGenerator extends MessageEventGenerator {
 
-	private int currentFrom;
-	private int currentTo;
+	public static final String PROBABILITY_TO_BE_PREWARNED_S = "prewarnedProb";
+
+	private double prewarnedProb;
+	private int countPrewarned;
+	private int maxPrewarned;
+	private List<Integer> prewarnedCandidates;
 
 	public DangerMessageGenerator(Settings s) {
 		super(s);
-		if (toHostRange==null) {
-			throw new SettingsError("Destination host ("+TO_HOST_RANGE_S
-			        +") must be defined");
+		this.prewarnedProb = s.getDouble(PROBABILITY_TO_BE_PREWARNED_S);
+		if (toHostRange == null) {
+			throw new SettingsError("Destination host (" + TO_HOST_RANGE_S
+					+ ") must be defined");
 		}
-		this.currentFrom = hostRange[0];
-		this.currentTo = toHostRange[0];
+		this.maxPrewarned = (int) (prewarnedProb * (hostRange[1] - hostRange[0]));
+		this.countPrewarned = 0;
+		this.prewarnedCandidates = new ArrayList<Integer>();
+		for (int i = hostRange[0]; i <= hostRange[1]; i++) {
+			this.prewarnedCandidates.add(i);
+		}
 	}
 
 	/**
@@ -32,19 +44,18 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 	public ExternalEvent nextEvent() {
 		int responseSize = 0; /* no responses requested */
 		int from, to;
+		int candidate;
 		/* compute from and to */
-		if (currentFrom>hostRange[1]||currentTo>hostRange[1]) {
+		if (countPrewarned >= maxPrewarned) {
 			this.nextEventsTime = Double.MAX_VALUE; /* no messages left */
 			return new ExternalEvent(Double.MAX_VALUE);
 		}
-		from = currentFrom;
-		to = currentTo;
-
-		currentTo++;
-		currentFrom++;
-
+		candidate = rng.nextInt(prewarnedCandidates.size());
+		from = prewarnedCandidates.remove(candidate);
+		to = from;
+		countPrewarned++;
 		MessageCreateEvent mce = new MessageCreateEvent(from, to, getID(),
-		        drawMessageSize(), responseSize, this.nextEventsTime);
+				drawMessageSize(), responseSize, this.nextEventsTime);
 
 		return mce;
 	}

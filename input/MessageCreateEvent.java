@@ -12,6 +12,7 @@ import core.World;
  * External event for creating a message.
  */
 public class MessageCreateEvent extends MessageEvent {
+	private static final long serialVersionUID = 1L;
 	private int size;
 	private int responseSize;
 	

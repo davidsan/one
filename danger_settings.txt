@@ -21,10 +21,13 @@ Group.nrofHosts = 0
 Group.router = EpidemicRouter
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 40
+Group1.nrofHosts = 20
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
+Group1.prewarnedProb = 0
+Group1.walkProb = 1
+Group1.walkTime = 1500
 Group1.bufferSize = 50M
 Group1.prefix = DANGER
 Group1.selfwarnedProb = 0.001
@@ -34,8 +37,8 @@ Group1.selfwarnedProb = 0.001
 # How many event generators
 Events.nrof = 2
 Events1.class = DangerMessageGenerator
-Events1.hosts = 0, 39
-Events1.tohosts = 0, 39
+Events1.hosts = 0, 19
+Events1.tohosts = 0, 19
 Events1.prefix = DANGER
 Events1.interval = 0
 Events1.prewarnedProb = 0.2

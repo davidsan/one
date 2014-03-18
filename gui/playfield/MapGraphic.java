@@ -63,6 +63,9 @@ public class MapGraphic extends PlayFieldGraphic {
 
 		// draws pois
 		List<MapNode> poisList = simMap.getPois();
+		if (poisList == null) {
+			return;
+		}
 		g2.setColor(POI_COLOR);
 		for (int i = 0; i < poisList.size(); i++) {
 			c2 = poisList.get(i).getLocation();

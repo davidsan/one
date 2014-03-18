@@ -28,7 +28,7 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 			throw new SettingsError("Destination host (" + TO_HOST_RANGE_S
 					+ ") must be defined");
 		}
-		this.maxPrewarned = (int) (prewarnedProb * (hostRange[1] - hostRange[0]));
+		this.maxPrewarned = (int) (prewarnedProb * (hostRange[1] - hostRange[0] + 1));
 		this.countPrewarned = 0;
 		this.prewarnedCandidates = new ArrayList<Integer>();
 		for (int i = hostRange[0]; i <= hostRange[1]; i++) {
@@ -46,7 +46,7 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 		int from, to;
 		int candidate;
 		/* compute from and to */
-		if (countPrewarned >= maxPrewarned) {
+		if (prewarnedCandidates.isEmpty() || countPrewarned >= maxPrewarned) {
 			this.nextEventsTime = Double.MAX_VALUE; /* no messages left */
 			return new ExternalEvent(Double.MAX_VALUE);
 		}

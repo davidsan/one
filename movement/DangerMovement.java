@@ -1,8 +1,6 @@
 package movement;
 
-import java.util.Collection;
-import java.util.Iterator;
-
+import input.DangerMessageGenerator;
 import movement.map.MapNode;
 import core.Coord;
 import core.Message;
@@ -18,30 +16,25 @@ import core.SimClock;
  */
 public class DangerMovement extends ExtendedMovementModel {
 
-	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
-	public static final String PROBABILITY_TO_RAMDOM_WALK = "walkProb";
-	public static final String PROBALITY_TO_SELF_WARNED ="selfwarnedProb";
-	public static final String MESSAGE_ID_PREFIX_S = "prefix";
-	public static final String TIME_TO_WALK="walkTime";
+	public static final String PROBABILITY_TO_WALK = "walkProb";
+	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
+	public static final String TIME_TO_WALK = "walkTime";
 
 	private HomeMovement homeMM;
+	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
 	private EvacuationCenterMovement evacMM;
-	private ShortestPathMapBasedMovement walkMM;
 
-	private static final int HOME_MODE = 0;
-	private static final int SHORT_MODE = 1;
-	private static final int EVAC_MODE = 2;
-	private static final int RANDOM_WALK_MODE = 3;
+	public static final int HOME_MODE = 0;
+	public static final int WALK_MODE = 1;
+	public static final int SHORT_MODE = 2;
+	public static final int EVAC_MODE = 3;
 
 	private int mode;
 
-	private double walkTime;
+	private double selfwarnedProb;
 	private double walkProb;
-	private double prewarnedProb;
-	private double selfwarnedProb;
-	private String prefix;
-	private double selfwarnedProb;
+	private double walkTime;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -53,24 +46,20 @@ public class DangerMovement extends ExtendedMovementModel {
 		homeMM = new HomeMovement(settings);
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
-		walkMM = new ShortestPathMapBasedMovement(settings);
-		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
-		walkProb = settings.getDouble(PROBABILITY_TO_RAMDOM_WALK);
-		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
+		walkMM = new RandomPathMapBasedMovement(settings);
+
+		walkProb = settings.getDouble(PROBABILITY_TO_WALK);
+		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 		walkTime = settings.getDouble(TIME_TO_WALK);
-		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
-		if (rng.nextDouble() > prewarnedProb) {
-			if (rng.nextDouble() > walkProb){
-				mode = HOME_MODE;
-				setCurrentMovementModel(homeMM);
-			}else{
-				mode = RANDOM_WALK_MODE;
-				setCurrentMovementModel(walkMM);
-			}
-		}else {
-			mode = SHORT_MODE;
-			setCurrentMovementModel(shortMM);
+
+		if (rng.nextDouble() > walkProb) {
+			mode = HOME_MODE;
+			setCurrentMovementModel(homeMM);
+		} else {
+			mode = WALK_MODE;
+			setCurrentMovementModel(walkMM);
 		}
+		setHostMode();
 	}
 
 	/**
@@ -83,24 +72,20 @@ public class DangerMovement extends ExtendedMovementModel {
 		homeMM = new HomeMovement(proto.homeMM);
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
-		walkMM = new ShortestPathMapBasedMovement(proto.walkMM);
-		prewarnedProb = proto.prewarnedProb;
+		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
+
 		walkProb = proto.walkProb;
 		selfwarnedProb = proto.selfwarnedProb;
 		walkTime = proto.walkTime;
-		prefix = proto.prefix;
-		if (rng.nextDouble() > prewarnedProb) {
-			if (rng.nextDouble() > walkProb){
-				mode = HOME_MODE;
-				setCurrentMovementModel(homeMM);
-			}else{
-				mode = RANDOM_WALK_MODE;
-				setCurrentMovementModel(walkMM);
-			}
-		}else {
-			mode = SHORT_MODE;
-			setCurrentMovementModel(shortMM);
+
+		if (rng.nextDouble() > walkProb) {
+			mode = HOME_MODE;
+			setCurrentMovementModel(homeMM);
+		} else {
+			mode = WALK_MODE;
+			setCurrentMovementModel(walkMM);
 		}
+		setHostMode();
 	}
 
 	@Override
@@ -109,17 +94,26 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains(prefix.toLowerCase())) {
+				if (m.getId()
+						.toLowerCase()
+						.contains(
+								DangerMessageGenerator.MESSAGE_ID_PREFIX_S
+										.toLowerCase())) {
 					mode = SHORT_MODE;
+					setHostMode();
 					setCurrentMovementModel(shortMM);
-					break;
+					return true;
 				}
 			}
 			// selfwarn
 			if (rng.nextDouble() < selfwarnedProb) {
+				this.host.getRouter().createNewMessage(
+						new Message(host, host,
+								DangerMessageGenerator.MESSAGE_ID_PREFIX_S
+										+ host.getAddress(), 0));
 				mode = SHORT_MODE;
+				setHostMode();
 				setCurrentMovementModel(shortMM);
-				break;
 			}
 			break;
 		case SHORT_MODE:
@@ -132,48 +126,52 @@ public class DangerMovement extends ExtendedMovementModel {
 						// the node is at the evacuation center
 						mode = EVAC_MODE;
 						setCurrentMovementModel(evacMM);
+						break;
 					}
 				}
+				setHostMode();
 			}
 			break;
 		case EVAC_MODE:
 			break;
-		case RANDOM_WALK_MODE:
-			System.out.println("je suis dans randomwalk");
+		case WALK_MODE:
+			walkMM.setLocation(getHost().getLocation()); // update his home
+			mode = WALK_MODE;
+			setCurrentMovementModel(walkMM);
 			double walkTimeCurrent = SimClock.getTime();
-			if(walkTimeCurrent > walkTime ){ // check if time is up
-				System.out.println("timeup");
+			if (walkTimeCurrent > walkTime) { // check if time is up
+
 				mode = HOME_MODE;
 				setCurrentMovementModel(homeMM);
-				break; 
-			}
-			
-			for (Iterator<Message> iterator = messages.iterator(); iterator
-					.hasNext();) {
-				Message m = (Message) iterator.next();
-				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
-						&& !(m.getFrom().equals(host))) {
-					System.out.println("msg");
-					shortMM.setLocation(host.getLocation());
-					mode = SHORT_MODE;
-					setCurrentMovementModel(shortMM);
-					break;
+			} else {
+				for (Message m : this.host.getMessageCollection()) {
+					if (m.getId()
+							.toLowerCase()
+							.contains(
+									DangerMessageGenerator.MESSAGE_ID_PREFIX_S
+											.toLowerCase())) {
+						shortMM.setLocation(host.getLocation());
+						mode = SHORT_MODE;
+						setCurrentMovementModel(shortMM);
+						break;
+					}
 				}
 			}
+			setHostMode();
 			break;
 		default:
 			break;
 		}
+		setHostMode();
 		return true;
 	}
 
 	@Override
 	public Coord getInitialLocation() {
-		 Coord homeLoc = shortMM.getInitialLocation().clone();
-         walkMM.setLocation(homeLoc);
-         shortMM.setLocation(homeLoc);
-         System.err.println(getHost().toString() + " : " + homeLoc);
-         return homeLoc;
+		Coord homeLoc = shortMM.getInitialLocation().clone();
+		walkMM.setLocation(homeLoc);
+		shortMM.setLocation(homeLoc);
+		return homeLoc;
 	}
 
 	@Override
@@ -181,4 +179,8 @@ public class DangerMovement extends ExtendedMovementModel {
 		return new DangerMovement(this);
 	}
 
+	private void setHostMode() {
+		if (!(getHost() == null))
+			getHost().setDangerMode(mode);
+	}
 }

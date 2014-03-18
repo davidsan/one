@@ -7,7 +7,6 @@ package core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Random;
 
 import movement.MovementModel;
 import movement.Path;
@@ -34,6 +33,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<MovementListener> movListeners;
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
+	private int dangerMode;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -531,6 +531,22 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public int compareTo(DTNHost h) {
 		return this.getAddress() - h.getAddress();
+	}
+	
+	/**
+	 * Return the danger mode
+	 * @return the danger mode
+	 */
+	public int getDangerMode() {
+		return dangerMode;
+	}
+	
+	/**
+	 * Set the danger mode
+	 * @param dangerMode
+	 */
+	public void setDangerMode(int dangerMode) {
+		this.dangerMode = dangerMode;
 	}
 
 }

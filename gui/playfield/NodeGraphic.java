@@ -10,6 +10,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import movement.DangerMovement;
 import core.Connection;
 import core.Coord;
 import core.DTNHost;
@@ -35,6 +36,12 @@ public class NodeGraphic extends PlayFieldGraphic {
 	private static Color msgColor3 = Color.RED;
 	
 	private static Color highlightedNodeColor = Color.MAGENTA;
+	
+	private static Color evacModeColor = Color.green;
+	private static Color homeModeColor = Color.gray;
+	private static Color walkModeColor = Color.red;
+	private static Color shortModeColor = Color.orange;
+	
 
 	private DTNHost node;
 
@@ -82,6 +89,17 @@ public class NodeGraphic extends PlayFieldGraphic {
 
 				// draw the "range" circle
 				g2.setColor(rangeColor);
+				
+				if (node.getDangerMode() == DangerMovement.EVAC_MODE) {
+					g2.setColor(evacModeColor);
+				} else if (node.getDangerMode() == DangerMovement.HOME_MODE) {
+					g2.setColor(homeModeColor);
+				} else if (node.getDangerMode() == DangerMovement.WALK_MODE) {
+					g2.setColor(walkModeColor);
+				} else if (node.getDangerMode() == DangerMovement.SHORT_MODE) {
+					g2.setColor(shortModeColor);
+				}
+				
 				g2.draw(coverage);
 			}
 		}

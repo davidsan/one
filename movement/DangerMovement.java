@@ -7,6 +7,7 @@ import movement.map.MapNode;
 import core.Coord;
 import core.Message;
 import core.Settings;
+import core.SimClock;
 
 /**
  * 
@@ -19,7 +20,9 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String PROBABILITY_TO_RAMDOM_WALK = "walkProb";
+	public static final String PROBALITY_TO_SELF_WARNED ="selfwarnedProb";
 	public static final String MESSAGE_ID_PREFIX_S = "prefix";
+	public static final String TIME_TO_WALK="walkTime";
 
 	private HomeMovement homeMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
@@ -33,6 +36,7 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	private int mode;
 
+	private double walkTime;
 	private double walkProb;
 	private double prewarnedProb;
 	private double selfwarnedProb;
@@ -51,6 +55,8 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkMM = new ShortestPathMapBasedMovement(settings);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 		walkProb = settings.getDouble(PROBABILITY_TO_RAMDOM_WALK);
+		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
+		walkTime = settings.getDouble(TIME_TO_WALK);
 		prefix = settings.getSetting(MESSAGE_ID_PREFIX_S);
 		if (rng.nextDouble() > prewarnedProb) {
 			if (rng.nextDouble() > walkProb){
@@ -79,6 +85,8 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkMM = new ShortestPathMapBasedMovement(proto.walkMM);
 		prewarnedProb = proto.prewarnedProb;
 		walkProb = proto.walkProb;
+		selfwarnedProb = proto.selfwarnedProb;
+		walkTime = proto.walkTime;
 		prefix = proto.prefix;
 		if (rng.nextDouble() > prewarnedProb) {
 			if (rng.nextDouble() > walkProb){
@@ -129,12 +137,24 @@ public class DangerMovement extends ExtendedMovementModel {
 		case EVAC_MODE:
 			break;
 		case RANDOM_WALK_MODE:
+			System.out.println("je suis dans randomwalk");
+			double walkTimeCurrent = SimClock.getTime();
+			if(walkTimeCurrent > walkTime ){ // check if time is up
+				System.out.println("timeup");
+				mode = HOME_MODE;
+				setCurrentMovementModel(homeMM);
+				break; 
+			}
+			
 			for (Iterator<Message> iterator = messages.iterator(); iterator
 					.hasNext();) {
 				Message m = (Message) iterator.next();
 				if (m.getId().toLowerCase().contains(prefix.toLowerCase())
 						&& !(m.getFrom().equals(host))) {
+					System.out.println("msg");
+					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
+					setCurrentMovementModel(shortMM);
 					break;
 				}
 			}
@@ -147,9 +167,11 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	@Override
 	public Coord getInitialLocation() {
-		Coord homeLoc = shortMM.getInitialLocation().clone();
-		shortMM.setLocation(homeLoc);
-		return homeLoc;
+		 Coord homeLoc = shortMM.getInitialLocation().clone();
+         walkMM.setLocation(homeLoc);
+         shortMM.setLocation(homeLoc);
+         System.err.println(getHost().toString() + " : " + homeLoc);
+         return homeLoc;
 	}
 
 	@Override

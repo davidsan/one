@@ -36,6 +36,7 @@ public class MapNode implements Comparable<MapNode> {
 		this.location = location;
 		this.neighbors = new Vector<MapNode>();
 		type = 0;
+		isClosed = false;
 	}
 	
 	/**

@@ -69,7 +69,7 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The distance between this and another coordinate
 	 */
 	public double distance(Coord other) {
-		if(mapnode.isClosed()){
+		if(mapnode!= null && mapnode.isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;
@@ -84,7 +84,7 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The square distance between this and another coordinate
 	 */
 	public double distance2(Coord other) {
-		if(mapnode.isClosed()){
+		if(mapnode!= null && mapnode.isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;

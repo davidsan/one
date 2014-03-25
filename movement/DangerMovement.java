@@ -23,7 +23,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	private HomeMovement homeMM;
 	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
-	private EvacuationCenterMovement evacMM;
+	private EvacuationCenterMovement2 evacMM;
 
 	public static final int HOME_MODE = 0;
 	public static final int WALK_MODE = 1;
@@ -45,7 +45,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		super(settings);
 		homeMM = new HomeMovement(settings);
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
-		evacMM = new EvacuationCenterMovement(settings);
+		evacMM = new EvacuationCenterMovement2(settings);
 		walkMM = new RandomPathMapBasedMovement(settings);
 
 		walkProb = settings.getDouble(PROBABILITY_TO_WALK);
@@ -71,7 +71,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		super(proto);
 		homeMM = new HomeMovement(proto.homeMM);
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
-		evacMM = new EvacuationCenterMovement(proto.evacMM);
+		evacMM = new EvacuationCenterMovement2(proto.evacMM);
 		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
 
 		walkProb = proto.walkProb;

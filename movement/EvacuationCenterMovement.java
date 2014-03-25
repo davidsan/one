@@ -43,5 +43,4 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	protected double generateWaitTime() {
 		return Double.MAX_VALUE;
 	}
-
 }

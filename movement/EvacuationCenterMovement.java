@@ -1,5 +1,6 @@
 package movement;
 
+import core.Coord;
 import core.Settings;
 
 /**
@@ -9,9 +10,10 @@ import core.Settings;
  * @author Virginie Collombon, David San
  */
 public class EvacuationCenterMovement extends MapBasedMovement implements
-        SwitchableMovement {
+		SwitchableMovement {
+
 	/**
-	 * Creates a new instance of EvacuationCenterMovement
+	 * Creates a new instance of EvacuationCenterMovement2
 	 * 
 	 * @param settings
 	 */
@@ -20,7 +22,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	}
 
 	/**
-	 * Creates a new instance of EvacuationCenterMovement from a prototype
+	 * Creates a new instance of EvacuationCenterMovement2 from a prototype
 	 * 
 	 * @param proto
 	 */
@@ -31,6 +33,27 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	@Override
 	public Path getPath() {
 		Path p = new Path();
+
+		// generate (x,y) within the circle of radius 250
+		Double a = 2 * Math.PI * Math.random();
+		Double r = Math.sqrt(Math.random());
+		Double x = getLastLocation().getX() + (r * 250.0) * Math.cos(a);
+		Double y = getLastLocation().getY() + (r * 250.0) * Math.sin(a);
+	
+		if (x > getMaxX()) {
+			x = (double) getMaxX();
+		} else if (x < 0) {
+			x = 0.0;
+		}
+		if (y > getMaxY()) {
+			y = (double) getMaxY();
+		} else if (y < 0) {
+			y = 0.0;
+		}
+		Coord c = new Coord(x, y);
+		double speed = 0.1;
+		p.addWaypoint(c, speed);
+		p.addWaypoint(getLastLocation(), speed);
 		return p;
 	}
 
@@ -41,6 +64,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 
 	@Override
 	protected double generateWaitTime() {
-		return Double.MAX_VALUE;
+		return 0;
 	}
+
 }

@@ -94,11 +94,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId()
-						.toLowerCase()
-						.contains(
-								DangerMessageGenerator.MESSAGE_ID_PREFIX_S
-										.toLowerCase())) {
+				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
@@ -107,9 +103,9 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			// selfwarn
 			if (rng.nextDouble() < selfwarnedProb) {
-				this.host.getRouter().createNewMessage(
-						new Message(host, host,
-								DangerMessageGenerator.MESSAGE_ID_PREFIX_S
+				this.host.getRouter()
+						.createNewMessage(
+								new Message(host, host, "DANGER"
 										+ host.getAddress(), 0));
 				mode = SHORT_MODE;
 				setHostMode();

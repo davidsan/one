@@ -42,7 +42,7 @@ Events.nrof = 2
 Events1.class = DangerMessageGenerator
 Events1.hosts = 0, 29
 Events1.tohosts = 0, 29
-Events1.prefix = DANGER
+
 # Interval (don't change this) equal to zero, will generate all messages at 
 # the beginning of the simulation
 Events1.interval = 0

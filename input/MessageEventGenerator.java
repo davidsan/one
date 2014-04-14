@@ -227,5 +227,5 @@ public class MessageEventGenerator implements EventQueue {
 	protected String getID(){
 		this.id++;
 		return idPrefix + this.id;
-	}	
+	}
 }

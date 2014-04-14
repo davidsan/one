@@ -34,6 +34,7 @@ public class DangerMessageGenerator extends MessageEventGenerator {
 		for (int i = hostRange[0]; i <= hostRange[1]; i++) {
 			this.prewarnedCandidates.add(i);
 		}
+		this.idPrefix = "DANGER";
 	}
 
 	/**

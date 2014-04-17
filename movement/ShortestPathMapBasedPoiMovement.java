@@ -21,6 +21,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	/** Points Of Interest handler */
 	private PointsOfInterestEvac pois;
 
+	private boolean ready;
+
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -32,6 +34,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
+		this.ready = true;
 	}
 
 	/**
@@ -46,6 +49,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		super(mbm);
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
+		this.ready = mbm.ready;
 	}
 
 	@Override
@@ -55,24 +59,32 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		MapNode to = pois.selectDestination(lastMapNode, pathFinder);
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
+		for (MapNode mapNode : nodePath) {
+			if (mapNode.isClosed()) {
+				System.err.println("hehe je sors");
+				ready = false;
+				return p;
+			}
+		}
+
 		// this assertion should never fire if the map is checked in read
 		// phase
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
 		if (nodePath.size() < 1) {
-			lastMapNode = to;
+			ready = false;
 			return p;
 		}
+
 		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
-			return p;
 		} else {
 			p.addWaypoint(nodePath.get(1).getLocation());
 			lastMapNode = nodePath.get(1);
-			return p;
 		}
+		return p;
 	}
 
 	@Override
@@ -82,6 +94,11 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	public PointsOfInterestEvac getPois() {
 		return pois;
+	}
+
+	@Override
+	public boolean isReady() {
+		return ready;
 	}
 
 }

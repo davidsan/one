@@ -5,8 +5,10 @@
 Scenario.name = danger_scenario
 Scenario.endTime = 700k
 Scenario.nrofHostGroups = 2 
-# FIXME : Un seul groupe dans la simulation
-# si nrofHostsGroups vaut 1, la carte n'est plus affichée !
+# Attention !
+# Si nrofHostsGroups vaut 1, la carte n'est plus affichée
+# car plus aucun groupe de noeuds possède un mouvement
+# qui utilise sur MapBasedMovement
 
 # Wifi interface (802.11b or 802.11g with a stock antenna)
 wifiInterface.type = SimpleBroadcastInterface
@@ -43,8 +45,8 @@ Events1.class = DangerMessageGenerator
 Events1.hosts = 0, 29
 Events1.tohosts = 0, 29
 
-# Interval (don't change this) equal to zero, will generate all messages at 
-# the beginning of the simulation
+# Interval (don't change this) equal to zero, will generate 
+# all messages at the beginning of the simulation
 Events1.interval = 0
 # Probability to be prewarned
 Events1.prewarnedProb = 0.5
@@ -59,7 +61,8 @@ Events2.interval = 20, 100
 Events2.nrofAccidents = 30
 
 ## Movement model settings
-# seed for movement models' pseudo random number generator (default = 0)
+# seed for movement models' pseudo random number generator 
+# (default = 0)
 MovementModel.rngSeed = 1
 # World's size for Movement Models
 MovementModel.worldSize = 10000, 8000

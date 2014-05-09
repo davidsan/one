@@ -13,7 +13,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 		SwitchableMovement {
 
 	/**
-	 * Creates a new instance of EvacuationCenterMovement2
+	 * Creates a new instance of EvacuationCenterMovement
 	 * 
 	 * @param settings
 	 */
@@ -22,7 +22,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	}
 
 	/**
-	 * Creates a new instance of EvacuationCenterMovement2 from a prototype
+	 * Creates a new instance of EvacuationCenterMovement from a prototype
 	 * 
 	 * @param proto
 	 */

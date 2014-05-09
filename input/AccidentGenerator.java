@@ -14,8 +14,7 @@ public class AccidentGenerator implements EventQueue {
 	public static final String ACCIDENT_INTERVAL_S = "interval";
 	public static final String ACCIDENT_NROF_S = "nrofAccidents";
 	public static final String ACCIDENT_DELAY_S = "delay";
-	// public static final String PROBABILITY_OF_ACCIDENT = "accidentProb";
-	// private double accidentProb = 1;
+	
 	private double nextEventsTime = 0;
 	/** Interval between accidents (min, max) */
 	private int[] accidentInterval;

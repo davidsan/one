@@ -7,7 +7,11 @@ import movement.map.SimMap;
 import core.SimClock;
 import core.SimScenario;
 import core.World;
-
+/**
+ * A Class for accident event
+ * 
+ * @author Virginie Collombon, David San
+ */
 public class AccidentEvent extends ExternalEvent {
 
 	private static final long serialVersionUID = 1L;

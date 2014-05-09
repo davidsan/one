@@ -1,7 +1,4 @@
-/* 
- * Copyright 2010 Aalto University, ComNet
- * Released under GPLv3. See LICENSE.txt for details. 
- */
+
 package movement;
 
 import java.util.List;
@@ -10,7 +7,12 @@ import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterest;
 import core.Settings;
-
+/**
+ * 
+ * A Class to model random walking movement for Danger Movement Model
+ * 
+ * @author Virginie Collombon, David San
+ */
 public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		SwitchableMovement {
 	/** the Dijkstra shortest path finder */

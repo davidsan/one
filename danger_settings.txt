@@ -10,7 +10,7 @@ Scenario.nrofHostGroups = 2
 # car plus aucun groupe de noeuds possède un mouvement
 # qui utilise sur MapBasedMovement
 
-# Wifi interface (802.11b or 802.11g with a stock antenna)
+# Wifi interface (802.11a or 802.11g with a stock antenna)
 wifiInterface.type = SimpleBroadcastInterface
 # Transmit speed of 54 Mbps = 6912kBps
 wifiInterface.transmitSpeed = 6912k

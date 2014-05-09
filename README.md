@@ -3,6 +3,10 @@
 
 A fork of the Opportunistic Network Environment simulator (the ONE) featuring crisis crowd movement.
 
+Generated Javadoc can be found at : [https://davidsan.github.io/one](https://davidsan.github.io/one).
+
+Repository can be found at : [https://github.com/davidsan/one](https://github.com/davidsan/one).
+
 For more information on the ONE, visit [http://www.netlab.tkk.fi/tutkimus/dtn/theone](http://www.netlab.tkk.fi/tutkimus/dtn/theone).
 
 

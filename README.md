@@ -31,9 +31,9 @@ This fork is based on version 1.5.1 RC2 of the ONE.
 * `input.AccidentGenerator`
 
 ### Existing classes edited
-* `core.Coord` : changes on distance methods)
-* `movement.map.MapNode` : adding new property for closed map node)
-* `gui.playfield.NodeGraphic` : for coloring the node according to the movement model)
+* `core.Coord` : changes on distance methods
+* `movement.map.MapNode` : adding new property for closed map node
+* `gui.playfield.NodeGraphic` : for coloring the node according to the movement model
 * `gui.playfield.MapGraphic` : for coloring the road closed
 
 ## Example of scenario

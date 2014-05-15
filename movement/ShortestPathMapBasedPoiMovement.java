@@ -61,7 +61,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 		for (MapNode mapNode : nodePath) {
 			if (mapNode.isClosed()) {
-				System.err.println("hehe je sors");
 				ready = false;
 				return p;
 			}

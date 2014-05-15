@@ -24,7 +24,6 @@ public class AccidentGenerator implements EventQueue {
 	private int count;
 
 	public AccidentGenerator(Settings s) {
-		// accidentProb = s.getDouble(PROBABILITY_OF_ACCIDENT);
 		this.rng = new Random(SimClock.getIntTime());
 		this.accidentInterval = s.getCsvInts(ACCIDENT_INTERVAL_S);
 		this.nrofAccidents = s.getInt(ACCIDENT_NROF_S);

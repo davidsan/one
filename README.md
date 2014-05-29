@@ -1,5 +1,4 @@
 # Crowd crisis movement simulation for the ONE [![Build Status](https://travis-ci.org/davidsan/one.png)](https://travis-ci.org/davidsan/one)
-==============================================
 
 
 A fork of the Opportunistic Network Environment simulator (the ONE) featuring crisis crowd movement.

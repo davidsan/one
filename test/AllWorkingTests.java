@@ -11,7 +11,7 @@ import core.SettingsError;
 public class AllWorkingTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite("the ONE tests");
+		TestSuite suite = new TestSuite("the ONE working tests (version 1.5.1 RC2)");
 		try {
 			TestSettings.init(null);
 		} catch (SettingsError e) {

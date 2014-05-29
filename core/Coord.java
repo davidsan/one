@@ -5,6 +5,7 @@
 package core;
 
 import movement.map.MapNode;
+import movement.map.SimMap;
 
 /**
  * Class to hold 2D coordinates and perform simple arithmetics and
@@ -13,7 +14,6 @@ import movement.map.MapNode;
 public class Coord implements Cloneable, Comparable<Coord> {
 	private double x;
 	private double y;
-	private MapNode mapnode;
 	
 	/**
 	 * Constructor.
@@ -23,15 +23,6 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	public Coord(double x, double y) {
 		setLocation(x,y);
 	}
-	
-	/**
-	 * Init the MapNode associated with this coordinate
-	 * @param mn The MapNode associated with this coordinate
-	 */
-	public void init(MapNode mn){
-		mapnode = mn;
-	}
-	
 	
 	/**
 	 * Sets the location of this coordinate object
@@ -69,7 +60,8 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The distance between this and another coordinate
 	 */
 	public double distance(Coord other) {
-		if(mapnode!= null && mapnode.isClosed()){
+		SimMap map = SimScenario.getInstance().getMap();
+		if(map!= null && map.getNodeByCoord(this).isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;
@@ -84,7 +76,8 @@ public class Coord implements Cloneable, Comparable<Coord> {
 	 * @return The square distance between this and another coordinate
 	 */
 	public double distance2(Coord other) {
-		if(mapnode!= null && mapnode.isClosed()){
+		SimMap map = SimScenario.getInstance().getMap();
+		if(map!= null && map.getNodeByCoord(this).isClosed()){
 			return Double.MAX_VALUE;
 		}
 		double dx = this.x - other.x;

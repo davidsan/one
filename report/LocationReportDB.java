@@ -7,6 +7,7 @@ import java.util.List;
 
 import core.DTNHost;
 import core.UpdateListener;
+import db.Database;
 import db.Queries;
 
 /**
@@ -17,6 +18,7 @@ import db.Queries;
 public class LocationReportDB extends ReportDB implements UpdateListener {
 
 	protected PreparedStatement statement;
+	private int batchCount;
 
 	/**
 	 * Constructor.
@@ -26,6 +28,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 	}
 
 	protected void initTable() {
+		batchCount = 0;
 		try {
 			Statement s = connection.createStatement();
 			s.setQueryTimeout(30); // set timeout to 30 sec.
@@ -51,6 +54,11 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 				statement.setDouble(3, host.getLocation().getX());
 				statement.setDouble(4, host.getLocation().getY());
 				statement.addBatch();
+				batchCount++;
+				if (batchCount >= Database.BATCH_LIMIT) {
+					batchCount = 0;
+					statement.executeBatch();
+				}
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}

@@ -10,6 +10,7 @@ import java.sql.SQLException;
  */
 public class Database {
 	public static final String DEFAULT_DB_FILE = "default.db";
+	public static final int BATCH_LIMIT = 1000;
 
 	public static Connection connect(String filename) throws SQLException,
 			ClassNotFoundException {

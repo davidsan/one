@@ -7,8 +7,11 @@ import java.sql.Statement;
 import core.Coord;
 import core.DTNHost;
 import core.MovementListener;
+import db.Queries;
+
 /**
  * Movement report stored in database
+ * 
  * @author Virginie Collombon, David San
  */
 public class MovementReportDB extends ReportDB implements MovementListener {
@@ -26,13 +29,11 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 		try {
 			Statement s = connection.createStatement();
 			s.setQueryTimeout(30); // set timeout to 30 sec.
-			s.executeUpdate("drop table if exists simulation");
-			s.executeUpdate("create table simulation (time integer, host integer, "
-					+ "location_x float, location_y float, "
-					+ "destination_x float, desination_y float);");
+			s.executeUpdate(Queries.getQuery("drop_table_simulation"));
+			s.executeUpdate(Queries.getQuery("create_table_simulation"));
 			s.close();
-			statement = connection.prepareStatement("insert into simulation "
-					+ "values(?, ?, ?, ?, ?, ?)");
+			statement = connection.prepareStatement(Queries
+					.getQuery("insert_into_simulation_values"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

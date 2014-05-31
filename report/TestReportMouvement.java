@@ -33,7 +33,6 @@ public class TestReportMouvement extends Report implements MovementListener {
 	public void done() {
 		write("COMMIT;");
 		super.done();
-		System.out.println("coucou");
 	}
 
 }

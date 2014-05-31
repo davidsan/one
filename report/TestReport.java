@@ -27,7 +27,7 @@ public class TestReport extends ReportSQL implements UpdateListener {
 	@Override
 	public void done() {
 		write("COMMIT;");
-		System.out.println("coucou");
+		super.done();
 	}
 
 }

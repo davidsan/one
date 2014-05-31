@@ -7,6 +7,7 @@ import java.sql.Statement;
 import core.Coord;
 import core.DTNHost;
 import core.MovementListener;
+import db.Database;
 import db.Queries;
 
 /**
@@ -17,6 +18,7 @@ import db.Queries;
 public class MovementReportDB extends ReportDB implements MovementListener {
 
 	protected PreparedStatement statement;
+	private int batchCount;
 
 	/**
 	 * Constructor.
@@ -26,6 +28,7 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 	}
 
 	protected void initTable() {
+		batchCount = 0;
 		try {
 			Statement s = connection.createStatement();
 			s.setQueryTimeout(30); // set timeout to 30 sec.
@@ -51,7 +54,11 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 			statement.setDouble(4, host.getLocation().getY());
 			statement.setDouble(5, destination.getX());
 			statement.setDouble(6, destination.getY());
-			statement.executeUpdate();
+			statement.addBatch();
+			if (batchCount >= Database.BATCH_SAFE_LIMIT) {
+				statement.executeBatch();
+				batchCount = 0;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -68,7 +75,11 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 			statement.setDouble(4, host.getLocation().getY());
 			statement.setDouble(5, host.getLocation().getX());
 			statement.setDouble(6, host.getLocation().getY());
-			statement.executeUpdate();
+			statement.addBatch();
+			if (batchCount >= Database.BATCH_SAFE_LIMIT) {
+				statement.executeBatch();
+				batchCount = 0;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -77,6 +88,7 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 	@Override
 	public void done() {
 		try {
+			statement.executeBatch();
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

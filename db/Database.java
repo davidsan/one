@@ -3,7 +3,11 @@ package db;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
+/**
+ * Database connection handling
+ * 
+ * @author Virginie Collombon, David San
+ */
 public class Database {
 	public static final String DEFAULT_DB_FILE = "default.db";
 

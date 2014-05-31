@@ -55,7 +55,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 				statement.setDouble(4, host.getLocation().getY());
 				statement.addBatch();
 				batchCount++;
-				if (batchCount >= Database.BATCH_LIMIT) {
+				if (batchCount >= Database.BATCH_SAFE_LIMIT) {
 					batchCount = 0;
 					statement.executeBatch();
 				}

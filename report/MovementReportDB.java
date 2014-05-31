@@ -29,11 +29,13 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 		try {
 			Statement s = connection.createStatement();
 			s.setQueryTimeout(30); // set timeout to 30 sec.
-			s.executeUpdate(Queries.getQuery("drop_table_simulation"));
-			s.executeUpdate(Queries.getQuery("create_table_simulation"));
+			s.executeUpdate(Queries
+					.getQuery("MovementReportDB.drop_table_movement"));
+			s.executeUpdate(Queries
+					.getQuery("MovementReportDB.create_table_movement"));
 			s.close();
 			statement = connection.prepareStatement(Queries
-					.getQuery("insert_into_simulation_values"));
+					.getQuery("MovementReportDB.insert_into_movement"));
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

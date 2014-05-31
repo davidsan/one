@@ -50,7 +50,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 				statement.setInt(2, host.getAddress());
 				statement.setDouble(3, host.getLocation().getX());
 				statement.setDouble(4, host.getLocation().getY());
-				statement.executeUpdate();
+				statement.addBatch();
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -61,6 +61,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 	@Override
 	public void done() {
 		try {
+			statement.executeBatch();
 			statement.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

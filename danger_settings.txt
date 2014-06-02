@@ -34,31 +34,22 @@ Group1.walkProb = 0.7
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
 Group1.selfwarnedProb = 0.001
+# Probability to be prewarned
+Group1.prewarnedProb = 0.5
 
 
 ## Message creation parameters
 # How many event generators
-Events.nrof = 2
-
-# Danger message generator (for prewarned node)
-Events1.class = DangerMessageGenerator
-Events1.hosts = 0, 29
-Events1.tohosts = 0, 29
-
-# Interval (don't change this) equal to zero, will generate 
-# all messages at the beginning of the simulation
-Events1.interval = 0
-# Probability to be prewarned
-Events1.prewarnedProb = 0.5
+Events.nrof = 1
 
 # Road accident generator
-Events2.class = AccidentGenerator
+Events1.class = AccidentGenerator
 # Time to wait before the first accident
-Events2.delay = 1000
+Events1.delay = 1000
 # Interval between 2 accidents
-Events2.interval = 20, 100
+Events1.interval = 20, 100
 # Number of accidents to generate
-Events2.nrofAccidents = 30
+Events1.nrofAccidents = 30
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

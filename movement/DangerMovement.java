@@ -17,9 +17,10 @@ import core.SimClock;
 public class DangerMovement extends ExtendedMovementModel {
 
 	public static final String PROBABILITY_TO_WALK = "walkProb";
+	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 	public static final String TIME_TO_WALK = "walkTime";
-
+	
 	private HomeMovement homeMM;
 	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
@@ -35,6 +36,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	private double selfwarnedProb;
 	private double walkProb;
 	private double walkTime;
+	private double prewarnedProb;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -51,13 +53,19 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkProb = settings.getDouble(PROBABILITY_TO_WALK);
 		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 		walkTime = settings.getDouble(TIME_TO_WALK);
+		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 
-		if (rng.nextDouble() > walkProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
+		if (rng.nextDouble() > prewarnedProb) {
+			mode = SHORT_MODE;
+			setCurrentMovementModel(shortMM);
 		} else {
-			mode = WALK_MODE;
-			setCurrentMovementModel(walkMM);
+			if (rng.nextDouble() > walkProb) {
+				mode = HOME_MODE;
+				setCurrentMovementModel(homeMM);
+			} else {
+				mode = WALK_MODE;
+				setCurrentMovementModel(walkMM);
+			}
 		}
 		setHostMode();
 	}
@@ -77,13 +85,19 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkProb = proto.walkProb;
 		selfwarnedProb = proto.selfwarnedProb;
 		walkTime = proto.walkTime;
+		prewarnedProb = proto.prewarnedProb;
 
-		if (rng.nextDouble() > walkProb) {
-			mode = HOME_MODE;
-			setCurrentMovementModel(homeMM);
+		if (rng.nextDouble() > prewarnedProb) {
+			mode = SHORT_MODE;
+			setCurrentMovementModel(shortMM);
 		} else {
-			mode = WALK_MODE;
-			setCurrentMovementModel(walkMM);
+			if (rng.nextDouble() > walkProb) {
+				mode = HOME_MODE;
+				setCurrentMovementModel(homeMM);
+			} else {
+				mode = WALK_MODE;
+				setCurrentMovementModel(walkMM);
+			}
 		}
 		setHostMode();
 	}
@@ -103,16 +117,16 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			// selfwarn
 			if (rng.nextDouble() < selfwarnedProb) {
-				this.host.getRouter()
-						.createNewMessage(
-								new Message(host, host, "DANGER"
-										+ host.getAddress(), 0));
 				mode = SHORT_MODE;
 				setHostMode();
 				setCurrentMovementModel(shortMM);
 			}
 			break;
 		case SHORT_MODE:
+			this.host.getRouter()
+			.createNewMessage(
+					new Message(host, host, "DANGER"
+							+ host.getAddress(), 0));
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center

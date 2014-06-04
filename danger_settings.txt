@@ -38,18 +38,29 @@ Group1.selfwarnedProb = 0.001
 Group1.prewarnedProb = 0.5
 
 
-## Message creation parameters
+## Message creation parameters 
 # How many event generators
-Events.nrof = 1
+Events.nrof = 2
+# Class of the first event generator
+Events1.class = MessageEventGenerator
+# (following settings are specific for the MessageEventGenerator class)
+# Creation interval in seconds (one new message every 25 to 35 seconds)
+Events1.interval = 25,35
+# Message sizes (500kB - 1MB)
+Events1.size = 500k,1M
+# range of message source/destination addresses
+Events1.hosts = 0,29
+# Message ID prefix
+Events1.prefix = M
 
 # Road accident generator
-Events1.class = AccidentGenerator
+Events2.class = AccidentGenerator
 # Time to wait before the first accident
-Events1.delay = 1000
+Events2.delay = 1000
 # Interval between 2 accidents
-Events1.interval = 20, 100
+Events2.interval = 20, 100
 # Number of accidents to generate
-Events1.nrofAccidents = 30
+Events2.nrofAccidents = 30
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

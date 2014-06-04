@@ -1,7 +1,7 @@
 package movement;
 
-import input.DangerMessageGenerator;
 import movement.map.MapNode;
+import routing.DangerRouter;
 import core.Coord;
 import core.Message;
 import core.Settings;
@@ -20,7 +20,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 	public static final String TIME_TO_WALK = "walkTime";
-	
+
 	private HomeMovement homeMM;
 	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
@@ -108,7 +108,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
@@ -123,10 +123,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case SHORT_MODE:
-			this.host.getRouter()
-			.createNewMessage(
-					new Message(host, host, "DANGER"
-							+ host.getAddress(), 0));
+			this.host.setWarned(true);
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -155,11 +152,7 @@ public class DangerMovement extends ExtendedMovementModel {
 				setCurrentMovementModel(homeMM);
 			} else {
 				for (Message m : this.host.getMessageCollection()) {
-					if (m.getId()
-							.toLowerCase()
-							.contains(
-									DangerMessageGenerator.MESSAGE_ID_PREFIX_S
-											.toLowerCase())) {
+					if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 						shortMM.setLocation(host.getLocation());
 						mode = SHORT_MODE;
 						setCurrentMovementModel(shortMM);

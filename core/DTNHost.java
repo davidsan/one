@@ -34,7 +34,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 	private int dangerMode;
-
+	private boolean warned;
+	
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
 		reset();
@@ -549,4 +550,20 @@ public class DTNHost implements Comparable<DTNHost> {
 		this.dangerMode = dangerMode;
 	}
 
+	/**
+	 * Return true if the node is warned of danger
+	 * @return true if the node is warned of danger
+	 */
+	public boolean isWarned() {
+		return warned;
+	}
+
+	/**
+	 * Set the warned state of the node
+	 * @param warned
+	 */
+	public void setWarned(boolean warned) {
+		this.warned = warned;
+	}	
+	
 }

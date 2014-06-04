@@ -20,7 +20,7 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
-Group.router = EpidemicRouter
+Group.router = DangerRouter
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30

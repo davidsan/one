@@ -30,7 +30,7 @@ This fork is based on version 1.5.1 RC2 of the ONE.
 * `movement.RandomPathMapBasedMovement`
 * `movement.ShortestPathMapBasedPoiMovement`
 * `movement.map.PointsOfInterestEvac`
-* `input.DangerMessageGenerator`
+* `input.DangerMessageGenerator` (not used)
 * `input.AccidentEvent`
 * `input.AccidentGenerator`
 

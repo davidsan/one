@@ -107,11 +107,12 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				// TODO detection entete
+				if (true) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
-					return true;
+					break;
 				}
 			}
 			// selfwarn
@@ -122,8 +123,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case SHORT_MODE:
-			this.host.getRouter().createNewMessage(
-					new Message(host, host, "DANGER" + host.getAddress(), 0));
+			this.host.setWarned(true);
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -136,7 +136,6 @@ public class DangerMovement extends ExtendedMovementModel {
 						break;
 					}
 				}
-				setHostMode();
 			}
 			break;
 		case EVAC_MODE:
@@ -152,14 +151,14 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				// TODO detection entete
+				if (true) {
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
 					break;
 				}
 			}
-			setHostMode();
 			break;
 		default:
 			break;

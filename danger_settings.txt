@@ -21,6 +21,7 @@ wifiInterface.transmitRange = 100
 # Common settings for all groups     
 Group.nrofHosts = 0
 Group.router = EpidemicRouter
+Group.maxselfwarnedProb = 0.20
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -29,13 +30,13 @@ Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
 # Probability for the node to walk at the beginning
-Group1.walkProb = 0.7
+Group1.walkProb = 0.1
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
 Group1.selfwarnedProb = 0.001
-# Probability to be prewarned
-Group1.prewarnedProb = 0.5
+ Probability to be prewarned
+Group1.prewarnedProb = 0.1
 
 
 ## Message creation parameters

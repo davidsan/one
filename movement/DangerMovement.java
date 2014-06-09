@@ -1,5 +1,6 @@
 package movement;
 
+import routing.DangerRouter;
 import movement.map.MapNode;
 import core.Coord;
 import core.Message;
@@ -54,7 +55,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkTime = settings.getDouble(TIME_TO_WALK);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 
-		if (rng.nextDouble() > prewarnedProb) {
+		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		} else {
@@ -86,7 +87,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkTime = proto.walkTime;
 		prewarnedProb = proto.prewarnedProb;
 
-		if (rng.nextDouble() > prewarnedProb) {
+		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		} else {
@@ -107,8 +108,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				// TODO detection entete
-				if (true) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
@@ -151,8 +151,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 
 			for (Message m : this.host.getMessageCollection()) {
-				// TODO detection entete
-				if (true) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);

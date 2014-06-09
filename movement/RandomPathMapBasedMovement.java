@@ -1,4 +1,3 @@
-
 package movement;
 
 import java.util.List;
@@ -7,6 +6,7 @@ import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterest;
 import core.Settings;
+
 /**
  * 
  * A Class to model random walking movement for Danger Movement Model
@@ -59,18 +59,17 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 				+ to + ". The simulation map isn't fully connected";
 
 		if (nodePath.size() < 1) {
-			lastMapNode = to;
+			//lastMapNode = to;
 			return p;
 		}
 		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
-			return p;
 		} else {
 			p.addWaypoint(nodePath.get(1).getLocation());
 			lastMapNode = nodePath.get(1);
-			return p;
 		}
+		return p;
 	}
 
 	@Override

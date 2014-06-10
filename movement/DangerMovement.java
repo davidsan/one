@@ -6,6 +6,7 @@ import core.Coord;
 import core.Message;
 import core.Settings;
 import core.SimClock;
+import core.SimScenario;
 
 /**
  * 
@@ -20,6 +21,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 	public static final String TIME_TO_WALK = "walkTime";
+	public static final String MAX_SELFWARNED = "maxselfwarnedProb";
 
 	private HomeMovement homeMM;
 	private RandomPathMapBasedMovement walkMM;
@@ -34,11 +36,15 @@ public class DangerMovement extends ExtendedMovementModel {
 	public static final int SOS_MODE = 4;
 
 	private int mode;
+	private static int nrofHostsWarned = 0;
+	private static int nrofHosts = 0;
 
 	private double selfwarnedProb;
 	private double walkProb;
 	private double walkTime;
 	private double prewarnedProb;
+	private double maxselfwarnedProb;
+	private static boolean onePrintPlease = true;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -57,6 +63,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 		walkTime = settings.getDouble(TIME_TO_WALK);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
+		maxselfwarnedProb = settings.getDouble(MAX_SELFWARNED);
 
 		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
@@ -86,10 +93,13 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
 		sosMM = new SosMovement(proto.sosMM);
 
+		maxselfwarnedProb = proto.maxselfwarnedProb;
 		walkProb = proto.walkProb;
 		selfwarnedProb = proto.selfwarnedProb;
 		walkTime = proto.walkTime;
 		prewarnedProb = proto.prewarnedProb;
+
+		nrofHosts++;
 
 		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
@@ -120,10 +130,20 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			// selfwarn
-			if (rng.nextDouble() < selfwarnedProb) {
-				mode = SHORT_MODE;
-				setHostMode();
-				setCurrentMovementModel(shortMM);
+			double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
+			if (nrofHostsWarned < nrofHostToWarn) {
+				if (rng.nextDouble() < selfwarnedProb) {
+					mode = SHORT_MODE;
+					setHostMode();
+					setCurrentMovementModel(shortMM);
+				}
+			} else {
+				if (onePrintPlease) {
+					System.out.println("Simulation can end now @"
+							+ SimClock.getIntTime() + " / "
+							+ SimScenario.getInstance().getEndTime());
+					onePrintPlease = false;
+				}
 			}
 			break;
 		case SHORT_MODE:
@@ -143,6 +163,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case EVAC_MODE:
+			nrofHostsWarned++;
 			break;
 		case WALK_MODE:
 			walkMM.setLocation(getHost().getLocation()); // update his home

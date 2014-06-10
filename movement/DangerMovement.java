@@ -1,5 +1,6 @@
 package movement;
 
+import routing.DangerRouter;
 import movement.map.MapNode;
 import core.Coord;
 import core.Message;
@@ -57,7 +58,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkTime = settings.getDouble(TIME_TO_WALK);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
 
-		if (rng.nextDouble() > prewarnedProb) {
+		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		} else {
@@ -90,7 +91,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkTime = proto.walkTime;
 		prewarnedProb = proto.prewarnedProb;
 
-		if (rng.nextDouble() > prewarnedProb) {
+		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
 			setCurrentMovementModel(shortMM);
 		} else {
@@ -111,11 +112,11 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
-					return true;
+					break;
 				}
 			}
 			// selfwarn
@@ -126,8 +127,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case SHORT_MODE:
-			this.host.getRouter().createNewMessage(
-					new Message(host, host, "DANGER" + host.getAddress(), 0));
+			this.host.setWarned(true);
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -140,7 +140,6 @@ public class DangerMovement extends ExtendedMovementModel {
 						break;
 					}
 				}
-				setHostMode();
 			}
 			break;
 		case EVAC_MODE:
@@ -156,14 +155,13 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
 					break;
 				}
 			}
-			setHostMode();
 			break;
 		case SOS_MODE:			
 			break;

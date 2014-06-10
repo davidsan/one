@@ -24,11 +24,13 @@ public class DangerMovement extends ExtendedMovementModel {
 	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
 	private EvacuationCenterMovement evacMM;
+	private SosMovement sosMM;
 
 	public static final int HOME_MODE = 0;
 	public static final int WALK_MODE = 1;
 	public static final int SHORT_MODE = 2;
 	public static final int EVAC_MODE = 3;
+	public static final int SOS_MODE = 4;
 
 	private int mode;
 
@@ -48,6 +50,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
 		walkMM = new RandomPathMapBasedMovement(settings);
+		sosMM = new SosMovement(settings);
 
 		walkProb = settings.getDouble(PROBABILITY_TO_WALK);
 		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
@@ -80,6 +83,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
+		sosMM = new SosMovement(proto.sosMM);
 
 		walkProb = proto.walkProb;
 		selfwarnedProb = proto.selfwarnedProb;
@@ -160,6 +164,8 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			setHostMode();
+			break;
+		case SOS_MODE:			
 			break;
 		default:
 			break;

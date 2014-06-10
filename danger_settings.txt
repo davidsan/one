@@ -20,8 +20,7 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
-Group.router = EpidemicRouter
-Group.maxselfwarnedProb = 0.20
+Group.router = DangerRouter
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -30,18 +29,18 @@ Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
 Group1.nrofInterfaces = 1
 # Probability for the node to walk at the beginning
-Group1.walkProb = 0.1
+Group1.walkProb = 0.4
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
-Group1.selfwarnedProb = 0.001
- Probability to be prewarned
-Group1.prewarnedProb = 0.1
+Group1.selfwarnedProb = 0.0
+# Probability to be prewarned
+Group1.prewarnedProb = 0.3
 
 
 ## Message creation parameters
 # How many event generators
-Events.nrof = 1
+Events.nrof = 2
 
 # Road accident generator
 Events1.class = AccidentGenerator
@@ -51,6 +50,18 @@ Events1.delay = 1000
 Events1.interval = 20, 100
 # Number of accidents to generate
 Events1.nrofAccidents = 30
+
+# Class of the first event generator
+Events1.class = MessageEventGenerator
+# (following settings are specific for the MessageEventGenerator class)
+# Creation interval in seconds (one new message every 25 to 35 seconds)
+Events1.interval = 25,35
+# Message sizes (500kB - 1MB)
+Events1.size = 500k,1M
+# range of message source/destination addresses
+Events1.hosts = 0,29
+# Message ID prefix
+Events1.prefix = M
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 
@@ -69,3 +80,4 @@ MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
 
 ## Points of Interest for the evacuation centers
 PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
+

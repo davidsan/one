@@ -1,6 +1,6 @@
 package movement;
 
-import input.DangerMessageGenerator;
+import routing.DangerRouter;
 import movement.map.MapNode;
 import core.Coord;
 import core.Message;
@@ -118,11 +118,11 @@ public class DangerMovement extends ExtendedMovementModel {
 		case HOME_MODE:
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getId().toLowerCase().contains("DANGER".toLowerCase())) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
-					return true;
+					break;
 				}
 			}
 			// selfwarn
@@ -143,8 +143,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		case SHORT_MODE:
-			this.host.getRouter().createNewMessage(
-					new Message(host, host, "DANGER" + host.getAddress(), 0));
+			this.host.setWarned(true);
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -157,7 +156,6 @@ public class DangerMovement extends ExtendedMovementModel {
 						break;
 					}
 				}
-				setHostMode();
 			}
 			break;
 		case EVAC_MODE:
@@ -171,21 +169,16 @@ public class DangerMovement extends ExtendedMovementModel {
 			if (walkTimeCurrent > walkTime) { // check if time is up
 				mode = HOME_MODE;
 				setCurrentMovementModel(homeMM);
-			} else {
-				for (Message m : this.host.getMessageCollection()) {
-					if (m.getId()
-							.toLowerCase()
-							.contains(
-									DangerMessageGenerator.MESSAGE_ID_PREFIX_S
-											.toLowerCase())) {
-						shortMM.setLocation(host.getLocation());
-						mode = SHORT_MODE;
-						setCurrentMovementModel(shortMM);
-						break;
-					}
+			}
+
+			for (Message m : this.host.getMessageCollection()) {
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
+					shortMM.setLocation(host.getLocation());
+					mode = SHORT_MODE;
+					setCurrentMovementModel(shortMM);
+					break;
 				}
 			}
-			setHostMode();
 			break;
 		default:
 			break;

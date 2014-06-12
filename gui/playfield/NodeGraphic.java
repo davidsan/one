@@ -41,9 +41,10 @@ public class NodeGraphic extends PlayFieldGraphic {
 	private static Color homeModeColor = Color.gray;
 	private static Color walkModeColor = Color.red;
 	private static Color shortModeColor = Color.orange;
-	
+	private static Color sosModeColor = Color.blue;
 
 	private DTNHost node;
+	
 
 	public NodeGraphic(DTNHost node) {	
 		this.node = node;
@@ -98,6 +99,8 @@ public class NodeGraphic extends PlayFieldGraphic {
 					g2.setColor(walkModeColor);
 				} else if (node.getDangerMode() == DangerMovement.SHORT_MODE) {
 					g2.setColor(shortModeColor);
+				} else if (node.getDangerMode() == DangerMovement.SOS_MODE) {
+					g2.setColor(sosModeColor);
 				}
 				
 				g2.draw(coverage);

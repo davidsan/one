@@ -118,8 +118,24 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	@Override
 	public boolean newOrders() {
+		double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
+		if(host.getAddress()==6) System.out.println(mode);
 		switch (mode) {
 		case HOME_MODE:
+			if(host.getAddress()==6) System.out.println(mode);
+			if (nrofHostsWarned >= nrofHostToWarn) {
+				System.out.println("sos");
+				mode = SOS_MODE;
+				setHostMode();
+				setCurrentMovementModel(sosMM);
+				if (onePrintPlease) {
+					System.out.println("Simulation can end now @"
+							+ SimClock.getIntTime() + " / "
+							+ SimScenario.getInstance().getEndTime());
+					onePrintPlease = false;
+				}
+				break;
+			}
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
 				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
@@ -130,24 +146,21 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			// selfwarn
-			double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
 			if (nrofHostsWarned < nrofHostToWarn) {
 				if (rng.nextDouble() < selfwarnedProb) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
 				}
-			} else {
-				if (onePrintPlease) {
-					System.out.println("Simulation can end now @"
-							+ SimClock.getIntTime() + " / "
-							+ SimScenario.getInstance().getEndTime());
-					onePrintPlease = false;
-				}
 			}
 			break;
 		case SHORT_MODE:
 			this.host.setWarned(true);
+			if (nrofHostsWarned >= nrofHostToWarn && this.host.isStuck()) {
+				mode = SOS_MODE;
+				setCurrentMovementModel(sosMM);
+				break;
+			}
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -176,7 +189,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
@@ -184,7 +197,8 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			break;
-		case SOS_MODE:			
+		case SOS_MODE:
+			//System.out.println(this.host.getAddress());
 			break;
 		default:
 			break;

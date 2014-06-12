@@ -9,6 +9,7 @@ import core.Settings;
  */
 public class HomeMovement extends MapBasedMovement implements
         SwitchableMovement {
+
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -39,5 +40,9 @@ public class HomeMovement extends MapBasedMovement implements
 		return new HomeMovement(this);
 	}
 
+	@Override
+	public boolean isReady() {
+		return true;
+	}
 	
 }

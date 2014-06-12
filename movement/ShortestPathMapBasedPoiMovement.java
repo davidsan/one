@@ -59,20 +59,24 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		MapNode to = pois.selectDestination(lastMapNode, pathFinder);
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
-		for (MapNode mapNode : nodePath) {
-			if (mapNode.isClosed()) {
-				ready = false;
-				return p;
-			}
-		}
+		// for (MapNode mapNode : nodePath) {
+		// if (mapNode.isClosed()) {
+		// ready = false;
+		// return p;
+		// }
+		// }
 
 		// this assertion should never fire if the map is checked in read
 		// phase
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
+		// test if the node is stuck or not
 		if (nodePath.size() < 1) {
 			ready = false;
+			if (host != null) {
+				host.setStuck(true);
+			}
 			return p;
 		}
 

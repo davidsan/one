@@ -102,8 +102,8 @@ public class DijkstraPathFinder {
 			
 			path.add(0, from); // finally put the source node to first node
 		}
-		
 		return path;
+		
 	}
 	
 	/**

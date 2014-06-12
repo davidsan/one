@@ -35,6 +35,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private ModuleCommunicationBus comBus;
 	private int dangerMode;
 	private boolean warned;
+	private boolean stuck;
 	
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -88,6 +89,9 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		
+		this.warned = false;
+		this.stuck = false;
 	}
 	
 	/**
@@ -376,6 +380,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (!isMovementActive() || SimClock.getTime() < this.nextTimeToMove) {
 			return; 
 		}
+		
 		if (this.destination == null) {
 			if (!setNextWaypoint()) {
 				return;
@@ -417,6 +422,7 @@ public class DTNHost implements Comparable<DTNHost> {
 		if (path == null || !path.hasNext()) {
 			this.nextTimeToMove = movement.nextPathAvailable();
 			this.path = null;
+			if(getAddress() == 6) System.out.println("false");
 			return false;
 		}
 
@@ -564,6 +570,22 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void setWarned(boolean warned) {
 		this.warned = warned;
+	}
+	
+	/**
+	 * Return the stuck boolean
+	 * @return the stuck boolean
+	 */
+	public boolean isStuck() {
+		return stuck;
+	}
+
+	/**
+	 * Set stuck boolean
+	 * @param stuck boolean
+	 */
+	public void setStuck(boolean stuck) {
+		this.stuck = stuck;
 	}
 	
 }

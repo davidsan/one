@@ -35,6 +35,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private ModuleCommunicationBus comBus;
 	private int dangerMode;
 	private boolean warned;
+	private boolean stucked;
 	
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -564,6 +565,22 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void setWarned(boolean warned) {
 		this.warned = warned;
+	}
+
+	/**
+	 * Return the stucked boolean
+	 * @return the stucked boolean
+	 */
+	public boolean isStucked() {
+		return stucked;
+	}
+	
+	/**
+	 * Set stucked boolean
+	 * @param stucked boolean
+	 */
+	public void setStucked(boolean stucked) {
+		this.stucked = stucked;
 	}
 	
 }

@@ -59,9 +59,12 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 				+ to + ". The simulation map isn't fully connected";
 
 		if (nodePath.size() < 1) {
-			//lastMapNode = to;
+			if (getHost() != null) {
+				getHost().setStucked(true);
+			}
 			return p;
 		}
+		
 		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);

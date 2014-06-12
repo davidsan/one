@@ -3,6 +3,7 @@ package movement;
 import routing.DangerRouter;
 import movement.map.MapNode;
 import core.Coord;
+import core.DTNHost;
 import core.Message;
 import core.Settings;
 import core.SimClock;
@@ -27,11 +28,13 @@ public class DangerMovement extends ExtendedMovementModel {
 	private RandomPathMapBasedMovement walkMM;
 	private ShortestPathMapBasedPoiMovement shortMM;
 	private EvacuationCenterMovement evacMM;
+	private SosMovement sosMM;
 
 	public static final int HOME_MODE = 0;
 	public static final int WALK_MODE = 1;
 	public static final int SHORT_MODE = 2;
 	public static final int EVAC_MODE = 3;
+	public static final int SOS_MODE = 4;
 
 	private int mode;
 	private static int nrofHostsWarned = 0;
@@ -55,6 +58,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(settings);
 		evacMM = new EvacuationCenterMovement(settings);
 		walkMM = new RandomPathMapBasedMovement(settings);
+		sosMM = new SosMovement(settings);
 
 		walkProb = settings.getDouble(PROBABILITY_TO_WALK);
 		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
@@ -88,6 +92,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		shortMM = new ShortestPathMapBasedPoiMovement(proto.shortMM);
 		evacMM = new EvacuationCenterMovement(proto.evacMM);
 		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
+		sosMM = new SosMovement(proto.sosMM);
 
 		maxselfwarnedProb = proto.maxselfwarnedProb;
 		walkProb = proto.walkProb;
@@ -114,8 +119,24 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	@Override
 	public boolean newOrders() {
+		double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
+		if (nrofHostsWarned >= nrofHostToWarn) {
+			if (onePrintPlease) {
+				System.out.println("Simulation can end now @"
+						+ SimClock.getIntTime() + " / "
+						+ SimScenario.getInstance().getEndTime());
+				onePrintPlease = false;
+			}
+		}
 		switch (mode) {
 		case HOME_MODE:
+			// sos mode
+			if (nrofHostsWarned >= nrofHostToWarn) {
+				mode = SOS_MODE;
+				setHostMode();
+				setCurrentMovementModel(sosMM);
+				break;
+			}
 			// check for danger message
 			for (Message m : this.host.getMessageCollection()) {
 				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
@@ -126,24 +147,25 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			// selfwarn
-			double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
 			if (nrofHostsWarned < nrofHostToWarn) {
 				if (rng.nextDouble() < selfwarnedProb) {
 					mode = SHORT_MODE;
 					setHostMode();
 					setCurrentMovementModel(shortMM);
 				}
-			} else {
-				if (onePrintPlease) {
-					System.out.println("Simulation can end now @"
-							+ SimClock.getIntTime() + " / "
-							+ SimScenario.getInstance().getEndTime());
-					onePrintPlease = false;
-				}
 			}
 			break;
 		case SHORT_MODE:
 			this.host.setWarned(true);
+			// sos mode
+			if (nrofHostsWarned >= nrofHostToWarn) {
+				if (host.isStucked()) {
+					mode = SOS_MODE;
+					setHostMode();
+					setCurrentMovementModel(sosMM);
+					break;
+				}
+			}
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center
@@ -170,9 +192,8 @@ public class DangerMovement extends ExtendedMovementModel {
 				mode = HOME_MODE;
 				setCurrentMovementModel(homeMM);
 			}
-
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
@@ -201,7 +222,16 @@ public class DangerMovement extends ExtendedMovementModel {
 	}
 
 	private void setHostMode() {
-		if (!(getHost() == null))
+		if (!(getHost() == null)) {
 			getHost().setDangerMode(mode);
+		}
 	}
+
+	@Override
+	public void setHost(DTNHost host) {
+		super.setHost(host);
+		walkMM.setHost(host);
+		shortMM.setHost(host);
+	}
+
 }

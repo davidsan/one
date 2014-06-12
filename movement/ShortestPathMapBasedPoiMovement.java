@@ -21,8 +21,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	/** Points Of Interest handler */
 	private PointsOfInterestEvac pois;
 
-	private boolean ready;
-
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -34,7 +32,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
-		this.ready = true;
 	}
 
 	/**
@@ -49,7 +46,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		super(mbm);
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
-		this.ready = mbm.ready;
 	}
 
 	@Override
@@ -88,11 +84,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	public PointsOfInterestEvac getPois() {
 		return pois;
-	}
-
-	@Override
-	public boolean isReady() {
-		return ready;
 	}
 
 }

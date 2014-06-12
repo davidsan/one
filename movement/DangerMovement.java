@@ -185,6 +185,13 @@ public class DangerMovement extends ExtendedMovementModel {
 			break;
 		case WALK_MODE:
 			walkMM.setLocation(getHost().getLocation()); // update his home
+			// sos mode
+			if (nrofHostsWarned >= nrofHostToWarn) {
+				mode = SOS_MODE;
+				setHostMode();
+				setCurrentMovementModel(sosMM);
+				break;
+			}
 			mode = WALK_MODE;
 			setCurrentMovementModel(walkMM);
 			double walkTimeCurrent = SimClock.getTime();

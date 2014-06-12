@@ -37,6 +37,8 @@ Group1.walkTime = 14500
 Group1.selfwarnedProb = 0.001
 # Probability to be prewarned
 Group1.prewarnedProb = 0.3
+# Percentage of warned nodes required to end the simulation
+Group1.maxselfwarnedProb = 0.3
 
 
 ## Message creation parameters

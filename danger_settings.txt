@@ -36,6 +36,8 @@ Group1.walkTime = 14500
 Group1.selfwarnedProb = 0.0
 # Probability to be prewarned
 Group1.prewarnedProb = 0.3
+# Percentage of warned nodes required to end the simulation
+Group1.maxselfwarnedProb = 0.3
 
 
 ## Message creation parameters
@@ -52,16 +54,16 @@ Events1.interval = 20, 100
 Events1.nrofAccidents = 30
 
 # Class of the first event generator
-Events1.class = MessageEventGenerator
+Events2.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events1.interval = 25,35
+Events2.interval = 25,35
 # Message sizes (500kB - 1MB)
-Events1.size = 500k,1M
+Events2.size = 500k,1M
 # range of message source/destination addresses
-Events1.hosts = 0,29
+Events2.hosts = 0,29
 # Message ID prefix
-Events1.prefix = M
+Events2.prefix = M
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

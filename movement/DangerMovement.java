@@ -163,7 +163,8 @@ public class DangerMovement extends ExtendedMovementModel {
 				}
 			}
 			if (shortMM.isReady()) {
-				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
+				// Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
+				Coord coordLastMapNode = host.getLocation();
 				// check if the node is at a evac center
 				for (MapNode mn : shortMM.getPois().getPoiLists()) {
 					Coord c = mn.getLocation();
@@ -182,7 +183,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		case WALK_MODE:
 			walkMM.setLocation(getHost().getLocation()); // update his home
 			// sos mode
-			if (nrofHostsWarned >= nrofHostToWarn) {
+			if (nrofHostsWarned >= nrofHostToWarn || host.isStucked()) {
 				mode = SOS_MODE;
 				setCurrentMovementModel(sosMM);
 				break;

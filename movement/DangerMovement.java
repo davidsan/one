@@ -133,7 +133,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			// sos mode
 			if (nrofHostsWarned >= nrofHostToWarn) {
 				mode = SOS_MODE;
-				setHostMode();
 				setCurrentMovementModel(sosMM);
 				break;
 			}
@@ -141,7 +140,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			for (Message m : this.host.getMessageCollection()) {
 				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
-					setHostMode();
 					setCurrentMovementModel(shortMM);
 					break;
 				}
@@ -150,7 +148,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			if (nrofHostsWarned < nrofHostToWarn) {
 				if (rng.nextDouble() < selfwarnedProb) {
 					mode = SHORT_MODE;
-					setHostMode();
 					setCurrentMovementModel(shortMM);
 				}
 			}
@@ -161,7 +158,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			if (nrofHostsWarned >= nrofHostToWarn) {
 				if (host.isStucked()) {
 					mode = SOS_MODE;
-					setHostMode();
 					setCurrentMovementModel(sosMM);
 					break;
 				}
@@ -188,12 +184,9 @@ public class DangerMovement extends ExtendedMovementModel {
 			// sos mode
 			if (nrofHostsWarned >= nrofHostToWarn) {
 				mode = SOS_MODE;
-				setHostMode();
 				setCurrentMovementModel(sosMM);
 				break;
 			}
-			mode = WALK_MODE;
-			setCurrentMovementModel(walkMM);
 			double walkTimeCurrent = SimClock.getTime();
 			if (walkTimeCurrent > walkTime) { // check if time is up
 				mode = HOME_MODE;
@@ -209,7 +202,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 			break;
 		default:
-			break;
 		}
 		setHostMode();
 		return true;

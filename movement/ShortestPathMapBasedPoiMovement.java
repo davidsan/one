@@ -23,6 +23,13 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	private boolean ready;
 
+	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
+
+	private double randomPoi;
+	private boolean chooseRandomPoi;
+
+	private MapNode to;
+
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -35,6 +42,9 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
 		this.ready = true;
+		randomPoi = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
+		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		to = null;
 	}
 
 	/**
@@ -50,13 +60,22 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
 		this.ready = mbm.ready;
+		this.randomPoi = mbm.randomPoi;
+		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		to = mbm.to;
 	}
 
 	@Override
 	public Path getPath() {
 		Path p = new Path(generateSpeed());
 
-		MapNode to = pois.selectDestination(lastMapNode, pathFinder);
+		if (!chooseRandomPoi) {
+			to = pois.selectDestination(lastMapNode, pathFinder);
+		} else if (to == null) {
+			System.out.println("coucou");
+			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
+		}
+
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
 		for (MapNode mapNode : nodePath) {

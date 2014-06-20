@@ -39,21 +39,21 @@ Group1.prewarnedProb = 1.0
 # Percentage of warned nodes required to end the simulation
 Group1.maxselfwarnedProb = 1.0
 #Probability of choose a random Poi
-Group1.randomPoi = 1.0
+Group1.randomPoi = 0.0
 
 
 ## Message creation parameters
 # How many event generators
-Events.nrof = 2
+Events.nrof = 1
 
 # Road accident generator
 Events1.class = AccidentGenerator
 # Time to wait before the first accident
-Events1.delay = 1000
+Events1.delay = 100
 # Interval between 2 accidents
-Events1.interval = 20, 100
+Events1.interval = 2, 10
 # Number of accidents to generate
-Events1.nrofAccidents = 0.0
+Events1.nrofAccidents = 3000
 
 # Class of the first event generator
 Events2.class = MessageEventGenerator

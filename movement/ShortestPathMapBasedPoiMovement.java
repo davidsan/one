@@ -5,6 +5,7 @@ import java.util.List;
 import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterestEvac;
+import core.DTNHost;
 import core.Settings;
 
 /**
@@ -77,12 +78,12 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
-		for (MapNode mapNode : nodePath) {
-			if (mapNode.isClosed()) {
-				ready = false;
-				return p;
-			}
-		}
+		// for (MapNode mapNode : nodePath) {
+		// if (mapNode.isClosed()) {
+		// ready = false;
+		// return p;
+		// }
+		// }
 
 		// this assertion should never fire if the map is checked in read
 		// phase
@@ -116,6 +117,12 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	@Override
 	public boolean isReady() {
 		return ready;
+	}
+
+	@Override
+	public void setHost(DTNHost host) {
+		super.setHost(host);
+		pathFinder.setHost(host);
 	}
 
 }

@@ -14,6 +14,8 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import core.DTNHost;
+
 /**
  * Implementation of the Dijkstra's shortest path algorithm.
  */
@@ -33,6 +35,7 @@ public class DijkstraPathFinder {
 	private Map<MapNode, MapNode> prevNodes;
 
 	private int [] okMapNodes;
+	private DTNHost host;
 	
 	/**
 	 * Constructor.
@@ -148,7 +151,13 @@ public class DijkstraPathFinder {
 	 * @param to The second node
 	 * @return Euclidean distance between the two map nodes
 	 */
-	private double getDistance(MapNode from, MapNode to) {
+	private double getDistance(MapNode from, MapNode to) {		
+		// return infinity for node aware of the accident
+		if (host != null) {
+			if (from.isClosed() && from.isAwareNode(host.getAddress())) {
+				return INFINITY;
+			}
+		}
 		return from.getLocation().distance(to.getLocation());
 	}
 	
@@ -224,5 +233,13 @@ public class DijkstraPathFinder {
 		public String toString() {
 			return map.toString();
 		}
+	}
+
+	/**
+	 * Sets the host 
+	 * @param host Host
+	 */
+	public void setHost(DTNHost host) {
+		this.host = host;
 	}
 }

@@ -1,8 +1,9 @@
 package movement;
 
-import routing.DangerRouter;
 import movement.map.MapNode;
+import routing.DangerRouter;
 import core.Coord;
+import core.DTNHost;
 import core.Message;
 import core.Settings;
 import core.SimClock;
@@ -172,7 +173,7 @@ public class DangerMovement extends ExtendedMovementModel {
 			}
 
 			for (Message m : this.host.getMessageCollection()) {
-				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null){
+				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					shortMM.setLocation(host.getLocation());
 					mode = SHORT_MODE;
 					setCurrentMovementModel(shortMM);
@@ -203,5 +204,14 @@ public class DangerMovement extends ExtendedMovementModel {
 	private void setHostMode() {
 		if (!(getHost() == null))
 			getHost().setDangerMode(mode);
+	}
+	
+	@Override
+	public void setHost(DTNHost host) {
+		super.setHost(host);
+		homeMM.setHost(host);
+		walkMM.setHost(host);
+		evacMM.setHost(host);
+		shortMM.setHost(host);
 	}
 }

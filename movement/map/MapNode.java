@@ -4,7 +4,6 @@
  */
 package movement.map;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,8 +27,6 @@ public class MapNode implements Comparable<MapNode> {
 	private int type;
 	// true if the node is "closed" (accident)
 	private boolean isClosed;
-	// list of nodes (by their address) aware of the accident
-	private List<Integer> awareNodes;
 	
 	/**
 	 * Constructor. Creates a map node to a location.
@@ -40,7 +37,6 @@ public class MapNode implements Comparable<MapNode> {
 		this.neighbors = new Vector<MapNode>();
 		type = 0;
 		isClosed = false;
-		awareNodes = new ArrayList<Integer>();
 	}
 	
 	/**
@@ -164,18 +160,5 @@ public class MapNode implements Comparable<MapNode> {
 	public void close(){
 		isClosed = true;
 	}
-
-	/**
-	 * True if the node is aware of the accident
-	 * @param address Address of the node
-	 * @return true if the node is aware of the accident
-	 */
-	public boolean isAwareNode(int address) {
-		// TODO 
-		// return awareNodes.contains(address);
-		return true;
-	}
-	
-	
 	
 }

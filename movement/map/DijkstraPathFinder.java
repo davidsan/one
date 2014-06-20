@@ -64,6 +64,14 @@ public class DijkstraPathFinder {
 		// set distance to source 0 and initialize unvisited queue
 		this.distances.put(node, 0);
 		this.unvisited.add(node);
+		
+		// discover accidents among the neighbors of the current node
+		for (MapNode neighbor : node.getNeighbors()) {
+			if (neighbor.isClosed()) {
+				// discovery
+				host.addAccidentAt(neighbor);
+			}
+		}
 	}
 	
 	/**
@@ -151,10 +159,10 @@ public class DijkstraPathFinder {
 	 * @param to The second node
 	 * @return Euclidean distance between the two map nodes
 	 */
-	private double getDistance(MapNode from, MapNode to) {		
-		// return infinity for node aware of the accident
+	private double getDistance(MapNode from, MapNode to) {
 		if (host != null) {
-			if (from.isClosed() && from.isAwareNode(host.getAddress())) {
+			// return infinity for node aware of the accident
+			if (from.isClosed() && host.isAwareOfAccidentAt(from)) {
 				return INFINITY;
 			}
 		}

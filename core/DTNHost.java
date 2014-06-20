@@ -10,6 +10,7 @@ import java.util.List;
 
 import movement.MovementModel;
 import movement.Path;
+import movement.map.MapNode;
 import routing.MessageRouter;
 import routing.util.RoutingInfo;
 
@@ -35,6 +36,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private ModuleCommunicationBus comBus;
 	private int dangerMode;
 	private boolean warned;
+	private List<MapNode> knownAccidents;
 	
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -88,6 +90,8 @@ public class DTNHost implements Comparable<DTNHost> {
 				l.initialLocation(this, this.location);
 			}
 		}
+		
+		this.knownAccidents = new ArrayList<MapNode>();
 	}
 	
 	/**
@@ -564,6 +568,23 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void setWarned(boolean warned) {
 		this.warned = warned;
+	}
+
+	/**
+	 * True if the host if aware of the accident at the node
+	 * @param from node
+	 * @return true if the host if aware of the accident at the node
+	 */
+	public boolean isAwareOfAccidentAt(MapNode from) {
+		return knownAccidents.contains(from);
+	}
+	
+	/**
+	 * Add node to the list of known accidents
+	 * @param node Accident node
+	 */
+	public void addAccidentAt(MapNode node){
+		knownAccidents.add(node);
 	}
 	
 }

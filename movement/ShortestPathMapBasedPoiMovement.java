@@ -72,7 +72,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		if (!chooseRandomPoi) {
 			to = pois.selectDestination(lastMapNode, pathFinder);
 		} else if (to == null) {
-			System.out.println("coucou");
 			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
 		}
 

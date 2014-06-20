@@ -16,6 +16,7 @@ import core.Settings;
  */
 public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		SwitchableMovement {
+	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
 	/** the Dijkstra shortest path finder */
 	private DijkstraPathFinder pathFinder;
 
@@ -24,12 +25,9 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	private boolean ready;
 
-	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
-
-	private double randomPoi;
-	private boolean chooseRandomPoi;
-
 	private MapNode to;
+	private double randomPoiProb;
+	private boolean chooseRandomPoi;
 
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
@@ -43,8 +41,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
 		this.ready = true;
-		randomPoi = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
-		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		randomPoiProb = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
+		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = null;
 	}
 
@@ -61,8 +59,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
 		this.ready = mbm.ready;
-		this.randomPoi = mbm.randomPoi;
-		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		this.randomPoiProb = mbm.randomPoiProb;
+		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = mbm.to;
 	}
 

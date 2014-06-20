@@ -75,7 +75,6 @@ public class DangerMovement extends ExtendedMovementModel {
 				setCurrentMovementModel(walkMM);
 			}
 		}
-		setHostMode();
 	}
 
 	/**
@@ -110,7 +109,6 @@ public class DangerMovement extends ExtendedMovementModel {
 				setCurrentMovementModel(walkMM);
 			}
 		}
-		setHostMode();
 	}
 
 	@Override
@@ -121,7 +119,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			for (Message m : this.host.getMessageCollection()) {
 				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
 					mode = SHORT_MODE;
-					setHostMode();
 					setCurrentMovementModel(shortMM);
 					break;
 				}
@@ -131,7 +128,6 @@ public class DangerMovement extends ExtendedMovementModel {
 			if (nrofHostsWarned < nrofHostToWarn) {
 				if (rng.nextDouble() < selfwarnedProb) {
 					mode = SHORT_MODE;
-					setHostMode();
 					setCurrentMovementModel(shortMM);
 				}
 			} else {
@@ -184,7 +180,6 @@ public class DangerMovement extends ExtendedMovementModel {
 		default:
 			break;
 		}
-		setHostMode();
 		return true;
 	}
 
@@ -199,11 +194,6 @@ public class DangerMovement extends ExtendedMovementModel {
 	@Override
 	public MovementModel replicate() {
 		return new DangerMovement(this);
-	}
-
-	private void setHostMode() {
-		if (!(getHost() == null))
-			getHost().setDangerMode(mode);
 	}
 	
 	@Override

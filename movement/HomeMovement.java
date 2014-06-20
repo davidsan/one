@@ -8,7 +8,7 @@ import core.Settings;
  * @author Virginie Collombon, David San
  */
 public class HomeMovement extends MapBasedMovement implements
-        SwitchableMovement {
+		SwitchableMovement {
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -31,6 +31,9 @@ public class HomeMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
+		if (!(getHost() == null)) {
+			getHost().setDangerMode(DangerMovement.HOME_MODE);
+		}
 		return new Path();
 	}
 
@@ -39,5 +42,4 @@ public class HomeMovement extends MapBasedMovement implements
 		return new HomeMovement(this);
 	}
 
-	
 }

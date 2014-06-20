@@ -68,6 +68,9 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
+		if (!(getHost() == null)) {
+			getHost().setDangerMode(DangerMovement.SHORT_MODE);
+		}
 		Path p = new Path(generateSpeed());
 
 		if (!chooseRandomPoi) {

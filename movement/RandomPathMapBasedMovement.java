@@ -49,6 +49,9 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
+		if (!(getHost() == null)) {
+			getHost().setDangerMode(DangerMovement.WALK_MODE);
+		}
 		Path p = new Path(generateSpeed());
 		MapNode to = pois.selectDestination();
 
@@ -59,7 +62,7 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 				+ to + ". The simulation map isn't fully connected";
 
 		if (nodePath.size() < 1) {
-			//lastMapNode = to;
+			// lastMapNode = to;
 			return p;
 		}
 		p.addWaypoint(nodePath.get(0).getLocation());

@@ -23,7 +23,7 @@ Group.nrofHosts = 0
 Group.router = DangerRouter
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 30
+Group1.nrofHosts = 3
 Group1.bufferSize = 50M
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
@@ -35,13 +35,13 @@ Group1.walkProb = 0.0
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
-Group1.selfwarnedProb = 0.001
+Group1.selfwarnedProb = 0.0
 # Probability to be prewarned
-Group1.prewarnedProb = 0.1
+Group1.prewarnedProb = 0.4
 # Percentage of warned nodes required to end the simulation
-Group1.maxselfwarnedProb = 0.5
+Group1.maxselfwarnedProb = 1.0
 #Probability of choose a random Poi
-Group1.randomPoi = 1.0
+Group1.randomPoi = 0.0
 
 
 ## Message creation parameters
@@ -73,8 +73,8 @@ Events1.nrofAccidents = 200
 Events2.class = OneMessageGenerator
 Events2.interval = 0,0
 Events2.size = 500k,1M
-Events2.hosts = 0,29
-Events2.tohosts = 0,29
+Events2.hosts = 0,2
+Events2.tohosts = 0,2
 Events2.prefix = TEST
 
 ## Movement model settings

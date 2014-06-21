@@ -69,7 +69,9 @@ public class DijkstraPathFinder {
 		for (MapNode neighbor : node.getNeighbors()) {
 			if (neighbor.isClosed()) {
 				// discovery
-				host.addAccidentAt(neighbor);
+				if (host != null) {
+					host.addAccidentAt(neighbor);
+				}
 			}
 		}
 	}

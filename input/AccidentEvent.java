@@ -30,7 +30,7 @@ public class AccidentEvent extends ExternalEvent {
 		MapNode n = null;
 		do {
 			n = map.getNodes().get(rng.nextInt(map.getNodes().size()));
-		} while (n.isClosed());
+		} while (n.isClosed() || n.getNeighbors().size() < 4);
 		n.close();
 	}
 

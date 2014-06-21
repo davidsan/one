@@ -6,6 +6,7 @@ import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterest;
 import core.Settings;
+import core.SimScenario;
 
 /**
  * 
@@ -61,10 +62,27 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
+		if (getHost() != null) {
+			if (SimScenario.getInstance().getMap()
+					.getNodeByCoord(getHost().getLocation()) != null
+					&& SimScenario.getInstance().getMap()
+							.getNodeByCoord(getHost().getLocation()).isClosed()) {
+				getHost().setStucked(true);
+			}
+		}
+		
+		// for (MapNode node : nodePath) {
+		// if (node.isClosed()) {
+		// if (getHost() != null) {
+		// getHost().setStucked(true);
+		// }
+		// }
+		// }
+		
 		if (nodePath.size() < 1) {
-			// lastMapNode = to;
 			return p;
 		}
+
 		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);

@@ -7,6 +7,7 @@ import movement.map.MapNode;
 import movement.map.PointsOfInterestEvac;
 import core.DTNHost;
 import core.Settings;
+import core.SimScenario;
 
 /**
  * Map based movement model that uses Dijkstra's algorithm to find shortest
@@ -79,20 +80,22 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
 
-		// for (MapNode mapNode : nodePath) {
-		// if (mapNode.isClosed()) {
-		// ready = false;
-		// return p;
-		// }
-		// }
-
 		// this assertion should never fire if the map is checked in read
 		// phase
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
+		if (getHost() != null) {
+			if (SimScenario.getInstance().getMap()
+					.getNodeByCoord(getHost().getLocation()) != null
+					&& SimScenario.getInstance().getMap()
+							.getNodeByCoord(getHost().getLocation()).isClosed()) {
+				getHost().setStucked(true);
+			}
+		}
+
 		if (nodePath.size() < 1) {
-			ready = false;
+//			ready = false;
 			return p;
 		}
 

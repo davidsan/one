@@ -154,13 +154,11 @@ public class DangerMovement extends ExtendedMovementModel {
 		case SHORT_MODE:
 			this.host.setWarned(true);
 			// sos mode
-			// if (nrofHostsWarned >= nrofHostToWarn) {
 			if (host.isStucked()) {
 				mode = SOS_MODE;
 				setCurrentMovementModel(sosMM);
 				break;
 			}
-			// }
 			if (shortMM.isReady()) {
 				Coord coordLastMapNode = shortMM.lastMapNode.getLocation();
 				// check if the node is at a evac center

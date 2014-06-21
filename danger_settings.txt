@@ -57,17 +57,25 @@ Events1.interval = 2, 10
 # Number of accidents to generate
 Events1.nrofAccidents = 100
 
-# Class of the first event generator
-Events2.class = MessageEventGenerator
+# Message event generator
+#Events2.class = MessageEventGenerator
 # (following settings are specific for the MessageEventGenerator class)
 # Creation interval in seconds (one new message every 25 to 35 seconds)
-Events2.interval = 25,35
+#Events2.interval = 25,35
 # Message sizes (500kB - 1MB)
-Events2.size = 500k,1M
+#Events2.size = 500k,1M
 # range of message source/destination addresses
-Events2.hosts = 0,29
+#Events2.hosts = 0,29
 # Message ID prefix
-Events2.prefix = M
+#Events2.prefix = M
+
+# Test message generator
+Events2.class = OneMessageGenerator
+Events2.interval = 0,0
+Events2.size = 500k,1M
+Events2.hosts = 0,29
+Events2.tohosts = 0,29
+Events2.prefix = TEST
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

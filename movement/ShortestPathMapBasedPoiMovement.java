@@ -7,7 +7,6 @@ import movement.map.MapNode;
 import movement.map.PointsOfInterestEvac;
 import core.DTNHost;
 import core.Settings;
-import core.SimScenario;
 
 /**
  * Map based movement model that uses Dijkstra's algorithm to find shortest
@@ -29,6 +28,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	private MapNode to;
 	private double randomPoiProb;
 	private boolean chooseRandomPoi;
+	private List<MapNode> nodePath;
+	private static int nrofComputations = 0;
 
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
@@ -45,6 +46,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		randomPoiProb = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
 		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = null;
+		nodePath = null;
 	}
 
 	/**
@@ -63,6 +65,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.randomPoiProb = mbm.randomPoiProb;
 		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = mbm.to;
+		nodePath = mbm.nodePath;
 	}
 
 	@Override
@@ -72,34 +75,53 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		}
 		Path p = new Path(generateSpeed());
 
+		boolean discovery = false;
+		// discover accidents among the neighbors of the current node
+		for (MapNode neighbor : lastMapNode.getNeighbors()) {
+			if (neighbor.isClosed()) {
+				// discovery
+				host.addAccidentAt(neighbor);
+				discovery = true;
+			}
+		}
+
 		if (!chooseRandomPoi) {
 			to = pois.selectDestination(lastMapNode, pathFinder);
 		} else if (to == null) {
 			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
 		}
 
-		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
+		// if the path was not computed
+		if (nodePath == null || nodePath.isEmpty() || discovery) {
+			System.err.println("Calcul #" + nrofComputations++);
+			nodePath = pathFinder.getShortestPath(lastMapNode, to);
+		} else {
+			// existing node path, we pop the head
+			nodePath.remove(0);
+		}
 
 		// this assertion should never fire if the map is checked in read
 		// phase
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
-		if (getHost() != null) {
-			if (SimScenario.getInstance().getMap()
-					.getNodeByCoord(getHost().getLocation()) != null
-					&& SimScenario.getInstance().getMap()
-							.getNodeByCoord(getHost().getLocation()).isClosed()) {
-				getHost().setStucked(true);
-			}
-		}
+		// if (getHost() != null) {
+		// if (SimScenario.getInstance().getMap()
+		// .getNodeByCoord(getHost().getLocation()) != null
+		// && SimScenario.getInstance().getMap()
+		// .getNodeByCoord(getHost().getLocation()).isClosed()) {
+		// getHost().setStucked(true);
+		// }
+		// }
 
 		if (nodePath.size() < 1) {
-//			ready = false;
+			if (getHost() != null) {
+				getHost().setStucked(true);
+			}
 			return p;
 		}
 
-		p.addWaypoint(nodePath.get(0).getLocation());
+		// p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
 		} else {

@@ -31,15 +31,15 @@ Group1.nrofInterfaces = 1
 # Walking speeds
 Group.speed = 0.7, 0.7
 # Probability for the node to walk at the beginning
-Group1.walkProb = 0.0
+Group1.walkProb = 0.7
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
-Group1.selfwarnedProb = 0.001
+Group1.selfwarnedProb = 0.00
 # Probability to be prewarned
-Group1.prewarnedProb = 0.1
+Group1.prewarnedProb = 0.2
 # Percentage of warned nodes required to end the simulation
-Group1.maxselfwarnedProb = 0.5
+Group1.maxselfwarnedProb = 0.1
 #Probability of choose a random Poi
 Group1.randomPoi = 1.0
 
@@ -55,7 +55,7 @@ Events1.delay = 100
 # Interval between 2 accidents
 Events1.interval = 2, 10
 # Number of accidents to generate
-Events1.nrofAccidents = 200
+Events1.nrofAccidents = 100
 
 # Message event generator
 #Events2.class = MessageEventGenerator

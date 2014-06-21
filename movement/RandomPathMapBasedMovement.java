@@ -5,6 +5,7 @@ import java.util.List;
 import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterest;
+import core.DTNHost;
 import core.Settings;
 import core.SimScenario;
 
@@ -22,6 +23,9 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 	/** Points Of Interest handler */
 	private PointsOfInterest pois;
 
+	private MapNode to;
+	private List<MapNode> nodePath;
+
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
@@ -33,6 +37,8 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
 		this.pois = new PointsOfInterest(getMap(), getOkMapNodeTypes(),
 				settings, rng);
+		this.to = null;
+		this.nodePath = null;
 	}
 
 	/**
@@ -46,6 +52,8 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		super(mbm);
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
+		this.to = mbm.to;
+		this.nodePath = mbm.nodePath;
 	}
 
 	@Override
@@ -54,23 +62,30 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 			getHost().setDangerMode(DangerMovement.WALK_MODE);
 		}
 		Path p = new Path(generateSpeed());
-		MapNode to = pois.selectDestination();
 
-		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
+		boolean discovery = false;
+		// discover accidents among the neighbors of the current node
+		for (MapNode neighbor : lastMapNode.getNeighbors()) {
+			if (neighbor.isClosed()) {
+				// discovery
+				host.addAccidentAt(neighbor);
+				discovery = true;
+			}
+		}
 
+		if (to == null || nodePath.isEmpty()) {
+			to = pois.selectDestination();
+		}
+
+		if (nodePath == null || nodePath.isEmpty() || discovery) {
+			nodePath = pathFinder.getShortestPath(lastMapNode, to);
+		} else {
+			nodePath.remove(0);
+		}
 		// this assertion should never fire if the map is checked in read phase
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
-		if (getHost() != null) {
-			if (SimScenario.getInstance().getMap()
-					.getNodeByCoord(getHost().getLocation()) != null
-					&& SimScenario.getInstance().getMap()
-							.getNodeByCoord(getHost().getLocation()).isClosed()) {
-				getHost().setStucked(true);
-			}
-		}
-		
 		// for (MapNode node : nodePath) {
 		// if (node.isClosed()) {
 		// if (getHost() != null) {
@@ -78,7 +93,7 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		// }
 		// }
 		// }
-		
+
 		if (nodePath.size() < 1) {
 			return p;
 		}
@@ -98,4 +113,9 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 		return new RandomPathMapBasedMovement(this);
 	}
 
+	@Override
+	public void setHost(DTNHost host) {
+		super.setHost(host);
+		pathFinder.setHost(host);
+	}
 }

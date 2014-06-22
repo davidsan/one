@@ -105,15 +105,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
-		// if (getHost() != null) {
-		// if (SimScenario.getInstance().getMap()
-		// .getNodeByCoord(getHost().getLocation()) != null
-		// && SimScenario.getInstance().getMap()
-		// .getNodeByCoord(getHost().getLocation()).isClosed()) {
-		// getHost().setStucked(true);
-		// }
-		// }
-
 		if (nodePath.size() < 1) {
 			if (getHost() != null) {
 				getHost().setStucked(true);

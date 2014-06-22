@@ -55,7 +55,7 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 			statement.setDouble(5, destination.getX());
 			statement.setDouble(6, destination.getY());
 			statement.addBatch();
-			if (batchCount >= Database.BATCH_SAFE_LIMIT) {
+			if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
 				statement.executeBatch();
 				batchCount = 0;
 			}
@@ -76,7 +76,7 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 			statement.setDouble(5, host.getLocation().getX());
 			statement.setDouble(6, host.getLocation().getY());
 			statement.addBatch();
-			if (batchCount >= Database.BATCH_SAFE_LIMIT) {
+			if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
 				statement.executeBatch();
 				batchCount = 0;
 			}

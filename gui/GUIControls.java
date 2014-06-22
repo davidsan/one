@@ -86,7 +86,7 @@ public class GUIControls extends JPanel implements ActionListener, ChangeListene
 	public static final double ZOOM_MAX = 10;
 	
 	/** index of initial update speed setting */
-	public static final int INITIAL_SPEED_SELECTION = 3;
+	public static final int INITIAL_SPEED_SELECTION = 4;
 	/** index of FFW speed setting */
 	public static final int FFW_SPEED_INDEX = 7;
 	
@@ -138,7 +138,7 @@ public class GUIControls extends JPanel implements ActionListener, ChangeListene
 		this.screenShotButton = new JButton(TEXT_SCREEN_SHOT);
 		this.guiUpdateChooser = new JComboBox(UP_SPEEDS);
 		
-		this.zoomSelector = new JSpinner(new SpinnerNumberModel(1.0, ZOOM_MIN, 
+		this.zoomSelector = new JSpinner(new SpinnerNumberModel(.1, ZOOM_MIN, 
 				ZOOM_MAX, 0.001));
 
 		this.add(simTimeField);

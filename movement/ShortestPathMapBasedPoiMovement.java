@@ -5,6 +5,7 @@ import java.util.List;
 import movement.map.DijkstraPathFinder;
 import movement.map.MapNode;
 import movement.map.PointsOfInterestEvac;
+import core.DTNHost;
 import core.Settings;
 
 /**
@@ -15,6 +16,7 @@ import core.Settings;
  */
 public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		SwitchableMovement {
+	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
 	/** the Dijkstra shortest path finder */
 	private DijkstraPathFinder pathFinder;
 
@@ -23,12 +25,11 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	private boolean ready;
 
-	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
-
-	private double randomPoi;
-	private boolean chooseRandomPoi;
-
 	private MapNode to;
+	private double randomPoiProb;
+	private boolean chooseRandomPoi;
+	private List<MapNode> nodePath;
+	private static int nrofComputations = 0;
 
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
@@ -42,9 +43,10 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
 		this.ready = true;
-		randomPoi = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
-		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		randomPoiProb = settings.getDouble(PROBABILITY_TO_CHOOSE_RANDOM_POI);
+		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = null;
+		nodePath = null;
 	}
 
 	/**
@@ -60,14 +62,28 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		this.pathFinder = mbm.pathFinder;
 		this.pois = mbm.pois;
 		this.ready = mbm.ready;
-		this.randomPoi = mbm.randomPoi;
-		chooseRandomPoi = rng.nextDouble() < randomPoi;
+		this.randomPoiProb = mbm.randomPoiProb;
+		chooseRandomPoi = rng.nextDouble() < randomPoiProb;
 		to = mbm.to;
+		nodePath = mbm.nodePath;
 	}
 
 	@Override
 	public Path getPath() {
+		if (!(getHost() == null)) {
+			getHost().setDangerMode(DangerMovement.SHORT_MODE);
+		}
 		Path p = new Path(generateSpeed());
+
+		boolean discovery = false;
+		// discover accidents among the neighbors of the current node
+		for (MapNode neighbor : lastMapNode.getNeighbors()) {
+			if (neighbor.isClosed()) {
+				// discovery
+				host.addAccidentAt(neighbor);
+				discovery = true;
+			}
+		}
 
 		if (!chooseRandomPoi) {
 			to = pois.selectDestination(lastMapNode, pathFinder);
@@ -75,13 +91,13 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
 		}
 
-		List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode, to);
-
-		for (MapNode mapNode : nodePath) {
-			if (mapNode.isClosed()) {
-				ready = false;
-				return p;
-			}
+		// if the path was not computed
+		if (nodePath == null || nodePath.isEmpty() || discovery) {
+			System.err.println("Calcul #" + nrofComputations++);
+			nodePath = pathFinder.getShortestPath(lastMapNode, to);
+		} else {
+			// existing node path, we pop the head
+			nodePath.remove(0);
 		}
 
 		// this assertion should never fire if the map is checked in read
@@ -89,12 +105,23 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		assert nodePath.size() > 0 : "No path from " + lastMapNode + " to "
 				+ to + ". The simulation map isn't fully connected";
 
+		// if (getHost() != null) {
+		// if (SimScenario.getInstance().getMap()
+		// .getNodeByCoord(getHost().getLocation()) != null
+		// && SimScenario.getInstance().getMap()
+		// .getNodeByCoord(getHost().getLocation()).isClosed()) {
+		// getHost().setStucked(true);
+		// }
+		// }
+
 		if (nodePath.size() < 1) {
-			ready = false;
+			if (getHost() != null) {
+				getHost().setStucked(true);
+			}
 			return p;
 		}
 
-		p.addWaypoint(nodePath.get(0).getLocation());
+		// p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
 		} else {
@@ -116,6 +143,12 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	@Override
 	public boolean isReady() {
 		return ready;
+	}
+
+	@Override
+	public void setHost(DTNHost host) {
+		super.setHost(host);
+		pathFinder.setHost(host);
 	}
 
 }

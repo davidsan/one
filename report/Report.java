@@ -135,7 +135,7 @@ public abstract class Report {
 	 * if it didn't exist.
 	 * @param outFileName Name of the file
 	 */
-	private void checkDirExistence(String outFileName) {
+	protected void checkDirExistence(String outFileName) {
 		File outFile = new File(outFileName);
 		File outDir = outFile.getParentFile();
 	

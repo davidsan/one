@@ -3,7 +3,7 @@
 #
 
 Scenario.name = danger_scenario
-Scenario.endTime = 700k
+Scenario.endTime = 43200
 Scenario.nrofHostGroups = 2 
 # Attention !
 # Si nrofHostsGroups vaut 1, la carte n'est plus affichée
@@ -94,4 +94,20 @@ MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
 
 ## Points of Interest for the evacuation centers
 PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
+
+
+## Reports - all report names have to be valid report classes
+
+# how many reports to load
+Report.nrofReports = 3
+# length of the warm up period (simulated seconds)
+Report.warmup = 0
+# default directory of reports (can be overridden per Report with output setting)
+Report.reportDir = reports/
+# Report classes to load
+Report.report2 = MovementReportDB
+# ReportDB update rate (steps)
+Report.updateRate = 1000
+# Report location
+Report.report3 = LocationReportDB
 

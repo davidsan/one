@@ -12,6 +12,4 @@ routing
 routing.maxprop
 routing.schedule
 routing.util
-test
 ui
-util

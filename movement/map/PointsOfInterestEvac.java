@@ -1,7 +1,6 @@
 package movement.map;
 
 import input.WKTReader;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-
+import movement.MovementModel;
 import core.Coord;
 import core.Settings;
 import core.SettingsError;
@@ -32,6 +31,12 @@ public class PointsOfInterestEvac {
 	private int[] okMapNodeTypes;
 	/** list of all this POI instance's POI lists */
 	private List<MapNode> poiLists;
+
+	protected static Random rng;
+
+	static {
+		reset();
+	}
 
 	/**
 	 * Constructor.
@@ -91,6 +96,11 @@ public class PointsOfInterestEvac {
 		// return the closest POI from the list
 		Double min = Collections.min(hm.keySet());
 		return hm.get(min);
+	}
+
+	public MapNode selectDestinationRandom(MapNode lastMapNode,
+			DijkstraPathFinder pathFinder) {		
+		return poiLists.get(rng.nextInt(poiLists.size()));
 	}
 
 	/**
@@ -169,5 +179,18 @@ public class PointsOfInterestEvac {
 
 	public List<MapNode> getPoiLists() {
 		return poiLists;
+	}
+
+	/**
+	 * Resets all static fields to default values
+	 */
+	public static void reset() {
+		Settings s = new Settings(MovementModel.MOVEMENT_MODEL_NS);
+		if (s.contains(MovementModel.RNG_SEED)) {
+			int seed = s.getInt(MovementModel.RNG_SEED);
+			rng = new Random(seed);
+		} else {
+			rng = new Random(0);
+		}
 	}
 }

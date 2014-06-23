@@ -3,7 +3,7 @@
 #
 
 Scenario.name = danger_scenario
-Scenario.endTime = 43200
+Scenario.endTime = 700k
 Scenario.nrofHostGroups = 2 
 # Attention !
 # Si nrofHostsGroups vaut 1, la carte n'est plus affichée
@@ -23,7 +23,7 @@ Group.nrofHosts = 0
 Group.router = DangerRouter
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 30
+Group1.nrofHosts = 3
 Group1.bufferSize = 50M
 Group1.movementModel = DangerMovement
 Group1.interface1 = wifiInterface
@@ -31,17 +31,17 @@ Group1.nrofInterfaces = 1
 # Walking speeds
 Group.speed = 0.7, 0.7
 # Probability for the node to walk at the beginning
-Group1.walkProb = 0.7
+Group1.walkProb = 0.0
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
-Group1.selfwarnedProb = 0.00
+Group1.selfwarnedProb = 0.0
 # Probability to be prewarned
-Group1.prewarnedProb = 0.2
+Group1.prewarnedProb = 0.4
 # Percentage of warned nodes required to end the simulation
-Group1.maxselfwarnedProb = 0.1
+Group1.maxselfwarnedProb = 1.0
 #Probability of choose a random Poi
-Group1.randomPoi = 1.0
+Group1.randomPoi = 0.0
 
 
 ## Message creation parameters
@@ -55,7 +55,7 @@ Events1.delay = 100
 # Interval between 2 accidents
 Events1.interval = 2, 10
 # Number of accidents to generate
-Events1.nrofAccidents = 100
+Events1.nrofAccidents = 200
 
 # Message event generator
 #Events2.class = MessageEventGenerator
@@ -73,8 +73,8 @@ Events1.nrofAccidents = 100
 Events2.class = OneMessageGenerator
 Events2.interval = 0,0
 Events2.size = 500k,1M
-Events2.hosts = 0,29
-Events2.tohosts = 0,29
+Events2.hosts = 0,2
+Events2.tohosts = 0,2
 Events2.prefix = TEST
 
 ## Movement model settings
@@ -94,20 +94,4 @@ MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
 
 ## Points of Interest for the evacuation centers
 PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
-
-
-## Reports - all report names have to be valid report classes
-
-# how many reports to load
-Report.nrofReports = 3
-# length of the warm up period (simulated seconds)
-Report.warmup = 0
-# default directory of reports (can be overridden per Report with output setting)
-Report.reportDir = reports/
-# Report classes to load
-Report.report2 = MovementReportDB
-# ReportDB update rate (steps)
-Report.updateRate = 1000
-# Report location
-Report.report3 = LocationReportDB
 

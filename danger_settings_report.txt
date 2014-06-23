@@ -1,0 +1,92 @@
+#
+# Settings for DangerMovement
+#
+
+Scenario.name = danger_scenario_report
+Scenario.endTime = 43200
+Scenario.nrofHostGroups = 2 
+# Attention !
+# Si nrofHostsGroups vaut 1, la carte n'est plus affichée
+# car plus aucun groupe de noeuds possède un mouvement
+# qui utilise sur MapBasedMovement
+
+# Wifi interface (802.11a or 802.11g with a stock antenna)
+wifiInterface.type = SimpleBroadcastInterface
+# Transmit speed of 54 Mbps = 6912kBps
+wifiInterface.transmitSpeed = 6912k
+# Range 100 m (330 ft) outdoors
+wifiInterface.transmitRange = 100
+
+## Group and movement model specific settings
+# Common settings for all groups     
+Group.nrofHosts = 0
+Group.router = EpidemicRouter
+
+# group1 (pedestrians) specific settings
+Group1.nrofHosts = 30
+Group1.bufferSize = 50M
+Group1.movementModel = DangerMovement
+Group1.interface1 = wifiInterface
+Group1.nrofInterfaces = 1
+# Probability for the node to walk at the beginning
+Group1.walkProb = 0.7
+# Minimum time the walking node will walk
+Group1.walkTime = 14500
+# Probability for the node to be selfwarned
+Group1.selfwarnedProb = 0.001
+
+
+## Message creation parameters
+# How many event generators
+Events.nrof = 2
+
+# Danger message generator (for prewarned node)
+Events1.class = DangerMessageGenerator
+Events1.hosts = 0, 29
+Events1.tohosts = 0, 29
+
+# Interval (don't change this) equal to zero, will generate 
+# all messages at the beginning of the simulation
+Events1.interval = 0
+# Probability to be prewarned
+Events1.prewarnedProb = 0.5
+
+# Road accident generator
+Events2.class = AccidentGenerator
+# Time to wait before the first accident
+Events2.delay = 1000
+# Interval between 2 accidents
+Events2.interval = 20, 100
+# Number of accidents to generate
+Events2.nrofAccidents = 30
+
+## Movement model settings
+# seed for movement models' pseudo random number generator 
+# (default = 0)
+MovementModel.rngSeed = 1
+# World's size for Movement Models
+MovementModel.worldSize = 10000, 8000
+# How long time to move hosts in the world before real simulation
+MovementModel.warmup = 0
+
+
+## Map based movement -movement model specific settings
+MapBasedMovement.nrofMapFiles = 1
+MapBasedMovement.mapFile1 = data/HelsinkiMedium/roads.wkt
+
+
+## Points of Interest for the evacuation centers
+PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
+
+
+## Reports - all report names have to be valid report classes
+
+# how many reports to load
+Report.nrofReports = 2
+# length of the warm up period (simulated seconds)
+Report.warmup = 0
+# default directory of reports (can be overridden per Report with output setting)
+Report.reportDir = reports/
+# Report classes to load
+Report.report2 = MovementReportDB
+

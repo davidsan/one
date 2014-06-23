@@ -3,19 +3,18 @@ package movement;
 import core.Settings;
 
 /**
- * A Class to model movement at the nodes' house.
+ * A Class to model movement when the node cannot be saved.
  * 
  * @author Virginie Collombon, David San
  */
-public class HomeMovement extends MapBasedMovement implements
-		SwitchableMovement {
+public class SosMovement extends MapBasedMovement implements SwitchableMovement {
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
 	 * 
 	 * @param settings
 	 *            The Settings object where the settings are read from
 	 */
-	public HomeMovement(Settings settings) {
+	public SosMovement(Settings settings) {
 		super(settings);
 	}
 
@@ -23,23 +22,23 @@ public class HomeMovement extends MapBasedMovement implements
 	 * Copyconstructor.
 	 * 
 	 * @param mbm
-	 *            The HomeMovement prototype to base the new object to
+	 *            The SosMovement prototype to base the new object to
 	 */
-	public HomeMovement(HomeMovement mbm) {
+	public SosMovement(SosMovement mbm) {
 		super(mbm);
 	}
 
 	@Override
 	public Path getPath() {
 		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.HOME_MODE);
+			getHost().setDangerMode(DangerMovement.SOS_MODE);
 		}
 		return new Path();
 	}
 
 	@Override
-	public HomeMovement replicate() {
-		return new HomeMovement(this);
+	public SosMovement replicate() {
+		return new SosMovement(this);
 	}
 
 }

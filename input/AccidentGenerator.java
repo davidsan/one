@@ -14,7 +14,7 @@ public class AccidentGenerator implements EventQueue {
 	public static final String ACCIDENT_INTERVAL_S = "interval";
 	public static final String ACCIDENT_NROF_S = "nrofAccidents";
 	public static final String ACCIDENT_DELAY_S = "delay";
-	
+
 	private double nextEventsTime = 0;
 	/** Interval between accidents (min, max) */
 	private int[] accidentInterval;
@@ -24,7 +24,6 @@ public class AccidentGenerator implements EventQueue {
 	private int count;
 
 	public AccidentGenerator(Settings s) {
-		// accidentProb = s.getDouble(PROBABILITY_OF_ACCIDENT);
 		this.rng = new Random(SimClock.getIntTime());
 		this.accidentInterval = s.getCsvInts(ACCIDENT_INTERVAL_S);
 		this.nrofAccidents = s.getInt(ACCIDENT_NROF_S);
@@ -39,6 +38,9 @@ public class AccidentGenerator implements EventQueue {
 		this.nextEventsTime += accidentInterval[0]
 				+ (accidentInterval[0] == accidentInterval[1] ? 0 : rng
 						.nextInt(accidentInterval[1] - accidentInterval[0]));
+		if (count >= nrofAccidents) {
+			this.nextEventsTime += Double.MAX_VALUE;
+		}
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class AccidentGenerator implements EventQueue {
 		AccidentEvent ae = new AccidentEvent(this.nextEventsTime);
 		this.nextEventsTime += interval;
 		count++;
-		if (count > nrofAccidents) {
+		if (count >= nrofAccidents) {
 			this.nextEventsTime += Double.MAX_VALUE;
 		}
 		return ae;

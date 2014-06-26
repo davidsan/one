@@ -10,7 +10,8 @@ import core.Settings;
  * Danger application to warn other hosts of a danger and to react when receiving
  * a warning message.
  * 
- * @author Virginie Collombon, David San
+ * @author Virginie Collombon
+ * @author David San
  */
 
 public class DangerApplication extends Application {

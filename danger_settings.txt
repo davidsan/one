@@ -20,7 +20,8 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
-Group.router = DangerRouter
+dangerApp.type = DangerApplication
+
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -40,9 +41,13 @@ Group1.selfwarnedProb = 0.00
 Group1.prewarnedProb = 0.2
 # Percentage of warned nodes required to end the simulation
 Group1.maxselfwarnedProb = 0.1
-#Probability of choose a random Poi
+# Probability of choose a random Poi
 Group1.randomPoi = 1.0
-
+# Message router
+Group1.router = EpidemicRouter
+# Nombre d'applications
+Group1.nrofApplications = 1
+Group1.application1 = dangerApp
 
 ## Message creation parameters
 # How many event generators
@@ -56,26 +61,6 @@ Events1.delay = 100
 Events1.interval = 2, 10
 # Number of accidents to generate
 Events1.nrofAccidents = 100
-
-# Message event generator
-#Events2.class = MessageEventGenerator
-# (following settings are specific for the MessageEventGenerator class)
-# Creation interval in seconds (one new message every 25 to 35 seconds)
-#Events2.interval = 25,35
-# Message sizes (500kB - 1MB)
-#Events2.size = 500k,1M
-# range of message source/destination addresses
-#Events2.hosts = 0,29
-# Message ID prefix
-#Events2.prefix = M
-
-# Test message generator
-Events2.class = OneMessageGenerator
-Events2.interval = 0,0
-Events2.size = 500k,1M
-Events2.hosts = 0,29
-Events2.tohosts = 0,29
-Events2.prefix = TEST
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

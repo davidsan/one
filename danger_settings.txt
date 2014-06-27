@@ -20,8 +20,9 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
-dangerApp.type = DangerApplication
 
+# Applications
+dangerApp.type = DangerApplication
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -51,7 +52,7 @@ Group1.application1 = dangerApp
 
 ## Message creation parameters
 # How many event generators
-Events.nrof = 2
+Events.nrof = 1
 
 # Road accident generator
 Events1.class = AccidentGenerator
@@ -61,6 +62,7 @@ Events1.delay = 100
 Events1.interval = 2, 10
 # Number of accidents to generate
 Events1.nrofAccidents = 300
+
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 

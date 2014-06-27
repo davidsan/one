@@ -20,7 +20,8 @@ wifiInterface.transmitRange = 100
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
-Group.router = DangerRouter
+dangerApp.type = DangerApplication
+
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -40,9 +41,13 @@ Group1.selfwarnedProb = 0.00
 Group1.prewarnedProb = 0.2
 # Percentage of warned nodes required to end the simulation
 Group1.maxselfwarnedProb = 0.1
-#Probability of choose a random Poi
+# Probability of choose a random Poi
 Group1.randomPoi = 1.0
-
+# Message router
+Group1.router = EpidemicRouter
+# Nombre d'applications
+Group1.nrofApplications = 1
+Group1.application1 = dangerApp
 
 ## Message creation parameters
 # How many event generators

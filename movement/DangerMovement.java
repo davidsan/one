@@ -4,10 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import movement.map.MapNode;
-import routing.DangerRouter;
 import core.Coord;
 import core.DTNHost;
-import core.Message;
 import core.Settings;
 import core.SimClock;
 import core.SimScenario;
@@ -138,12 +136,10 @@ public class DangerMovement extends ExtendedMovementModel {
 				break;
 			}
 			// check for danger message
-			for (Message m : this.host.getMessageCollection()) {
-				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
-					mode = SHORT_MODE;
-					setCurrentMovementModel(shortMM);
-					break;
-				}
+			if(host.isWarned()){
+				mode = SHORT_MODE;
+				setCurrentMovementModel(shortMM);
+				break;
 			}
 			// selfwarn
 			if (rng.nextDouble() < selfwarnedProb) {
@@ -197,13 +193,10 @@ public class DangerMovement extends ExtendedMovementModel {
 				mode = HOME_MODE;
 				setCurrentMovementModel(homeMM);
 			}
-			for (Message m : this.host.getMessageCollection()) {
-				if (m.getProperty(DangerRouter.KEY_MESSAGE) != null) {
-					shortMM.setLocation(host.getLocation());
-					mode = SHORT_MODE;
-					setCurrentMovementModel(shortMM);
-					break;
-				}
+			if(host.isWarned()){
+				mode = SHORT_MODE;
+				setCurrentMovementModel(shortMM);
+				break;
 			}
 			break;
 		default:

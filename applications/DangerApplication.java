@@ -1,10 +1,6 @@
 
 package applications;
 
-import java.awt.List;
-import java.sql.Time;
-import java.util.ArrayList;
-
 import core.Application;
 import core.Connection;
 import core.DTNHost;

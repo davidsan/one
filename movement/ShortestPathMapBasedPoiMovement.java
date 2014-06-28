@@ -29,7 +29,6 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	private double randomPoiProb;
 	private boolean chooseRandomPoi;
 	private List<MapNode> nodePath;
-	private static int nrofComputations = 0;
 
 	/**
 	 * Creates a new movement model based on a Settings object's settings.
@@ -70,18 +69,14 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
-		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.SHORT_MODE);
-		}
+		getHost().setDangerMode(DangerMovement.SHORT_MODE);
 		Path p = new Path(generateSpeed());
 
-		boolean discovery = false;
 		// discover accidents among the neighbors of the current node
 		for (MapNode neighbor : lastMapNode.getNeighbors()) {
 			if (neighbor.isClosed()) {
 				// discovery
 				host.addAccidentAt(neighbor);
-				discovery = true;
 			}
 		}
 
@@ -92,10 +87,10 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		}
 
 		// if the path was not computed
-		if (nodePath == null || nodePath.isEmpty() || discovery) {
-			nrofComputations++;
-			// System.err.println("Calcul #" + nrofComputations);
+		if (nodePath == null || nodePath.isEmpty()
+				|| getHost().isRecalculatingRoute()) {
 			nodePath = pathFinder.getShortestPath(lastMapNode, to);
+			getHost().setRecalculatingRoute(false);
 		} else {
 			// existing node path, we pop the head
 			nodePath.remove(0);

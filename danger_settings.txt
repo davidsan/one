@@ -23,6 +23,7 @@ Group.nrofHosts = 0
 
 # Applications
 dangerApp.type = DangerApplication
+dangerApp.interval = 1000
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30

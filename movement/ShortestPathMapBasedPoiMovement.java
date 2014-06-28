@@ -93,7 +93,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 
 		// if the path was not computed
 		if (nodePath == null || nodePath.isEmpty() || discovery) {
-			System.err.println("Calcul #" + nrofComputations++);
+			nrofComputations++;
+			// System.err.println("Calcul #" + nrofComputations);
 			nodePath = pathFinder.getShortestPath(lastMapNode, to);
 		} else {
 			// existing node path, we pop the head

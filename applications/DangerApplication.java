@@ -24,6 +24,8 @@ public class DangerApplication extends Application {
 
 	/** Message sending interval */
 	public static final String SEND_INTERVAL = "interval";
+	/** Message size */
+	public static final String MESSAGE_SIZE = "size";
 
 	/** Application ID */
 	public static final String APP_ID = "applications.DangerApplication";
@@ -35,6 +37,8 @@ public class DangerApplication extends Application {
 	private Map<DTNHost, Double> hostDelayMap;
 	// Message sending interval between two connected nodes
 	private double sendInterval = 500;
+	// Message size
+	private int messageSize = 10;
 
 	/**
 	 * Creates a new danger application with the given settings.
@@ -45,6 +49,9 @@ public class DangerApplication extends Application {
 	public DangerApplication(Settings s) {
 		if (s.contains(SEND_INTERVAL)) {
 			this.sendInterval = s.getDouble(SEND_INTERVAL);
+		}
+		if (s.contains(MESSAGE_SIZE)) {
+			this.sendInterval = s.getInt(MESSAGE_SIZE);
 		}
 		this.hostDelayMap = new HashMap<DTNHost, Double>();
 		super.setAppID(APP_ID);
@@ -58,6 +65,7 @@ public class DangerApplication extends Application {
 	public DangerApplication(DangerApplication a) {
 		super(a);
 		this.sendInterval = a.getSendInterval();
+		this.messageSize = a.getMessageSize();
 		this.hostDelayMap = new HashMap<DTNHost, Double>();
 	}
 
@@ -118,12 +126,13 @@ public class DangerApplication extends Application {
 						+ " vers " + h.getAddress());
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
-						+ SimClock.getIntTime() + "-" + host.getAddress(), 10);
-				
+						+ SimClock.getIntTime() + "-" + host.getAddress(),
+						messageSize);
+
 				if (host.isWarned()) {
 					m.addProperty(DANGER_KEY_MESSAGE, true);
 				}
-				
+
 				m.setAppID(APP_ID);
 				host.createNewMessage(m);
 				super.sendEventToListeners("SentDanger", null, host);
@@ -140,4 +149,11 @@ public class DangerApplication extends Application {
 		return sendInterval;
 	}
 
+	/**
+	 * 
+	 * @return message size
+	 */
+	public int getMessageSize() {
+		return messageSize;
+	}
 }

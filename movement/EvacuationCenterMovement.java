@@ -31,9 +31,7 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
-		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.EVAC_MODE);
-		}
+		getHost().setDangerMode(DangerMovement.EVAC_MODE);
 		Path p = new Path();
 
 		// // generate (x,y) within the circle of radius 250

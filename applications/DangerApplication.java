@@ -106,25 +106,28 @@ public class DangerApplication extends Application {
 				disconnectedHosts.add(h);
 			}
 		}
+
 		for (DTNHost h : disconnectedHosts) {
 			hostDelayMap.remove(h);
 		}
 
-		if (host.isWarned()) {
-			for (Connection c : connections) {
-				DTNHost h = c.getOtherNode(host);
-				if (!hostDelayMap.containsKey(h)) {
-					System.err.println("Creation message de "
-							+ host.getAddress() + " vers " + h.getAddress());
-					hostDelayMap.put(h, SimClock.getTime());
-					Message m = new Message(host, h, "danger"
-							+ SimClock.getIntTime() + "-" + host.getAddress(),
-							10);
+		for (Connection c : connections) {
+			DTNHost h = c.getOtherNode(host);
+			if (!hostDelayMap.containsKey(h)) {
+				System.err.println("Creation message de " + host.getAddress()
+						+ " vers " + h.getAddress());
+				hostDelayMap.put(h, SimClock.getTime());
+				Message m = new Message(host, h, "danger"
+						+ SimClock.getIntTime() + "-" + host.getAddress(), 10);
+				
+				if (host.isWarned()) {
 					m.addProperty(DANGER_KEY_MESSAGE, true);
-					m.setAppID(APP_ID);
-					host.createNewMessage(m);
-					super.sendEventToListeners("SentDanger", null, host);
 				}
+				
+				m.setAppID(APP_ID);
+				host.createNewMessage(m);
+				super.sendEventToListeners("SentDanger", null, host);
+
 			}
 		}
 	}

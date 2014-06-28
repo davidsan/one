@@ -39,7 +39,7 @@ public class DangerApplication extends Application {
 
 	/** Known Location Key Message */
 	public static final String KNOWN_LOCATIONS_KEY_MESSAGE = "KNOWN_LOCATIONS";
-	
+
 	/** Known Accidents Key Message */
 	public static final String KNOWN_ACCIDENTS_KEY_MESSAGE = "KNOWN_ACCIDENTS";
 
@@ -90,7 +90,7 @@ public class DangerApplication extends Application {
 	 */
 	@Override
 	public Message handle(Message msg, DTNHost host) {
-		
+
 		/* Warning flag handling */
 		if (msg.getProperty(DANGER_KEY_MESSAGE) != null) {
 			host.setWarned(true);
@@ -110,16 +110,16 @@ public class DangerApplication extends Application {
 				host.updateKnownLocations(hostMsg, c, stamp);
 			}
 		}
-		
+
 		/* Updating list of known accidents */
 		if (msg.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE) != null) {
 			@SuppressWarnings("unchecked")
-			Set<MapNode> knownAccidentsMsg = (Set<MapNode>) msg.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE);
+			Set<MapNode> knownAccidentsMsg = (Set<MapNode>) msg
+					.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE);
 			for (MapNode node : knownAccidentsMsg) {
 				host.addAccidentAt(node);
 			}
 		}
-
 
 		return msg;
 	}
@@ -167,7 +167,6 @@ public class DangerApplication extends Application {
 						+ SimClock.getIntTime() + "-" + host.getAddress(),
 						messageSize);
 
-
 				/* Add warning flag if host is warned */
 				if (host.isWarned()) {
 					m.addProperty(DANGER_KEY_MESSAGE, true);
@@ -178,11 +177,10 @@ public class DangerApplication extends Application {
 				m.addProperty(KNOWN_LOCATIONS_KEY_MESSAGE,
 						host.getKnownLocations());
 
-
 				/* Add known accidents in the message */
 				m.addProperty(KNOWN_ACCIDENTS_KEY_MESSAGE,
-						host.getKnownLocations());
-				
+						host.getKnownAccidents());
+
 				m.setAppID(APP_ID);
 				host.createNewMessage(m);
 				super.sendEventToListeners("SentDanger", null, host);

@@ -31,9 +31,7 @@ public class HomeMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
-		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.HOME_MODE);
-		}
+		getHost().setDangerMode(DangerMovement.HOME_MODE);
 		return new Path();
 	}
 

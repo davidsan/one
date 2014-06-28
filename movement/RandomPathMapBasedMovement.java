@@ -57,9 +57,7 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 
 	@Override
 	public Path getPath() {
-		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.WALK_MODE);
-		}
+		getHost().setDangerMode(DangerMovement.WALK_MODE);
 		Path p = new Path(generateSpeed());
 
 		boolean discovery = false;

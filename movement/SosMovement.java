@@ -30,9 +30,7 @@ public class SosMovement extends MapBasedMovement implements SwitchableMovement 
 
 	@Override
 	public Path getPath() {
-		if (!(getHost() == null)) {
-			getHost().setDangerMode(DangerMovement.SOS_MODE);
-		}
+		getHost().setDangerMode(DangerMovement.SOS_MODE);
 		return new Path();
 	}
 

@@ -1,16 +1,25 @@
-
 package applications;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import movement.DangerMovement;
+import movement.map.MapNode;
+import util.Tuple;
 import core.Application;
 import core.Connection;
+import core.Coord;
 import core.DTNHost;
 import core.Message;
 import core.Settings;
 import core.SimClock;
 
 /**
- * Danger application to warn other hosts of a danger and to react when receiving
- * a warning message.
+ * Danger application to warn other hosts of a danger and to react when
+ * receiving a warning message.
  * 
  * @author Virginie Collombon
  * @author David San
@@ -18,40 +27,109 @@ import core.SimClock;
 
 public class DangerApplication extends Application {
 
+	/** Message sending interval */
+	public static final String SEND_INTERVAL = "interval";
+	/** Message size */
+	public static final String MESSAGE_SIZE = "size";
+
 	/** Application ID */
 	public static final String APP_ID = "applications.DangerApplication";
 
-	public static final String KEY_MESSAGE = "DANGER";
-	
-	/** 
+	/** Danger Key Message */
+	public static final String DANGER_KEY_MESSAGE = "DANGER";
+
+	/** Known Location Key Message */
+	public static final String KNOWN_LOCATIONS_KEY_MESSAGE = "KNOWN_LOCATIONS";
+
+	/** Known Accidents Key Message */
+	public static final String KNOWN_ACCIDENTS_KEY_MESSAGE = "KNOWN_ACCIDENTS";
+
+	// Private vars
+	private Map<DTNHost, Double> hostDelayMap;
+	// Message sending interval between two connected nodes
+	private double sendInterval = 500;
+	// Message size
+	private int messageSize = 10;
+
+	private static int uid = 0;
+
+	/**
 	 * Creates a new danger application with the given settings.
-	 * @param s	Settings to use for initializing the application.
+	 * 
+	 * @param s
+	 *            Settings to use for initializing the application.
 	 */
 	public DangerApplication(Settings s) {
+		if (s.contains(SEND_INTERVAL)) {
+			this.sendInterval = s.getDouble(SEND_INTERVAL);
+		}
+		if (s.contains(MESSAGE_SIZE)) {
+			this.sendInterval = s.getInt(MESSAGE_SIZE);
+		}
+		this.hostDelayMap = new HashMap<DTNHost, Double>();
 		super.setAppID(APP_ID);
 	}
-	
-	/** 
+
+	/**
 	 * Copy-constructor
+	 * 
 	 * @param a
 	 */
 	public DangerApplication(DangerApplication a) {
 		super(a);
+		this.sendInterval = a.getSendInterval();
+		this.messageSize = a.getMessageSize();
+		this.hostDelayMap = new HashMap<DTNHost, Double>();
 	}
-	
-	/** 
-	 * Handles an incoming message. If the message is a warning message 
-	 * sets the host warned boolean.
+
+	/**
+	 * Handles an incoming message. If the message is a warning message sets the
+	 * host warned boolean.
 	 * 
-	 * @param msg	message received by the router
-	 * @param host	host to which the application instance is attached
+	 * @param msg
+	 *            message received by the router
+	 * @param host
+	 *            host to which the application instance is attached
 	 */
 	@Override
 	public Message handle(Message msg, DTNHost host) {
-		if(msg.getProperty(KEY_MESSAGE) != null){
+
+		/* direct drop the message if host is at evacuation center */
+		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
+			return null;
+		}
+
+		/* Warning flag handling */
+		if (msg.getProperty(DANGER_KEY_MESSAGE) != null) {
 			host.setWarned(true);
 		}
-		return msg;
+
+		/* Updating known locations map */
+		if (msg.getProperty(KNOWN_LOCATIONS_KEY_MESSAGE) != null) {
+			// System.err.println("[debug] node " + host.getAddress()
+			// + " receive 1 message with his known locations");
+			@SuppressWarnings("unchecked")
+			Map<DTNHost, Tuple<Coord, Integer>> knownLocationsMsg = (Map<DTNHost, Tuple<Coord, Integer>>) msg
+					.getProperty(KNOWN_LOCATIONS_KEY_MESSAGE);
+			// add map B element or update if already in map res
+			for (DTNHost hostMsg : knownLocationsMsg.keySet()) {
+				Coord c = knownLocationsMsg.get(hostMsg).getKey();
+				int stamp = knownLocationsMsg.get(hostMsg).getValue();
+				host.updateKnownLocations(hostMsg, c, stamp);
+			}
+		}
+
+		/* Updating list of known accidents */
+		if (msg.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE) != null) {
+			@SuppressWarnings("unchecked")
+			Set<MapNode> knownAccidentsMsg = (Set<MapNode>) msg
+					.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE);
+			for (MapNode node : knownAccidentsMsg) {
+				host.addAccidentAt(node);
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -59,22 +137,119 @@ public class DangerApplication extends Application {
 		return new DangerApplication(this);
 	}
 
-	/** 
+	/**
 	 * Creates warning message for other hosts in range
 	 * 
-	 * @param host to which the application instance is attached
+	 * @param host
+	 *            to which the application instance is attached
 	 */
 	@Override
 	public void update(DTNHost host) {
-		if(host.isWarned()){
-			for (Connection c : host.getConnections()) {
-				DTNHost h = c.getOtherNode(host);
-				Message m = new Message(host, h, "danger" + SimClock.getIntTime() + "-" + host.getAddress(), 10);
-				m.addProperty(KEY_MESSAGE, true);
+
+		/* do nothing if host is at evacuation center */
+		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
+			return;
+		}
+
+		List<Connection> connections = host.getConnections();
+		List<DTNHost> connectedHosts = new ArrayList<DTNHost>();
+		List<DTNHost> disconnectedHosts = new ArrayList<DTNHost>();
+		for (Connection connection : connections) {
+			connectedHosts.add(connection.getOtherNode(host));
+		}
+
+		// remove disconnected host from hash
+		// also remove host with expired timer
+		for (DTNHost h : hostDelayMap.keySet()) {
+			if (!connectedHosts.contains(h)
+					|| SimClock.getTime() - hostDelayMap.get(h) >= sendInterval) {
+				disconnectedHosts.add(h);
+			}
+		}
+
+		for (DTNHost h : disconnectedHosts) {
+			hostDelayMap.remove(h);
+		}
+
+		for (Connection c : connections) {
+			DTNHost h = c.getOtherNode(host);
+			if (!hostDelayMap.containsKey(h)) {
+				System.err.println("Message from " + host.getAddress() + " to "
+						+ h.getAddress());
+				hostDelayMap.put(h, SimClock.getTime());
+				Message m = new Message(host, h, "danger"
+						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"
+						+ uid++, messageSize);				
+
+				/* Add warning flag if host is warned */
+				if (host.isWarned()) {
+					m.addProperty(DANGER_KEY_MESSAGE, true);
+				}
+
+				/* Add known locations in the message */
+				host.updateSelfKnownLocation();
+				m.addProperty(KNOWN_LOCATIONS_KEY_MESSAGE,
+						host.getKnownLocations());
+
+				/* Add known accidents in the message */
+				m.addProperty(KNOWN_ACCIDENTS_KEY_MESSAGE,
+						host.getKnownAccidents());
+
 				m.setAppID(APP_ID);
 				host.createNewMessage(m);
 				super.sendEventToListeners("SentDanger", null, host);
+
 			}
 		}
+	}
+
+	/**
+	 * Merge the two maps based on stamp value.
+	 * 
+	 * @param a
+	 *            first map
+	 * @param b
+	 *            second map
+	 * @return merge of the two maps based on stamp value
+	 */
+	@Deprecated
+	Map<DTNHost, Tuple<Coord, Integer>> computeMostRecentKnownLocations(
+			Map<DTNHost, Tuple<Coord, Integer>> a,
+			Map<DTNHost, Tuple<Coord, Integer>> b) {
+		Map<DTNHost, Tuple<Coord, Integer>> res = new HashMap<DTNHost, Tuple<Coord, Integer>>();
+
+		// clone the map A
+		for (DTNHost ha : a.keySet()) {
+			// ha doesn't need cloning
+			res.put(ha, new Tuple<Coord, Integer>(a.get(ha).getKey(), a.get(ha)
+					.getValue()));
+		}
+
+		// add map B element or update if already in map res
+		for (DTNHost hb : b.keySet()) {
+			if (!res.containsKey(hb)
+					|| res.get(hb).getValue() < b.get(hb).getValue()) {
+				res.put(hb, new Tuple<Coord, Integer>(b.get(hb).getKey(), b
+						.get(hb).getValue()));
+			}
+		}
+
+		return res;
+	}
+
+	/**
+	 * 
+	 * @return message sending interval between two connected nodes
+	 */
+	public double getSendInterval() {
+		return sendInterval;
+	}
+
+	/**
+	 * 
+	 * @return message size
+	 */
+	public int getMessageSize() {
+		return messageSize;
 	}
 }

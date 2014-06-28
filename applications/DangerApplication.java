@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import movement.DangerMovement;
 import movement.map.MapNode;
 import util.Tuple;
 import core.Application;
@@ -50,6 +51,8 @@ public class DangerApplication extends Application {
 	// Message size
 	private int messageSize = 10;
 
+	private static int uid = 0;
+
 	/**
 	 * Creates a new danger application with the given settings.
 	 * 
@@ -91,6 +94,11 @@ public class DangerApplication extends Application {
 	@Override
 	public Message handle(Message msg, DTNHost host) {
 
+		/* direct drop the message if host is at evacuation center */
+		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
+			return null;
+		}
+
 		/* Warning flag handling */
 		if (msg.getProperty(DANGER_KEY_MESSAGE) != null) {
 			host.setWarned(true);
@@ -121,7 +129,7 @@ public class DangerApplication extends Application {
 			}
 		}
 
-		return msg;
+		return null;
 	}
 
 	@Override
@@ -137,6 +145,12 @@ public class DangerApplication extends Application {
 	 */
 	@Override
 	public void update(DTNHost host) {
+
+		/* do nothing if host is at evacuation center */
+		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
+			return;
+		}
+
 		List<Connection> connections = host.getConnections();
 		List<DTNHost> connectedHosts = new ArrayList<DTNHost>();
 		List<DTNHost> disconnectedHosts = new ArrayList<DTNHost>();
@@ -164,8 +178,8 @@ public class DangerApplication extends Application {
 						+ h.getAddress());
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
-						+ SimClock.getIntTime() + "-" + host.getAddress(),
-						messageSize);
+						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"
+						+ uid++, messageSize);				
 
 				/* Add warning flag if host is warned */
 				if (host.isWarned()) {

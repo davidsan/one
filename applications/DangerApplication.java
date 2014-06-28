@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import movement.map.MapNode;
 import util.Tuple;
 import core.Application;
 import core.Connection;
@@ -37,6 +39,9 @@ public class DangerApplication extends Application {
 
 	/** Known Location Key Message */
 	public static final String KNOWN_LOCATIONS_KEY_MESSAGE = "KNOWN_LOCATIONS";
+	
+	/** Known Accidents Key Message */
+	public static final String KNOWN_ACCIDENTS_KEY_MESSAGE = "KNOWN_ACCIDENTS";
 
 	// Private vars
 	private Map<DTNHost, Double> hostDelayMap;
@@ -85,10 +90,13 @@ public class DangerApplication extends Application {
 	 */
 	@Override
 	public Message handle(Message msg, DTNHost host) {
+		
+		/* Warning flag handling */
 		if (msg.getProperty(DANGER_KEY_MESSAGE) != null) {
 			host.setWarned(true);
 		}
 
+		/* Updating known locations map */
 		if (msg.getProperty(KNOWN_LOCATIONS_KEY_MESSAGE) != null) {
 			// System.err.println("[debug] node " + host.getAddress()
 			// + " receive 1 message with his known locations");
@@ -102,6 +110,16 @@ public class DangerApplication extends Application {
 				host.updateKnownLocations(hostMsg, c, stamp);
 			}
 		}
+		
+		/* Updating list of known accidents */
+		if (msg.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE) != null) {
+			@SuppressWarnings("unchecked")
+			Set<MapNode> knownAccidentsMsg = (Set<MapNode>) msg.getProperty(KNOWN_ACCIDENTS_KEY_MESSAGE);
+			for (MapNode node : knownAccidentsMsg) {
+				host.addAccidentAt(node);
+			}
+		}
+
 
 		return msg;
 	}
@@ -149,14 +167,22 @@ public class DangerApplication extends Application {
 						+ SimClock.getIntTime() + "-" + host.getAddress(),
 						messageSize);
 
+
+				/* Add warning flag if host is warned */
 				if (host.isWarned()) {
 					m.addProperty(DANGER_KEY_MESSAGE, true);
 				}
 
+				/* Add known locations in the message */
 				host.updateSelfKnownLocation();
 				m.addProperty(KNOWN_LOCATIONS_KEY_MESSAGE,
 						host.getKnownLocations());
 
+
+				/* Add known accidents in the message */
+				m.addProperty(KNOWN_ACCIDENTS_KEY_MESSAGE,
+						host.getKnownLocations());
+				
 				m.setAppID(APP_ID);
 				host.createNewMessage(m);
 				super.sendEventToListeners("SentDanger", null, host);

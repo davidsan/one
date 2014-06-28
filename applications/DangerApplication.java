@@ -5,8 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import util.Tuple;
 import core.Application;
 import core.Connection;
+import core.Coord;
 import core.DTNHost;
 import core.Message;
 import core.Settings;
@@ -32,6 +34,9 @@ public class DangerApplication extends Application {
 
 	/** Danger Key Message */
 	public static final String DANGER_KEY_MESSAGE = "DANGER";
+
+	/** Known Location Key Message */
+	public static final String KNOWN_LOCATIONS_KEY_MESSAGE = "KNOWN_LOCATIONS";
 
 	// Private vars
 	private Map<DTNHost, Double> hostDelayMap;
@@ -83,6 +88,21 @@ public class DangerApplication extends Application {
 		if (msg.getProperty(DANGER_KEY_MESSAGE) != null) {
 			host.setWarned(true);
 		}
+
+		if (msg.getProperty(KNOWN_LOCATIONS_KEY_MESSAGE) != null) {
+			// System.err.println("[debug] node " + host.getAddress()
+			// + " receive 1 message with his known locations");
+			@SuppressWarnings("unchecked")
+			Map<DTNHost, Tuple<Coord, Integer>> knownLocationsMsg = (Map<DTNHost, Tuple<Coord, Integer>>) msg
+					.getProperty(KNOWN_LOCATIONS_KEY_MESSAGE);
+			// add map B element or update if already in map res
+			for (DTNHost hostMsg : knownLocationsMsg.keySet()) {
+				Coord c = knownLocationsMsg.get(hostMsg).getKey();
+				int stamp = knownLocationsMsg.get(hostMsg).getValue();
+				host.updateKnownLocations(hostMsg, c, stamp);
+			}
+		}
+
 		return msg;
 	}
 
@@ -122,8 +142,8 @@ public class DangerApplication extends Application {
 		for (Connection c : connections) {
 			DTNHost h = c.getOtherNode(host);
 			if (!hostDelayMap.containsKey(h)) {
-				System.err.println("Creation message de " + host.getAddress()
-						+ " vers " + h.getAddress());
+				System.err.println("Message from " + host.getAddress() + " to "
+						+ h.getAddress());
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
 						+ SimClock.getIntTime() + "-" + host.getAddress(),
@@ -133,12 +153,50 @@ public class DangerApplication extends Application {
 					m.addProperty(DANGER_KEY_MESSAGE, true);
 				}
 
+				host.updateSelfKnownLocation();
+				m.addProperty(KNOWN_LOCATIONS_KEY_MESSAGE,
+						host.getKnownLocations());
+
 				m.setAppID(APP_ID);
 				host.createNewMessage(m);
 				super.sendEventToListeners("SentDanger", null, host);
 
 			}
 		}
+	}
+
+	/**
+	 * Merge the two maps based on stamp value.
+	 * 
+	 * @param a
+	 *            first map
+	 * @param b
+	 *            second map
+	 * @return merge of the two maps based on stamp value
+	 */
+	@Deprecated
+	Map<DTNHost, Tuple<Coord, Integer>> computeMostRecentKnownLocations(
+			Map<DTNHost, Tuple<Coord, Integer>> a,
+			Map<DTNHost, Tuple<Coord, Integer>> b) {
+		Map<DTNHost, Tuple<Coord, Integer>> res = new HashMap<DTNHost, Tuple<Coord, Integer>>();
+
+		// clone the map A
+		for (DTNHost ha : a.keySet()) {
+			// ha doesn't need cloning
+			res.put(ha, new Tuple<Coord, Integer>(a.get(ha).getKey(), a.get(ha)
+					.getValue()));
+		}
+
+		// add map B element or update if already in map res
+		for (DTNHost hb : b.keySet()) {
+			if (!res.containsKey(hb)
+					|| res.get(hb).getValue() < b.get(hb).getValue()) {
+				res.put(hb, new Tuple<Coord, Integer>(b.get(hb).getKey(), b
+						.get(hb).getValue()));
+			}
+		}
+
+		return res;
 	}
 
 	/**

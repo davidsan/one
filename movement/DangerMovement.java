@@ -175,8 +175,8 @@ public class DangerMovement extends ExtendedMovementModel {
 					warnedHosts.add(getHost());
 					int nrofRequired = (int) (nrofHostToWarn - warnedHosts
 							.size());
-					System.err.println(getHost().getAddress()
-							+ " is at evac center. " + nrofRequired + " more to go.");
+					// System.err.println(getHost().getAddress()
+					// + " is at evac center. " + nrofRequired + " more to go.");
 				}
 			}
 			break;

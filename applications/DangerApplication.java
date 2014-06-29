@@ -174,8 +174,9 @@ public class DangerApplication extends Application {
 		for (Connection c : connections) {
 			DTNHost h = c.getOtherNode(host);
 			if (!hostDelayMap.containsKey(h)) {
-				System.err.println("Message from " + host.getAddress() + " to "
-						+ h.getAddress());
+				// System.err.println("Message from " + host.getAddress() +
+				// " to "
+				// + h.getAddress());
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
 						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"

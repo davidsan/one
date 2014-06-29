@@ -60,11 +60,55 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 					statement.setInt(2, host.getAddress());
 					statement.setDouble(3, host.getLocation().getX());
 					statement.setDouble(4, host.getLocation().getY());
+					statement.setInt(5, -1);
+					statement.setDouble(6, -1);
+					statement.setDouble(7, -1);
+					statement.setInt(8, -1);
 					statement.addBatch();
-					if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
-						System.err.println("executeBatch @"+time);
-						statement.executeBatch();
-						batchCount = 0;
+					System.out.println(time.intValue() + ";"
+							+ host.getAddress() + ";"
+							+ host.getLocation().getX() + ";"
+							+ host.getLocation().getY() + ";" + -1 + ";" + -1
+							+ ";" + -1 + ";" + -1);
+					for (DTNHost knownHost : host.getKnownLocations().keySet()) {
+						statement.setDouble(1, time);
+						statement.setInt(2, host.getAddress());
+						statement.setDouble(3, host.getLocation().getX());
+						statement.setDouble(4, host.getLocation().getY());
+						statement.setInt(5, knownHost.getAddress());
+						statement.setDouble(6,
+								host.getKnownLocations().get(knownHost)
+										.getKey().getX());
+						statement.setDouble(7,
+								host.getKnownLocations().get(knownHost)
+										.getKey().getY());
+						statement.setInt(8,
+								host.getKnownLocations().get(knownHost)
+										.getValue());
+						statement.addBatch();
+						System.out.println(time.intValue()
+								+ ";"
+								+ host.getAddress()
+								+ ";"
+								+ host.getLocation().getX()
+								+ ";"
+								+ host.getLocation().getY()
+								+ ";"
+								+ knownHost.getAddress()
+								+ ";"
+								+ host.getKnownLocations().get(knownHost)
+										.getKey().getX()
+								+ ";"
+								+ host.getKnownLocations().get(knownHost)
+										.getKey().getY()
+								+ ";"
+								+ host.getKnownLocations().get(knownHost)
+										.getValue());
+						if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
+							// System.err.println("executeBatch @" + time);
+							statement.executeBatch();
+							batchCount = 0;
+						}
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();

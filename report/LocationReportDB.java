@@ -56,54 +56,37 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 			Double time = getSimTime();
 			for (DTNHost host : hosts) {
 				try {
-					statement.setDouble(1, time);
-					statement.setInt(2, host.getAddress());
-					statement.setDouble(3, host.getLocation().getX());
-					statement.setDouble(4, host.getLocation().getY());
-					statement.setInt(5, -1);
-					statement.setDouble(6, -1);
-					statement.setDouble(7, -1);
-					statement.setInt(8, -1);
-					statement.addBatch();
-					System.out.println(time.intValue() + ";"
-							+ host.getAddress() + ";"
-							+ host.getLocation().getX() + ";"
-							+ host.getLocation().getY() + ";" + -1 + ";" + -1
-							+ ";" + -1 + ";" + -1);
+					/* manually update his own location */
+					host.updateSelfKnownLocation();
+
 					for (DTNHost knownHost : host.getKnownLocations().keySet()) {
+						int address = host.getAddress();
+						int knownHostAddress = knownHost.getAddress();
+						double knownHostLocationX = knownHost.getLocation()
+								.getX();
+						double knownHostLocationY = knownHost.getLocation()
+								.getY();
+						int stamp = host.getKnownLocations().get(knownHost)
+								.getValue();
+
 						statement.setDouble(1, time);
-						statement.setInt(2, host.getAddress());
-						statement.setDouble(3, host.getLocation().getX());
-						statement.setDouble(4, host.getLocation().getY());
-						statement.setInt(5, knownHost.getAddress());
-						statement.setDouble(6,
-								host.getKnownLocations().get(knownHost)
-										.getKey().getX());
-						statement.setDouble(7,
-								host.getKnownLocations().get(knownHost)
-										.getKey().getY());
-						statement.setInt(8,
-								host.getKnownLocations().get(knownHost)
-										.getValue());
+						statement.setInt(2, address);
+						statement.setInt(3, knownHostAddress);
+						statement.setDouble(4, knownHostLocationX);
+						statement.setDouble(5, knownHostLocationY);
+						statement.setInt(6, stamp);
 						statement.addBatch();
-						System.out.println(time.intValue()
-								+ ";"
-								+ host.getAddress()
-								+ ";"
-								+ host.getLocation().getX()
-								+ ";"
-								+ host.getLocation().getY()
-								+ ";"
-								+ knownHost.getAddress()
-								+ ";"
-								+ host.getKnownLocations().get(knownHost)
-										.getKey().getX()
-								+ ";"
-								+ host.getKnownLocations().get(knownHost)
-										.getKey().getY()
-								+ ";"
-								+ host.getKnownLocations().get(knownHost)
-										.getValue());
+
+						StringBuilder csvBuilder = new StringBuilder();
+						csvBuilder.append(time + ";");
+						csvBuilder.append(address + ";");
+						csvBuilder.append(knownHostAddress + ";");
+						csvBuilder.append(knownHostLocationX + ";");
+						csvBuilder.append(knownHostLocationY + ";");
+						csvBuilder.append(stamp);
+
+						System.out.println(csvBuilder.toString());
+
 						if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
 							// System.err.println("executeBatch @" + time);
 							statement.executeBatch();

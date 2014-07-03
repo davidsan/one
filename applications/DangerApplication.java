@@ -66,7 +66,7 @@ public class DangerApplication extends Application {
 			this.sendInterval = s.getDouble(SEND_INTERVAL);
 		}
 		if (s.contains(MESSAGE_SIZE)) {
-			this.sendInterval = s.getInt(MESSAGE_SIZE);
+			this.messageSize = s.getInt(MESSAGE_SIZE);
 		}
 		this.hostDelayMap = new HashMap<DTNHost, Double>();
 		super.setAppID(APP_ID);

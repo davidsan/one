@@ -87,7 +87,7 @@ PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 3
+Report.nrofReports = 4
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 # default directory of reports (can be overridden per Report with output setting)
@@ -98,4 +98,5 @@ Report.report2 = MovementReportDB
 Report.updateRate = 1000
 # Report location
 Report.report3 = LocationReportDB
-
+# Report Time
+Report.report4 = TimeReportDB

@@ -11,11 +11,11 @@ import core.SimScenario;
 import core.UpdateListener;
 import db.Queries;
 
-public class TimeReport extends ReportDB implements UpdateListener {
+public class TimeReportDB extends ReportDB implements UpdateListener {
 
 	protected PreparedStatement statement;
 
-	public TimeReport() {
+	public TimeReportDB() {
 		super();
 	}
 
@@ -51,6 +51,8 @@ public class TimeReport extends ReportDB implements UpdateListener {
 			statement.setInt(3, nbOfDTNHosts);
 			statement.setInt(4, nbOfMessages);
 			statement.setDouble(5, (1.0 * nbOfMessages) / nbOfDTNHosts);
+			statement.executeUpdate();
+			statement.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();

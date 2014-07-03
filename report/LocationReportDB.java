@@ -85,7 +85,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 						csvBuilder.append(knownHostLocationY + ";");
 						csvBuilder.append(stamp);
 
-						System.out.println(csvBuilder.toString());
+						// System.out.println(csvBuilder.toString());
 
 						if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
 							// System.err.println("executeBatch @" + time);

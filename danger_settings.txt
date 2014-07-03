@@ -62,10 +62,10 @@ Events.nrof = 1
 Events1.class = AccidentGenerator
 # Time to wait before the first accident
 Events1.delay = 0
-# Interval between 2 accidents
-Events1.interval = 2, 10
+# Probability of accident per step of sim
+Events1.accidentProb = 1.0
 # Number of accidents to generate
-Events1.nrofAccidents = 300
+Events1.nrofAccidents = 10
 
 
 ## Movement model settings

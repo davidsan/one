@@ -53,6 +53,8 @@ public class DangerApplication extends Application {
 
 	private static int uid = 0;
 
+	public static int nbOfMessages = 0;
+
 	/**
 	 * Creates a new danger application with the given settings.
 	 * 
@@ -180,7 +182,8 @@ public class DangerApplication extends Application {
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
 						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"
-						+ uid++, messageSize);				
+						+ uid++, messageSize);
+				nbOfMessages++;
 
 				/* Add warning flag if host is warned */
 				if (host.isWarned()) {
@@ -252,5 +255,13 @@ public class DangerApplication extends Application {
 	 */
 	public int getMessageSize() {
 		return messageSize;
+	}
+
+	/**
+	 * 
+	 * @return the number of messages
+	 */
+	public static int getNbOfMessages() {
+		return nbOfMessages;
 	}
 }

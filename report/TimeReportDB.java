@@ -11,6 +11,11 @@ import core.SimScenario;
 import core.UpdateListener;
 import db.Queries;
 
+/**
+ * Time and other stats report stored in database
+ * 
+ * @author Virginie Collombon, David San
+ */
 public class TimeReportDB extends ReportDB implements UpdateListener {
 
 	protected PreparedStatement statement;

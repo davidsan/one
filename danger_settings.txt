@@ -23,7 +23,10 @@ Group.nrofHosts = 0
 
 # Applications
 dangerApp.type = DangerApplication
-dangerApp.interval = 1000
+# Message sending interval between two connected hosts
+dangerApp.interval = 500
+# Message size (bytes)
+dangerApp.size = 10
 
 # group1 (pedestrians) specific settings
 Group1.nrofHosts = 30
@@ -38,13 +41,13 @@ Group1.walkProb = 0.7
 # Minimum time the walking node will walk
 Group1.walkTime = 14500
 # Probability for the node to be selfwarned
-Group1.selfwarnedProb = 0.00
+Group1.selfwarnedProb = 0.000001
 # Probability to be prewarned
-Group1.prewarnedProb = 0.2
+Group1.prewarnedProb = 0.8
 # Percentage of warned nodes required to end the simulation
-Group1.maxselfwarnedProb = 0.1
-# Probability of choose a random Poi
-Group1.randomPoi = 1.0
+Group1.maxselfwarnedProb = 0.9
+# Probability to choose a random POI
+Group1.randomPoi = 0.5
 # Message router
 Group1.router = EpidemicRouter
 # Nombre d'applications
@@ -58,7 +61,7 @@ Events.nrof = 1
 # Road accident generator
 Events1.class = AccidentGenerator
 # Time to wait before the first accident
-Events1.delay = 100
+Events1.delay = 0
 # Interval between 2 accidents
 Events1.interval = 2, 10
 # Number of accidents to generate
@@ -68,7 +71,7 @@ Events1.nrofAccidents = 300
 ## Movement model settings
 # seed for movement models' pseudo random number generator 
 # (default = 0)
-MovementModel.rngSeed = 1
+MovementModel.rngSeed = 0
 # World's size for Movement Models
 MovementModel.worldSize = 10000, 8000
 # How long time to move hosts in the world before real simulation
@@ -87,16 +90,14 @@ PointsOfInterestEvac.poiFile = data/HelsinkiMedium/A_pois.wkt
 ## Reports - all report names have to be valid report classes
 
 # how many reports to load
-Report.nrofReports = 4
+Report.nrofReports = 2
 # length of the warm up period (simulated seconds)
 Report.warmup = 0
 # default directory of reports (can be overridden per Report with output setting)
 Report.reportDir = reports/
-# Report classes to load
-Report.report2 = MovementReportDB
 # ReportDB update rate (steps)
 Report.updateRate = 1000
 # Report location
-Report.report3 = LocationReportDB
+Report.report1 = LocationReportDB
 # Report Time
-Report.report4 = TimeReportDB
+Report.report2 = TimeReportDB

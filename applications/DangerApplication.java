@@ -152,6 +152,12 @@ public class DangerApplication extends Application {
 		}
 
 		List<Connection> connections = host.getConnections();
+
+		if (connections.size() == 0) {
+			hostDelayMap.clear();
+			return;
+		}
+
 		List<DTNHost> connectedHosts = new ArrayList<DTNHost>();
 		List<DTNHost> disconnectedHosts = new ArrayList<DTNHost>();
 		for (Connection connection : connections) {

@@ -103,6 +103,6 @@ Report.reportDir = reports/
 # ReportDB update rate (steps)
 Report.updateRate = 1000
 # Report location
-Report.report1 = LocationReportDB
+Report.report1 = LocationReportCSV
 # Report Time
 Report.report2 = TimeReportDB

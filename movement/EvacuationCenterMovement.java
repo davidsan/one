@@ -58,6 +58,16 @@ public class EvacuationCenterMovement extends MapBasedMovement implements
 	}
 
 	@Override
+	public boolean isReady() {
+		return false;
+	}
+
+	@Override
+	public double nextPathAvailable() {
+		return Double.MAX_VALUE; // no new paths available
+	}
+
+	@Override
 	public EvacuationCenterMovement replicate() {
 		return new EvacuationCenterMovement(this);
 	}

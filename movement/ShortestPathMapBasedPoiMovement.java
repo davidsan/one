@@ -108,7 +108,8 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 			return p;
 		}
 
-		// p.addWaypoint(nodePath.get(0).getLocation());
+		// host walk toward the road if he was off-road
+		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
 		} else {

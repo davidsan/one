@@ -4,6 +4,7 @@
  */
 package routing;
 
+import core.Connection;
 import core.Settings;
 
 /**
@@ -47,6 +48,17 @@ public class EpidemicDeliverableRouter extends ActiveRouter {
 			return; // started a transfer, don't try others (yet)
 		}
 
+	}
+
+	@Override
+	protected void transferDone(Connection con) {
+		/*
+		 * don't leave a copy for the sender if the message was passed to the
+		 * final recipient
+		 */
+		if (con.getMessage().getHops().contains(con.getMessage().getTo())) {
+			this.deleteMessage(con.getMessage().getId(), false);
+		}
 	}
 
 	@Override

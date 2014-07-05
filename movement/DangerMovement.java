@@ -136,7 +136,7 @@ public class DangerMovement extends ExtendedMovementModel {
 				break;
 			}
 			// check for danger message
-			if(host.isWarned()){
+			if (host.isWarned()) {
 				mode = SHORT_MODE;
 				setCurrentMovementModel(shortMM);
 				break;
@@ -164,21 +164,14 @@ public class DangerMovement extends ExtendedMovementModel {
 						// the node is at the evacuation center
 						mode = EVAC_MODE;
 						setCurrentMovementModel(evacMM);
+						if (!warnedHosts.contains(getHost()))
+							warnedHosts.add(getHost());
 						break;
 					}
 				}
 			}
 			break;
 		case EVAC_MODE:
-			if (getHost() != null) {
-				if (!warnedHosts.contains(getHost())) {
-					warnedHosts.add(getHost());
-					// int nrofRequired = (int) (nrofHostToWarn - warnedHosts
-					// .size());
-					// System.err.println(getHost().getAddress()
-					// + " is at evac center. " + nrofRequired + " more to go.");
-				}
-			}
 			break;
 		case WALK_MODE:
 			walkMM.setLocation(getHost().getLocation()); // update his home
@@ -193,7 +186,7 @@ public class DangerMovement extends ExtendedMovementModel {
 				mode = HOME_MODE;
 				setCurrentMovementModel(homeMM);
 			}
-			if(host.isWarned()){
+			if (host.isWarned()) {
 				mode = SHORT_MODE;
 				setCurrentMovementModel(shortMM);
 				break;

@@ -40,7 +40,7 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
-	private int dangerMode;
+	private int dangerMode = 0;
 	private boolean warned;
 	private Set<MapNode> knownAccidents;
 	private boolean stucked;

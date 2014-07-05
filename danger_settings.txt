@@ -17,6 +17,11 @@ wifiInterface.transmitSpeed = 6912k
 # Range 100 m (330 ft) outdoors
 wifiInterface.transmitRange = 100
 
+# No signal interface for testing purpose
+noSignalInterface.type= SimpleBroadcastInterface
+noSignalInterface.transmitSpeed = 0
+noSignalInterface.transmitRange = 0
+
 ## Group and movement model specific settings
 # Common settings for all groups     
 Group.nrofHosts = 0
@@ -32,7 +37,7 @@ dangerApp.size = 10
 Group1.nrofHosts = 1000
 Group1.bufferSize = 50M
 Group1.movementModel = DangerMovement
-Group1.interface1 = wifiInterface
+Group1.interface1 = btInterface
 Group1.nrofInterfaces = 1
 # Walking speeds
 Group.speed = 0.7, 0.7
@@ -43,13 +48,13 @@ Group1.walkTime = 14500
 # Probability for the node to be selfwarned
 Group1.selfwarnedProb = 0.000001
 # Probability to be prewarned
-Group1.prewarnedProb = 0.8
+Group1.prewarnedProb = 1.0
 # Percentage of warned nodes required to end the simulation
 Group1.maxselfwarnedProb = 0.9
 # Probability to choose a random POI
-Group1.randomPoi = 0.5
+Group1.randomPoi = 1.0
 # Message router
-Group1.router = EpidemicRouter
+Group1.router = EpidemicDeliverableRouter
 # Nombre d'applications
 Group1.nrofApplications = 1
 Group1.application1 = dangerApp

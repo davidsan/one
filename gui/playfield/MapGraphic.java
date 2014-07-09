@@ -22,7 +22,7 @@ public class MapGraphic extends PlayFieldGraphic {
 	private final Color BG_COLOR = Color.WHITE;
 	private final Color ACCIDENT_COLOR = Color.RED;
 	private final Color POI_COLOR = Color.MAGENTA;
-	private int rayonPoi = 250;
+	private int rayonPoi = 40;
 	private int rayonAccident = 15;
 
 	public MapGraphic(SimMap simMap) {
@@ -69,7 +69,7 @@ public class MapGraphic extends PlayFieldGraphic {
 		g2.setColor(POI_COLOR);
 		for (int i = 0; i < poisList.size(); i++) {
 			c2 = poisList.get(i).getLocation();
-			g2.drawOval(scale(c2.getX() - rayonPoi),
+			g2.fillOval(scale(c2.getX() - rayonPoi),
 					scale(c2.getY() - rayonPoi), scale(rayonPoi * 2),
 					scale(rayonPoi * 2));
 		}

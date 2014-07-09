@@ -80,16 +80,18 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 			}
 		}
 
-		if (!chooseRandomPoi) {
-			to = pois.selectDestination(lastMapNode, pathFinder);
-		} else if (to == null) {
+		if (chooseRandomPoi && to == null) {
 			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
 		}
 
 		// if the path was not computed
 		if (nodePath == null || nodePath.isEmpty()
 				|| getHost().isRecalculatingRoute()) {
+			if (!chooseRandomPoi){
+				to = pois.selectDestination(lastMapNode, pathFinder);
+			}
 			nodePath = pathFinder.getShortestPath(lastMapNode, to);
+			host.setNodePath(nodePath); // for danger app 
 			getHost().setRecalculatingRoute(false);
 		} else {
 			// existing node path, we pop the head
@@ -117,6 +119,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 			lastMapNode = nodePath.get(1);
 		}
 		return p;
+
 	}
 
 	@Override

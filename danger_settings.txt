@@ -79,7 +79,7 @@ Events1.nrofAccidents = 10
 # (default = 0)
 MovementModel.rngSeed = 0
 # World's size for Movement Models
-MovementModel.worldSize = 10000, 8000
+MovementModel.worldSize = 6000, 6000
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 0
 

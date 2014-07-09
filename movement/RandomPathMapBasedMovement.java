@@ -87,7 +87,7 @@ public class RandomPathMapBasedMovement extends MapBasedMovement implements
 			return p;
 		}
 
-		// p.addWaypoint(nodePath.get(0).getLocation());
+		p.addWaypoint(nodePath.get(0).getLocation());
 		if (nodePath.size() < 2) {
 			lastMapNode = nodePath.get(0);
 		} else {

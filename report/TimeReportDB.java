@@ -49,7 +49,7 @@ public class TimeReportDB extends ReportDB implements UpdateListener {
 		double timeEnd = SimScenario.getInstance().getEndTime();
 		double canTimeEnd = SimScenario.getInstance().getCanEndTime();
 		int nbOfDTNHosts = SimScenario.getInstance().getHosts().size();
-		int nbOfMessages = DangerApplication.getNbOfMessages();
+		int nbOfMessages = DangerApplication.getNrofMessages();
 		try {
 			statement.setDouble(1, timeEnd);
 			statement.setDouble(2, canTimeEnd);

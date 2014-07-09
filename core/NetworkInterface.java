@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import movement.DangerMovement;
 import routing.util.EnergyModel;
-
 import util.ActivenessHandler;
 
 /**
@@ -227,7 +227,9 @@ abstract public class NetworkInterface implements ModuleCommunicationListener {
 	 */
 	public boolean isActive() {
 		boolean active = ah.isActive(this.activenessJitterValue);
-		
+		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
+			active = false;
+		}
 		if (active && host.getComBus().getDouble(EnergyModel.ENERGY_VALUE_ID,
 					1) <= 0) {
 			/* TODO: better way to check battery level */

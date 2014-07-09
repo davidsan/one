@@ -53,8 +53,6 @@ public class DangerApplication extends Application {
 
 	private static int uid = 0;
 
-	public static int nbOfMessages = 0;
-
 	/**
 	 * Creates a new danger application with the given settings.
 	 * 
@@ -154,6 +152,12 @@ public class DangerApplication extends Application {
 		}
 
 		List<Connection> connections = host.getConnections();
+
+		if (connections.size() == 0) {
+			hostDelayMap.clear();
+			return;
+		}
+
 		List<DTNHost> connectedHosts = new ArrayList<DTNHost>();
 		List<DTNHost> disconnectedHosts = new ArrayList<DTNHost>();
 		for (Connection connection : connections) {
@@ -183,7 +187,6 @@ public class DangerApplication extends Application {
 				Message m = new Message(host, h, "danger"
 						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"
 						+ uid++, messageSize);
-				nbOfMessages++;
 
 				/* Add warning flag if host is warned */
 				if (host.isWarned()) {
@@ -208,40 +211,6 @@ public class DangerApplication extends Application {
 	}
 
 	/**
-	 * Merge the two maps based on stamp value.
-	 * 
-	 * @param a
-	 *            first map
-	 * @param b
-	 *            second map
-	 * @return merge of the two maps based on stamp value
-	 */
-	@Deprecated
-	Map<DTNHost, Tuple<Coord, Integer>> computeMostRecentKnownLocations(
-			Map<DTNHost, Tuple<Coord, Integer>> a,
-			Map<DTNHost, Tuple<Coord, Integer>> b) {
-		Map<DTNHost, Tuple<Coord, Integer>> res = new HashMap<DTNHost, Tuple<Coord, Integer>>();
-
-		// clone the map A
-		for (DTNHost ha : a.keySet()) {
-			// ha doesn't need cloning
-			res.put(ha, new Tuple<Coord, Integer>(a.get(ha).getKey(), a.get(ha)
-					.getValue()));
-		}
-
-		// add map B element or update if already in map res
-		for (DTNHost hb : b.keySet()) {
-			if (!res.containsKey(hb)
-					|| res.get(hb).getValue() < b.get(hb).getValue()) {
-				res.put(hb, new Tuple<Coord, Integer>(b.get(hb).getKey(), b
-						.get(hb).getValue()));
-			}
-		}
-
-		return res;
-	}
-
-	/**
 	 * 
 	 * @return message sending interval between two connected nodes
 	 */
@@ -257,11 +226,8 @@ public class DangerApplication extends Application {
 		return messageSize;
 	}
 
-	/**
-	 * 
-	 * @return the number of messages
-	 */
-	public static int getNbOfMessages() {
-		return nbOfMessages;
+	public static int getNrofMessages() {
+		return uid;
 	}
+
 }

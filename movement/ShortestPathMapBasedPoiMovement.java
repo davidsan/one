@@ -3,6 +3,7 @@ package movement;
 import java.util.List;
 
 import movement.map.DijkstraPathFinder;
+import movement.map.DijkstraPathFinderOptimal;
 import movement.map.MapNode;
 import movement.map.PointsOfInterestEvac;
 import core.DTNHost;
@@ -19,6 +20,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	public static final String PROBABILITY_TO_CHOOSE_RANDOM_POI = "randomPoi";
 	/** the Dijkstra shortest path finder */
 	private DijkstraPathFinder pathFinder;
+	private DijkstraPathFinderOptimal pathFinderPoi;
 
 	/** Points Of Interest handler */
 	private PointsOfInterestEvac pois;
@@ -39,6 +41,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 	public ShortestPathMapBasedPoiMovement(Settings settings) {
 		super(settings);
 		this.pathFinder = new DijkstraPathFinder(getOkMapNodeTypes());
+		this.pathFinderPoi = new DijkstraPathFinderOptimal(getOkMapNodeTypes());
 		this.pois = new PointsOfInterestEvac(getMap(), getOkMapNodeTypes(),
 				settings, rng);
 		this.ready = true;
@@ -59,6 +62,7 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 			ShortestPathMapBasedPoiMovement mbm) {
 		super(mbm);
 		this.pathFinder = mbm.pathFinder;
+		this.pathFinderPoi = mbm.pathFinderPoi;
 		this.pois = mbm.pois;
 		this.ready = mbm.ready;
 		this.randomPoiProb = mbm.randomPoiProb;
@@ -81,17 +85,17 @@ public class ShortestPathMapBasedPoiMovement extends MapBasedMovement implements
 		}
 
 		if (chooseRandomPoi && to == null) {
-			to = pois.selectDestinationRandom(lastMapNode, pathFinder);
+			to = pois.selectDestinationRandom();
 		}
 
 		// if the path was not computed
 		if (nodePath == null || nodePath.isEmpty()
 				|| getHost().isRecalculatingRoute()) {
-			if (!chooseRandomPoi){
-				to = pois.selectDestination(lastMapNode, pathFinder);
+			if (!chooseRandomPoi) {
+				to = pois.selectDestination(lastMapNode, pathFinderPoi);
 			}
 			nodePath = pathFinder.getShortestPath(lastMapNode, to);
-			host.setNodePath(nodePath); // for danger app 
+			host.setNodePath(nodePath); // for danger app
 			getHost().setRecalculatingRoute(false);
 		} else {
 			// existing node path, we pop the head

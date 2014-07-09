@@ -1,5 +1,6 @@
 package report;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.util.List;
 
@@ -30,7 +31,11 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 
 	@Override
 	void initCSVHeader() {
-		out.println("time,host,known_host,known_location_x,known_location_y,freshness");
+		try {
+			out.write("time,host,known_host,known_location_x,known_location_y,freshness");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -40,23 +45,21 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 			for (DTNHost host : hosts) {
 				/* manually update his own location */
 				host.updateSelfKnownLocation();
-
+				int address = host.getAddress();
+				String prefix = time + "," + address + ",";
 				for (DTNHost knownHost : host.getKnownLocations().keySet()) {
-					int address = host.getAddress();
 					int knownHostAddress = knownHost.getAddress();
 					double knownHostLocationX = knownHost.getLocation().getX();
 					double knownHostLocationY = knownHost.getLocation().getY();
 					int stamp = host.getKnownLocations().get(knownHost)
 							.getValue();
-
-					StringBuilder csvBuilder = new StringBuilder();
-					csvBuilder.append(time + ",");
-					csvBuilder.append(address + ",");
-					csvBuilder.append(knownHostAddress + ",");
-					csvBuilder.append(knownHostLocationX + ",");
-					csvBuilder.append(knownHostLocationY + ",");
-					csvBuilder.append(stamp);
-					out.println(csvBuilder.toString());
+					try {
+						out.write(prefix + knownHostAddress + ","
+								+ knownHostLocationX + "," + knownHostLocationY
+								+ "," + stamp);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				}
 
 			}

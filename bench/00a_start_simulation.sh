@@ -11,8 +11,11 @@ tick=0.1
 
 buffer_size=5M
 msg_size=1
-
 ###
+### Random
+SIM_SETTINGS_RANDOM=$RANDOM
+###
+
 
 usage="Usage : 00a <chemin the one> <nb hotes> [options]\n
 Options :\n
@@ -170,12 +173,15 @@ Events1.delay = 0
 Events1.accidentProb = 1.0
 # Number of accidents to generate
 Events1.nrofAccidents = 10
+# Seed for accident generator's pseudo random number generator 
+# (default = 0)
+Events1.seed = $SIM_SETTINGS_RANDOM
 
 
 ## Movement model settings
 # seed for movement models' pseudo random number generator 
 # (default = 0)
-MovementModel.rngSeed = $RANDOM
+MovementModel.rngSeed = $SIM_SETTINGS_RANDOM
 # World's size for Movement Models
 MovementModel.worldSize = 6000, 6000
 # How long time to move hosts in the world before real simulation

@@ -4,7 +4,7 @@
 
 Scenario.name = danger_scenario
 Scenario.endTime = 43200
-Scenario.nrofHostGroups = 2 
+Scenario.nrofHostGroups = 2
 # Attention !
 # Si nrofHostsGroups vaut 1, la carte n'est plus affichée
 # car plus aucun groupe de noeuds possède un mouvement
@@ -72,6 +72,9 @@ Events1.delay = 0
 Events1.accidentProb = 1.0
 # Number of accidents to generate
 Events1.nrofAccidents = 10
+# Seed for accident generator's pseudo random number generator 
+# (default = 0)
+Events1.seed = 0
 
 
 ## Movement model settings

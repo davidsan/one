@@ -3,7 +3,6 @@ package input;
 import java.util.Random;
 
 import core.Settings;
-import core.SimClock;
 
 /**
  * Accident events generator.
@@ -14,19 +13,26 @@ public class AccidentGenerator implements EventQueue {
 	public static final String ACCIDENT_PROB_S = "accidentProb";
 	public static final String ACCIDENT_NROF_S = "nrofAccidents";
 	public static final String ACCIDENT_DELAY_S = "delay";
+	public static final String ACCIDENT_SEED_S = "seed";
 
-	private double nextEventsTime = 0;
-	protected Random rng;
+	private double nextEventsTime;
 	private double accidentProb;
 	private int nrofAccidents;
 	private int count;
+	private int seed;
+	private static Random rng;
 
 	public AccidentGenerator(Settings s) {
-		this.rng = new Random(SimClock.getIntTime());
 		this.accidentProb = s.getDouble(ACCIDENT_PROB_S);
 		this.nrofAccidents = s.getInt(ACCIDENT_NROF_S);
 		this.nextEventsTime = s.getInt(ACCIDENT_DELAY_S);
 		this.count = 0;
+		if (s.contains(ACCIDENT_SEED_S)) {
+			this.seed = s.getInt(ACCIDENT_SEED_S);
+		} else {
+			this.seed = 0;
+		}
+		rng = new Random(this.seed);
 
 		this.nextEventsTime = 0;
 
@@ -55,6 +61,10 @@ public class AccidentGenerator implements EventQueue {
 	@Override
 	public double nextEventsTime() {
 		return this.nextEventsTime;
+	}
+	
+	public static Random getRng() {
+		return rng;
 	}
 
 }

@@ -4,7 +4,7 @@
 usage="Usage : $0 <chemin the one>"
 [[ $# -lt 1 ]] && echo -e $usage >&2 && exit 1
 
-echo -n "Launch compilation jobs..."
+echo "Launch compilation jobs..."
 oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ core/*.java"
 oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ movement/*.java"
 oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ report/*.java"

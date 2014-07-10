@@ -216,7 +216,7 @@ EOF
     # On n'envoie qu'un mail par rafale de simulations, pour le dernier job
     [ $i -eq $nb_simu ] && mail="--notify mail:$mail_addr"
 
-    oarsub -l "/nodes=1/core=1,walltime=100:0:0" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name" &
+    oarsub -l "/nodes=1/core=1,walltime=100:0:0" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name $dir_name_root" &
 
 done
 

@@ -1,5 +1,6 @@
 package report;
 
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -23,6 +24,7 @@ public abstract class ReportCSV extends Report {
 	private String scenarioName;
 
 	protected Connection connection;
+	protected BufferedWriter out;
 
 	/**
 	 * Constructor.
@@ -63,7 +65,7 @@ public abstract class ReportCSV extends Report {
 	@Override
 	protected void init() {
 		try {
-			this.out = new PrintWriter(new FileWriter(outFileName));
+			this.out = new BufferedWriter(new FileWriter(outFileName));
 		} catch (IOException e) {
 			throw new SimError("Couldn't open file '" + outFileName
 					+ "' for report output\n" + e.getMessage(), e);

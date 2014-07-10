@@ -80,8 +80,6 @@ public class MapGraphic extends PlayFieldGraphic {
 					scale(rayonPoi * 2), scale(rayonPoi * 2));
 			g2.fillOval(scale(c.getX() - bulletSize), scale(c.getY()
 					- bulletSize), scale(bulletSize * 2), scale(bulletSize * 2));
-
-			g2.setColor(POI_COLOR);
 		}
 		g2.setColor(PATH_COLOR);
 	}

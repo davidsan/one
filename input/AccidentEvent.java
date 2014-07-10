@@ -4,7 +4,6 @@ import java.util.Random;
 
 import movement.map.MapNode;
 import movement.map.SimMap;
-import core.SimClock;
 import core.SimScenario;
 import core.World;
 /**
@@ -26,7 +25,7 @@ public class AccidentEvent extends ExternalEvent {
 		if (map == null) {
 			return;
 		}
-		Random rng = new Random(SimClock.getIntTime());
+		Random rng = AccidentGenerator.getRng();
 		MapNode n = null;
 		do {
 			n = map.getNodes().get(rng.nextInt(map.getNodes().size()));

@@ -3,7 +3,7 @@
 #
 
 Scenario.name = danger_scenario
-Scenario.endTime = 43200
+Scenario.endTime = 7200
 Scenario.nrofHostGroups = 2
 # Attention !
 # Si nrofHostsGroups vaut 1, la carte n'est plus affichée

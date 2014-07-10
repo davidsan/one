@@ -33,6 +33,7 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 	void initCSVHeader() {
 		try {
 			out.write("time,host,known_host,known_location_x,known_location_y,freshness");
+			out.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -57,6 +58,7 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 						out.write(prefix + knownHostAddress + ","
 								+ knownHostLocationX + "," + knownHostLocationY
 								+ "," + stamp);
+						out.newLine();
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

@@ -1,10 +1,9 @@
 #! /bin/bash
 
-### Paramètres par défaut
+### Default parameter
 compile=n
-suffix=
 
-duration=43200
+duration=7200
 mail_addr=san@npa.lip6.fr
 nb_simu=20
 tick=0.1
@@ -20,7 +19,6 @@ SIM_SETTINGS_RANDOM=$RANDOM
 usage="Usage : 00a <chemin the one> <nb hotes> [options]\n
 Options :\n
  -c, --compile\t\tcompile le simulateur\n
- -s, --suffix\t\tchaîne de caractères ajoutée à la fin du dossier\n
 
  -d, --duration\t\tdurée d'une simulation (en secondes)\n
  -m, --mail_addr\tadresse mail pour la notification du statut des jobs OAR\n
@@ -41,7 +39,6 @@ shift 2
 while [[ "$1" != "" ]] ; do
     case $1 in
         -c|--compile)        compile=y;        shift 1;;
-        -s|--suffix)         suffix=$2;        shift 2;;
 
         -d|--duration)       duration=$2;      shift 2;;
         -m|--mail_addr)      mail_addr=$2;     shift 2;;
@@ -74,10 +71,14 @@ done
 # Recompilation du simulateur si demandé
 if [[ $compile == "y" ]] ; then
     echo -n "Compilation du simulateur..."
-    seconds=`date +%s`
-    oarsub -l "/nodes=1/core=1,walltime=100:0:0" "./compile.bat"
-    seconds=`expr \`date +%s\` - $seconds`
-    echo " finie en $seconds"s
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ core/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ movement/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ report/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ routing/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ gui/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ input/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ applications/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ interfaces/*.java"
 fi
 
 # Génère le dossier de simulation (création dossier, base.db, settings.txt)
@@ -105,23 +106,7 @@ for i in `seq $nb_simu`; do
 Scenario.name = $unique_name
 Scenario.endTime = $duration
 Scenario.updateInterval = $tick
-Scenario.nrofHostGroups = 2 
-# Attention !
-# Si nrofHostsGroups vaut 1, la carte n'est plus affichée
-# car plus aucun groupe de noeuds possède un mouvement
-# qui utilise sur MapBasedMovement
-
-# Wifi interface (802.11a or 802.11g with a stock antenna)
-wifiInterface.type = SimpleBroadcastInterface
-# Transmit speed of 54 Mbps = 6912kBps
-wifiInterface.transmitSpeed = 6912k
-# Range 100 m (330 ft) outdoors
-wifiInterface.transmitRange = 100
-
-# No signal interface for testing purpose
-noSignalInterface.type= SimpleBroadcastInterface
-noSignalInterface.transmitSpeed = 0
-noSignalInterface.transmitRange = 0
+Scenario.nrofHostGroups = 1 
 
 ## Group and movement model specific settings
 # Common settings for all groups     
@@ -216,7 +201,7 @@ EOF
     # On n'envoie qu'un mail par rafale de simulations, pour le dernier job
     [ $i -eq $nb_simu ] && mail="--notify mail:$mail_addr"
 
-    oarsub -l "/nodes=1/core=1,walltime=100:0:0" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name $dir_name_root" &
+    oarsub -l "core=1,walltime=72:0:0" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name $dir_name_root" &
 
 done
 

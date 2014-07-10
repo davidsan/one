@@ -121,8 +121,9 @@ public class DangerMovement extends ExtendedMovementModel {
 		double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
 		if (warnedHosts.size() >= nrofHostToWarn) {
 			if (onePrintPlease) {
+				SimScenario.getInstance().setCanEndTime(SimClock.getTime());
 				System.out.println("Simulation can end now @"
-						+ SimClock.getIntTime() + " / "
+						+ SimScenario.getInstance().getCanEndTime() + " / "
 						+ SimScenario.getInstance().getEndTime());
 				onePrintPlease = false;
 			}

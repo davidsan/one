@@ -72,7 +72,7 @@ done
 if [[ $compile == "y" ]] ; then
     echo -n "Compilation du simulateur..."
     seconds=`date +%s`
-    ./compile.bat
+    oarsub -l "/nodes=1/core=1,walltime=100:0:0" "./compile.bat"
     seconds=`expr \`date +%s\` - $seconds`
     echo " finie en $seconds"s
 fi

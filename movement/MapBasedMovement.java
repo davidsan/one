@@ -64,6 +64,7 @@ public class MapBasedMovement extends MovementModel implements SwitchableMovemen
 	private static SimMap cachedMap = null;
 	/** names of the previously cached map's files (for hit comparison) */
 	private static List<String> cachedMapFiles = null;
+	private static Coord offset;
 	
 	/**
 	 * Creates a new MapBasedMovement based on a Settings object's settings.
@@ -301,7 +302,7 @@ public class MapBasedMovement extends MovementModel implements SwitchableMovemen
 		checkMapConnectedness(simMap.getNodes());
 		// mirrors the map (y' = -y) and moves its upper left corner to origo
 		simMap.mirror();
-		Coord offset = simMap.getMinBound().clone();		
+		offset = simMap.getMinBound().clone();		
 		simMap.translate(-offset.getX(), -offset.getY());
 		checkCoordValidity(simMap.getNodes());
 		
@@ -309,6 +310,10 @@ public class MapBasedMovement extends MovementModel implements SwitchableMovemen
 		return simMap;
 	}
 	
+	public static Coord getOffset() {
+		return offset;
+	}
+
 	/**
 	 * Checks that all map nodes can be reached from all other map nodes
 	 * @param nodes The list of nodes to check

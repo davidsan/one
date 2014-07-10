@@ -4,9 +4,9 @@
 compile=n
 suffix=
 
-duration=4320
+duration=43200
 mail_addr=san@npa.lip6.fr
-nb_simu=2
+nb_simu=20
 tick=0.1
 
 buffer_size=5M

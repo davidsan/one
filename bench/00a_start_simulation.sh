@@ -71,14 +71,14 @@ done
 # Recompilation du simulateur si demandé
 if [[ $compile == "y" ]] ; then
     echo -n "Compilation du simulateur..."
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ core/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ movement/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ report/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ routing/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ gui/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ input/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ applications/*.java"
-    oarsub -l "core=1,walltime=0:10:00" -E /dev/null -O /dev/null "javac -extdirs lib/ interfaces/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE core" -E /dev/null -O /dev/null "javac -extdirs lib/ core/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE movement" -E /dev/null -O /dev/null "javac -extdirs lib/ movement/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE report" -E /dev/null -O /dev/null "javac -extdirs lib/ report/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE routing" -E /dev/null -O /dev/null "javac -extdirs lib/ routing/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE gui" -E /dev/null -O /dev/null "javac -extdirs lib/ gui/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE input" -E /dev/null -O /dev/null "javac -extdirs lib/ input/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE applications" -E /dev/null -O /dev/null "javac -extdirs lib/ applications/*.java"
+    oarsub -l "core=1,walltime=0:10:00" -n "Compile ONE interfaces" -E /dev/null -O /dev/null "javac -extdirs lib/ interfaces/*.java"
 fi
 
 # Génère le dossier de simulation (création dossier, base.db, settings.txt)
@@ -201,7 +201,7 @@ EOF
     # On n'envoie qu'un mail par rafale de simulations, pour le dernier job
     [ $i -eq $nb_simu ] && mail="--notify mail:$mail_addr"
 
-    oarsub -l "core=1,walltime=72:0:0" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name $dir_name_root" &
+    oarsub -l "core=1,walltime=72:0:0" -n "ONE $unique_name" -O $dir_name/log_%jobid%.out -E $dir_name/log_%jobid%.err $mail "./01_simulation.sh $path_the_one $settings_name $dir_name_root" &
 
 done
 

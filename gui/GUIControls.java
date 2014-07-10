@@ -138,7 +138,7 @@ public class GUIControls extends JPanel implements ActionListener, ChangeListene
 		this.screenShotButton = new JButton(TEXT_SCREEN_SHOT);
 		this.guiUpdateChooser = new JComboBox(UP_SPEEDS);
 		
-		this.zoomSelector = new JSpinner(new SpinnerNumberModel(.1, ZOOM_MIN, 
+		this.zoomSelector = new JSpinner(new SpinnerNumberModel(1., ZOOM_MIN, 
 				ZOOM_MAX, 0.001));
 
 		this.add(simTimeField);

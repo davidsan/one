@@ -22,7 +22,7 @@ public class MapGraphic extends PlayFieldGraphic {
 	private final Color BG_COLOR = Color.WHITE;
 	private final Color ACCIDENT_COLOR = Color.RED;
 	private final Color POI_COLOR = Color.MAGENTA;
-	private int rayonPoi = 40;
+	private int rayonPoi = 15;
 	private int rayonAccident = 15;
 
 	public MapGraphic(SimMap simMap) {

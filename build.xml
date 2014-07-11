@@ -44,4 +44,35 @@
             <classpath refid="one.classpath"/>
         </javac>
     </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
+    <target name="DTNSim">
+        <java classname="core.DTNSim" failonerror="true" fork="yes">
+            <arg line="danger_settings.txt"/>
+            <classpath refid="one.classpath"/>
+        </java>
+    </target>
+    <target name="AllTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="test.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="one.classpath"/>
+        </junit>
+    </target>
+    <target name="AllWorkingTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="test.AllWorkingTests" todir="${junit.output.dir}"/>
+            <classpath refid="one.classpath"/>
+        </junit>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
 </project>

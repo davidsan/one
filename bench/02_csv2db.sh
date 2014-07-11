@@ -7,10 +7,9 @@ usage="Usage : $0 <scenario_name> <results dir>"
 scenario_name=$1
 result_dir=$2
 
-cd $result_dir
 
-for csv in `ls $scenario_name_*/*.csv` ; do
+for csv in `ls $result_dir/$scenario_name_*/*.csv` ; do
 	./csv2db.sh $csv
 done
 
-cd $OLDPWD
+#cd $OLDPWD

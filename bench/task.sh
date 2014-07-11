@@ -36,4 +36,23 @@ mv $one_directory/reports/csv/${settings_basename_without_ext}_* $result_dir/$se
 mv $one_directory/reports/database/${settings_basename_without_ext}_* $result_dir/$settings_basename_without_ext
 
 
+for csv in `ls $result_dir/$settings_basename_without_ext/*.csv` ; do
+	db_file=`echo $csv | sed -e 's/csv$/db/'`
+	if [ ! -f $db_file ]; then
+		echo "Convert to SQLite $csv"
+		./bench/csv2db.sh $csv
+	fi
+
+	# Delete CSV file
+	rm $csv
+done
+
+# Compress all .db files
+for db in `ls $result_dir/$settings_basename_without_ext/*.db` ; do
+	gzip $db
+done
+
+echo "Done."
+
+
 cd $OLDPWD

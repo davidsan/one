@@ -288,7 +288,7 @@ EOF
 
     job_name="ONE $scenario_name"
     # Submit job to OAR scheduler
-    oarsub -l "core=1,walltime=72:0:0" -name="${job_name}" --stdout="${simulation_directory}/log_%jobid%.out" --stderr="${simulation_directory}/log_%jobid%.err" $mail_opt "./task.sh $one_directory $settings $result_dir" &
+    oarsub -l "core=1,walltime=72:0:0" --name "${job_name}" --stdout "${simulation_directory}/log_%jobid%.out" --stderr "${simulation_directory}/log_%jobid%.err" $mail_opt "./task.sh $one_directory $settings $result_dir" &
     # For sequential run, comment previous line and
     # uncomment next
     # ./task.sh $one_directory $settings $result_dir

@@ -44,7 +44,7 @@ for csv in `ls $result_dir/$settings_basename_without_ext/*.csv` ; do
 	fi
 
 	# Delete CSV file
-	rm $csv
+	rm -f $csv
 done
 
 # Compress all .db files

@@ -23,7 +23,7 @@ public class DangerMovement extends ExtendedMovementModel {
 	public static final String PROBABILITY_TO_BE_PREWARNED = "prewarnedProb";
 	public static final String PROBABILITY_TO_BE_SELFWARNED = "selfwarnedProb";
 	public static final String TIME_TO_WALK = "walkTime";
-	public static final String MAX_SELFWARNED = "maxselfwarnedProb";
+	public static final String PERCENTAGE_TO_SAVE = "percentageToSave";
 
 	private HomeMovement homeMM;
 	private RandomPathMapBasedMovement walkMM;
@@ -39,14 +39,13 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	private int mode;
 	private static int nrofHosts = 0;
-	private static List<DTNHost> warnedHosts = new ArrayList<DTNHost>();
+	private static List<DTNHost> savedHosts = new ArrayList<DTNHost>();
 
 	private double selfwarnedProb;
 	private double walkProb;
 	private double walkTime;
 	private double prewarnedProb;
-	private double maxselfwarnedProb;
-	private static boolean onePrintPlease = true;
+	private double percentageToSave;
 
 	/**
 	 * Creates a new instance of DangerMovement
@@ -65,7 +64,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		selfwarnedProb = settings.getDouble(PROBABILITY_TO_BE_SELFWARNED);
 		walkTime = settings.getDouble(TIME_TO_WALK);
 		prewarnedProb = settings.getDouble(PROBABILITY_TO_BE_PREWARNED);
-		maxselfwarnedProb = settings.getDouble(MAX_SELFWARNED);
+		percentageToSave = settings.getDouble(PERCENTAGE_TO_SAVE);
 
 		if (rng.nextDouble() < prewarnedProb) {
 			mode = SHORT_MODE;
@@ -94,7 +93,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		walkMM = new RandomPathMapBasedMovement(proto.walkMM);
 		sosMM = new SosMovement(proto.sosMM);
 
-		maxselfwarnedProb = proto.maxselfwarnedProb;
+		percentageToSave = proto.percentageToSave;
 		walkProb = proto.walkProb;
 		selfwarnedProb = proto.selfwarnedProb;
 		walkTime = proto.walkTime;
@@ -118,20 +117,19 @@ public class DangerMovement extends ExtendedMovementModel {
 
 	@Override
 	public boolean newOrders() {
-		double nrofHostToWarn = maxselfwarnedProb * nrofHosts;
-		if (warnedHosts.size() >= nrofHostToWarn) {
-			if (onePrintPlease) {
-				SimScenario.getInstance().setCanEndTime(SimClock.getTime());
-				System.out.println("Simulation can end now @"
-						+ SimScenario.getInstance().getCanEndTime() + " / "
-						+ SimScenario.getInstance().getEndTime());
-				onePrintPlease = false;
-			}
+		double nrofHostToSave = percentageToSave * nrofHosts;
+		SimScenario scenario = SimScenario.getInstance();
+		// sets the can end time for the scenario if the number of host to save has been reached
+		if (scenario.getCanEndTime() < 0 && savedHosts.size() >= nrofHostToSave) {
+			SimScenario.getInstance().setCanEndTime(SimClock.getTime());
+			System.out.println("Simulation can end now @"
+					+ SimScenario.getInstance().getCanEndTime() + " / "
+					+ SimScenario.getInstance().getEndTime());
 		}
 		switch (mode) {
 		case HOME_MODE:
 			// sos mode
-			if (warnedHosts.size() >= nrofHostToWarn) {
+			if (savedHosts.size() >= nrofHostToSave) {
 				mode = SOS_MODE;
 				setCurrentMovementModel(sosMM);
 				break;
@@ -165,8 +163,8 @@ public class DangerMovement extends ExtendedMovementModel {
 						// the node is at the evacuation center
 						mode = EVAC_MODE;
 						setCurrentMovementModel(evacMM);
-						if (!warnedHosts.contains(getHost()))
-							warnedHosts.add(getHost());
+						if (!savedHosts.contains(getHost()))
+							savedHosts.add(getHost());
 						break;
 					}
 				}
@@ -177,7 +175,7 @@ public class DangerMovement extends ExtendedMovementModel {
 		case WALK_MODE:
 			walkMM.setLocation(getHost().getLocation()); // update his home
 			// sos mode
-			if (warnedHosts.size() >= nrofHostToWarn || host.isStucked()) {
+			if (savedHosts.size() >= nrofHostToSave || host.isStucked()) {
 				mode = SOS_MODE;
 				setCurrentMovementModel(sosMM);
 				break;

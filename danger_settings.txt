@@ -51,7 +51,7 @@ Group1.selfwarnedProb = 0.000001
 Group1.prewarnedProb = 0.8
 # Percentage of nodes at evacuation center 
 # required to end the simulation
-Group1.maxselfwarnedProb = 0.9
+Group1.percentageToSave = 0.9
 # Probability to choose a random POI
 Group1.randomPoi = 0.1
 # Message router

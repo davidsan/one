@@ -4,21 +4,21 @@
 usage="Usage : $0 <csv file>"
 [[ $# -lt 1 ]] && echo $usage >&2 && exit 1
 
-CSV_FILE=$1
-# Création bd
-DB_FILE=`echo $1 | sed -e 's/csv$/db/'`
+csv_file=$1
+# Create database
+db_file=`echo $csv_file | sed -e 's/csv$/db/'`
 
-# Création table
-TABLE_NAME=`echo $1 | sed -E "s/.*_(.*)ReportCSV.csv/\1/" | tr '[:upper:]' '[:lower:]'`
-HEADERS=`head -n 1 $CSV_FILE`
-echo "drop table if exists $TABLE_NAME;" | sqlite3 $DB_FILE
-echo "create table $TABLE_NAME($HEADERS);" | sqlite3 $DB_FILE
+# Create table
+table_name=`echo $csv_file | sed -E "s/.*_(.*)ReportCSV.csv/\1/" | tr '[:upper:]' '[:lower:]'`
+headers=`head -n 1 $csv_file`
+echo "drop table if exists $table_name;" | sqlite3 $db_file
+echo "create table $table_name($headers);" | sqlite3 $db_file
 
-# Import données
-sqlite3 $DB_FILE <<EOF
+# Import data
+sqlite3 $db_file <<EOF
 .separator ','
-.import $CSV_FILE $TABLE_NAME
+.import $csv_file $table_name
 EOF
 
-# Suppression première ligne (entête)
-echo "delete from $TABLE_NAME where rowid < (select rowid from $TABLE_NAME limit 1,1);" | sqlite3 $DB_FILE
+# Remove first row (headers from CSV file)
+echo "delete from $table_name where rowid < (select rowid from $table_name limit 1,1);" | sqlite3 $db_file

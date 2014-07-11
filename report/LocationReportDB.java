@@ -8,7 +8,6 @@ import java.util.List;
 import core.DTNHost;
 import core.Settings;
 import core.UpdateListener;
-import db.Database;
 import db.Queries;
 
 /**

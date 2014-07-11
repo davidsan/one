@@ -52,7 +52,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 	@Override
 	public void updated(List<DTNHost> hosts) {
 		if (stepCount <= 0) {
-			Double time = getSimTime();
+			int time = (int) getSimTime();
 			for (DTNHost host : hosts) {
 				try {
 					/* manually update his own location */
@@ -68,7 +68,7 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 						int stamp = host.getKnownLocations().get(knownHost)
 								.getValue();
 
-						statement.setDouble(1, time);
+						statement.setInt(1, time);
 						statement.setInt(2, address);
 						statement.setInt(3, knownHostAddress);
 						statement.setDouble(4, knownHostLocationX);

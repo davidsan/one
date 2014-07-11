@@ -42,7 +42,7 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 	@Override
 	public void updated(List<DTNHost> hosts) {
 		if (stepCount <= 0) {
-			Double time = getSimTime();
+			int time = (int) getSimTime();
 			for (DTNHost host : hosts) {
 				/* manually update his own location */
 				host.updateSelfKnownLocation();

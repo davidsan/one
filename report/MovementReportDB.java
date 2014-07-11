@@ -46,9 +46,9 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 
 	@Override
 	public void newDestination(DTNHost host, Coord destination, double speed) {
-		Double time = getSimTime();
+		int time = (int) getSimTime();
 		try {
-			statement.setDouble(1, time);
+			statement.setInt(1, time);
 			statement.setInt(2, host.getAddress());
 			statement.setDouble(3, host.getLocation().getX());
 			statement.setDouble(4, host.getLocation().getY());
@@ -67,9 +67,9 @@ public class MovementReportDB extends ReportDB implements MovementListener {
 
 	@Override
 	public void initialLocation(DTNHost host, Coord location) {
-		Double time = getSimTime();
+		int time = (int) getSimTime();
 		try {
-			statement.setDouble(1, time);
+			statement.setInt(1, time);
 			statement.setInt(2, host.getAddress());
 			statement.setDouble(3, host.getLocation().getX());
 			statement.setDouble(4, host.getLocation().getY());

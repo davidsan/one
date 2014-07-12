@@ -74,23 +74,15 @@ public class PointsOfInterestEvac {
 	 * @return A destination among POIs or all MapNodes
 	 */
 	public MapNode selectDestination(MapNode lastMapNode,
-			DijkstraPathFinder pathFinder) {
+			DijkstraPathFinderOptimal pathFinder) {
 		HashMap<Double, MapNode> hm = new HashMap<Double, MapNode>();
 
 		for (Iterator<MapNode> it = poiLists.iterator(); it.hasNext();) {
 			MapNode poi = (MapNode) it.next();
 
-			// compute Dijkstra path
-			List<MapNode> nodePath = pathFinder.getShortestPath(lastMapNode,
-					poi);
-
 			// compute the path's distance
-			Double distance = 0.0;
-			for (int i = 0; i < nodePath.size() - 1; i++) {
-				MapNode gauche = nodePath.get(i);
-				MapNode droite = nodePath.get(i + 1);
-				distance += gauche.getLocation().distance(droite.getLocation());
-			}
+			Double distance = pathFinder.getShortestDistance(lastMapNode, poi);
+
 			hm.put(distance, poi);
 		}
 		// return the closest POI from the list
@@ -98,8 +90,7 @@ public class PointsOfInterestEvac {
 		return hm.get(min);
 	}
 
-	public MapNode selectDestinationRandom(MapNode lastMapNode,
-			DijkstraPathFinder pathFinder) {		
+	public MapNode selectDestinationRandom() {
 		return poiLists.get(rng.nextInt(poiLists.size()));
 	}
 

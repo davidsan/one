@@ -40,13 +40,14 @@ public class DTNHost implements Comparable<DTNHost> {
 	private List<NetworkInterface> net;
 	private ModuleCommunicationBus comBus;
 
-	private int dangerMode;
+	private int dangerMode = 0;
 	private boolean warned;
 	private Set<MapNode> knownAccidents;
 	private boolean stucked;
 	private Map<DTNHost, Tuple<Coord, Integer>> knownLocations;
 	private int stamp = 0;
 	private boolean recalculatingRoute = false;
+	private List<MapNode> nodePath;
 
 	static {
 		DTNSim.registerForReset(DTNHost.class.getCanonicalName());
@@ -111,6 +112,7 @@ public class DTNHost implements Comparable<DTNHost> {
 
 		this.knownAccidents = new HashSet<MapNode>();
 		this.knownLocations = new HashMap<DTNHost, Tuple<Coord, Integer>>();
+		this.nodePath = null;
 	}
 
 	/**
@@ -514,18 +516,6 @@ public class DTNHost implements Comparable<DTNHost> {
 	}
 
 	/**
-	 * Requests for deliverable message from this host to be sent trough a
-	 * connection.
-	 * 
-	 * @param con
-	 *            The connection to send the messages trough
-	 * @return True if this host started a transfer, false if not
-	 */
-	public boolean requestDeliverableMessages(Connection con) {
-		return this.router.requestDeliverableMessages(con);
-	}
-
-	/**
 	 * Informs the host that a message was successfully transferred.
 	 * 
 	 * @param id
@@ -535,6 +525,18 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void messageTransferred(String id, DTNHost from) {
 		this.router.messageTransferred(id, from);
+	}
+
+	/**
+	 * Requests for deliverable message from this host to be sent trough a
+	 * connection.
+	 * 
+	 * @param con
+	 *            The connection to send the messages trough
+	 * @return True if this host started a transfer, false if not
+	 */
+	public boolean requestDeliverableMessages(Connection con) {
+		return this.router.requestDeliverableMessages(con);
 	}
 
 	/**
@@ -683,7 +685,8 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void addAccidentAt(MapNode node) {
 		knownAccidents.add(node);
-		recalculatingRoute = true;
+		if (nodePath == null || nodePath.contains(node))
+			recalculatingRoute = true;
 	}
 
 	/**
@@ -774,6 +777,25 @@ public class DTNHost implements Comparable<DTNHost> {
 	 */
 	public void setRecalculatingRoute(boolean recalculatingRoute) {
 		this.recalculatingRoute = recalculatingRoute;
+	}
+
+	/**
+	 * Getter for nodePath nodePath is a list of the entire path between the
+	 * node and his final destination (computed by Dijkstra's algorithm)
+	 * 
+	 * @return nodePath
+	 */
+	public List<MapNode> getNodePath() {
+		return nodePath;
+	}
+
+	/**
+	 * Setter for nodePath
+	 * 
+	 * @param nodePath
+	 */
+	public void setNodePath(List<MapNode> nodePath) {
+		this.nodePath = nodePath;
 	}
 
 }

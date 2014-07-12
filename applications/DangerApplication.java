@@ -64,7 +64,7 @@ public class DangerApplication extends Application {
 			this.sendInterval = s.getDouble(SEND_INTERVAL);
 		}
 		if (s.contains(MESSAGE_SIZE)) {
-			this.sendInterval = s.getInt(MESSAGE_SIZE);
+			this.messageSize = s.getInt(MESSAGE_SIZE);
 		}
 		this.hostDelayMap = new HashMap<DTNHost, Double>();
 		super.setAppID(APP_ID);
@@ -152,6 +152,12 @@ public class DangerApplication extends Application {
 		}
 
 		List<Connection> connections = host.getConnections();
+
+		if (connections.size() == 0) {
+			hostDelayMap.clear();
+			return;
+		}
+
 		List<DTNHost> connectedHosts = new ArrayList<DTNHost>();
 		List<DTNHost> disconnectedHosts = new ArrayList<DTNHost>();
 		for (Connection connection : connections) {
@@ -174,12 +180,13 @@ public class DangerApplication extends Application {
 		for (Connection c : connections) {
 			DTNHost h = c.getOtherNode(host);
 			if (!hostDelayMap.containsKey(h)) {
-				System.err.println("Message from " + host.getAddress() + " to "
-						+ h.getAddress());
+				// System.err.println("Message from " + host.getAddress() +
+				// " to "
+				// + h.getAddress());
 				hostDelayMap.put(h, SimClock.getTime());
 				Message m = new Message(host, h, "danger"
 						+ SimClock.getIntTime() + "-" + host.getAddress() + "-"
-						+ uid++, messageSize);				
+						+ uid++, messageSize);
 
 				/* Add warning flag if host is warned */
 				if (host.isWarned()) {
@@ -204,40 +211,6 @@ public class DangerApplication extends Application {
 	}
 
 	/**
-	 * Merge the two maps based on stamp value.
-	 * 
-	 * @param a
-	 *            first map
-	 * @param b
-	 *            second map
-	 * @return merge of the two maps based on stamp value
-	 */
-	@Deprecated
-	Map<DTNHost, Tuple<Coord, Integer>> computeMostRecentKnownLocations(
-			Map<DTNHost, Tuple<Coord, Integer>> a,
-			Map<DTNHost, Tuple<Coord, Integer>> b) {
-		Map<DTNHost, Tuple<Coord, Integer>> res = new HashMap<DTNHost, Tuple<Coord, Integer>>();
-
-		// clone the map A
-		for (DTNHost ha : a.keySet()) {
-			// ha doesn't need cloning
-			res.put(ha, new Tuple<Coord, Integer>(a.get(ha).getKey(), a.get(ha)
-					.getValue()));
-		}
-
-		// add map B element or update if already in map res
-		for (DTNHost hb : b.keySet()) {
-			if (!res.containsKey(hb)
-					|| res.get(hb).getValue() < b.get(hb).getValue()) {
-				res.put(hb, new Tuple<Coord, Integer>(b.get(hb).getKey(), b
-						.get(hb).getValue()));
-			}
-		}
-
-		return res;
-	}
-
-	/**
 	 * 
 	 * @return message sending interval between two connected nodes
 	 */
@@ -252,4 +225,9 @@ public class DangerApplication extends Application {
 	public int getMessageSize() {
 		return messageSize;
 	}
+
+	public static int getNrofMessages() {
+		return uid;
+	}
+
 }

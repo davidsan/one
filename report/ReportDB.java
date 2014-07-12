@@ -10,6 +10,7 @@ import db.Database;
 /**
  * Abstract superclass for all reports using a database. All settings defined in
  * this class can be used for all ReportDB classes.
+ * 
  * @author Virginie Collombon, David San
  */
 public abstract class ReportDB extends Report {

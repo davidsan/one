@@ -56,15 +56,42 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 			Double time = getSimTime();
 			for (DTNHost host : hosts) {
 				try {
-					statement.setDouble(1, time);
-					statement.setInt(2, host.getAddress());
-					statement.setDouble(3, host.getLocation().getX());
-					statement.setDouble(4, host.getLocation().getY());
-					statement.addBatch();
-					if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
-						System.err.println("executeBatch @"+time);
-						statement.executeBatch();
-						batchCount = 0;
+					/* manually update his own location */
+					host.updateSelfKnownLocation();
+
+					for (DTNHost knownHost : host.getKnownLocations().keySet()) {
+						int address = host.getAddress();
+						int knownHostAddress = knownHost.getAddress();
+						double knownHostLocationX = knownHost.getLocation()
+								.getX();
+						double knownHostLocationY = knownHost.getLocation()
+								.getY();
+						int stamp = host.getKnownLocations().get(knownHost)
+								.getValue();
+
+						statement.setDouble(1, time);
+						statement.setInt(2, address);
+						statement.setInt(3, knownHostAddress);
+						statement.setDouble(4, knownHostLocationX);
+						statement.setDouble(5, knownHostLocationY);
+						statement.setInt(6, stamp);
+						statement.addBatch();
+
+						// StringBuilder csvBuilder = new StringBuilder();
+						// csvBuilder.append(time + ";");
+						// csvBuilder.append(address + ";");
+						// csvBuilder.append(knownHostAddress + ";");
+						// csvBuilder.append(knownHostLocationX + ";");
+						// csvBuilder.append(knownHostLocationY + ";");
+						// csvBuilder.append(stamp);
+
+						// System.out.println(csvBuilder.toString());
+						batchCount++;
+						// if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
+						// // System.err.println("executeBatch @" + time);
+						// statement.executeBatch();
+						// batchCount = 0;
+						// }
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -78,6 +105,8 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 	@Override
 	public void done() {
 		try {
+			System.err.println("Batch load in progress : " + batchCount
+					+ " ops");
 			statement.executeBatch();
 			statement.close();
 		} catch (SQLException e) {

@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * Queries accessor using properties
+ * 
+ * @author Virginie Collombon
+ * @author David San
+ */
 public class Queries {
 	private static final String filename = "db/queries.properties";
 	private static Properties properties;

@@ -117,6 +117,7 @@ public class SimScenario implements Serializable {
 	private List<UpdateListener> updateListeners;
 	/** Global application event listeners */
 	private List<ApplicationListener> appListeners;
+	private double canEndTime;
 
 	static {
 		DTNSim.registerForReset(SimScenario.class.getCanonicalName());
@@ -411,5 +412,23 @@ public class SimScenario implements Serializable {
 	public World getWorld() {
 		return this.world;
 	}
+	
+
+	/**
+	 * Returns the time of the end
+	 * @return the time of the end
+	 */
+	public double getCanEndTime(){
+		return this.canEndTime;
+	}
+	
+	/**
+	 * Sets the time of the end
+	 * @param time
+	 */
+	public void setCanEndTime(double time){
+		this.canEndTime = time;
+	}
+	
 
 }

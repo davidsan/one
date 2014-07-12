@@ -8,6 +8,7 @@ import java.util.List;
 import core.DTNHost;
 import core.Settings;
 import core.UpdateListener;
+import db.Database;
 import db.Queries;
 
 /**
@@ -75,22 +76,11 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 						statement.setDouble(5, knownHostLocationY);
 						statement.setInt(6, stamp);
 						statement.addBatch();
-
-						// StringBuilder csvBuilder = new StringBuilder();
-						// csvBuilder.append(time + ";");
-						// csvBuilder.append(address + ";");
-						// csvBuilder.append(knownHostAddress + ";");
-						// csvBuilder.append(knownHostLocationX + ";");
-						// csvBuilder.append(knownHostLocationY + ";");
-						// csvBuilder.append(stamp);
-
-						// System.out.println(csvBuilder.toString());
 						batchCount++;
-						// if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
-						// // System.err.println("executeBatch @" + time);
-						// statement.executeBatch();
-						// batchCount = 0;
-						// }
+						if (batchCount++ >= Database.BATCH_SAFE_LIMIT) {
+							statement.executeBatch();
+							batchCount = 0;
+						}
 					}
 				} catch (SQLException e) {
 					e.printStackTrace();
@@ -104,8 +94,6 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 	@Override
 	public void done() {
 		try {
-			System.err.println("Batch load in progress : " + batchCount
-					+ " ops");
 			statement.executeBatch();
 			statement.close();
 		} catch (SQLException e) {

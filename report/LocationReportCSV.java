@@ -9,7 +9,7 @@ import core.Settings;
 import core.UpdateListener;
 
 /**
- * Location report stored in database
+ * Location report stored in csv file
  * 
  * @author Virginie Collombon, David San
  */

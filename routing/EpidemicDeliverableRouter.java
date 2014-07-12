@@ -8,8 +8,9 @@ import core.Connection;
 import core.Settings;
 
 /**
- * Epidemic message router with drop-oldest buffer and only single transferring
- * connections at a time.
+ * EpidemicRouter without tryAllMessagesToAllConnections() in update()
+ * 
+ * @author Virginie Collombon, David San
  */
 public class EpidemicDeliverableRouter extends ActiveRouter {
 

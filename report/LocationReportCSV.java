@@ -32,7 +32,7 @@ public class LocationReportCSV extends ReportCSV implements UpdateListener {
 	@Override
 	void initCSVHeader() {
 		try {
-			out.write("time,host,known_host,known_location_x,known_location_y,freshness");
+			out.write("time integer, host integer, known_host integer, known_location_x real, known_location_y real, freshness integer");
 			out.newLine();
 		} catch (IOException e) {
 			e.printStackTrace();

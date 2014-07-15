@@ -2,7 +2,7 @@
 # Submit multiple ONE simulation jobs to the OAR batch scheduler
 
 # Default parameters
-mail="san@npa.lip6.fr"
+mail="david.san@lip6.fr"
 end_time=7200
 nrof_sim=20
 tick=0.1

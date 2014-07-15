@@ -3,7 +3,7 @@
 
 # Default parameters
 mail="david.san@lip6.fr"
-end_time=7200
+end_time=43200
 nrof_sim=20
 tick=0.1
 speed=1.5
@@ -11,7 +11,7 @@ walk_prob=0.7
 walk_time=14500
 selfwarned_prob=0.000001
 prewarned_prob=0.8
-percentage_to_save=0.9
+percentage_to_save=0.95
 random_poi=0.1
 
 router="EpidemicDeliverableRouter"
@@ -22,10 +22,10 @@ buffer_size=5M
 message_size=1
 reemit_interval=300
 report_interval=1000
-map_file=data/usantiago2.wkt
-poi_file=data/usantiago2_pois.wkt
-map_x=1478
-map_y=2350
+map_file=data/santiago_center.wkt
+poi_file=data/santiago_center_pois.wkt
+map_x=6000
+map_y=6000
 random_seed=$RANDOM
 
 # Usage

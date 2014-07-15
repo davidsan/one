@@ -3,7 +3,7 @@
 #
 
 Scenario.name = danger_scenario
-Scenario.endTime = 7200
+Scenario.endTime = 43200
 Scenario.nrofHostGroups = 2
 # Attention !
 # Si nrofHostsGroups vaut 1, la carte n'est plus affichée
@@ -82,18 +82,18 @@ Events1.seed = 0
 # (default = 0)
 MovementModel.rngSeed = 0
 # World's size for Movement Models
-MovementModel.worldSize = 1478, 2350
+MovementModel.worldSize = 6000, 6000
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 0
 
 
 ## Map based movement -movement model specific settings
 MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/usantiago2.wkt
+MapBasedMovement.mapFile1 = data/santiago_center.wkt
 
 
 ## Points of Interest for the evacuation centers
-PointsOfInterestEvac.poiFile = data/usantiago2_pois.wkt
+PointsOfInterestEvac.poiFile = data/santiago_center_pois.wkt
 
 
 ## Reports - all report names have to be valid report classes

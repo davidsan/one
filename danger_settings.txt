@@ -5,10 +5,7 @@
 Scenario.name = danger_scenario
 Scenario.endTime = 43200
 Scenario.nrofHostGroups = 2
-# Attention !
-# Si nrofHostsGroups vaut 1, la carte n'est plus affichée
-# car plus aucun groupe de noeuds possède un mouvement
-# qui utilise sur MapBasedMovement
+
 
 # Wifi interface (802.11a or 802.11g with a stock antenna)
 wifiInterface.type = SimpleBroadcastInterface
@@ -32,11 +29,12 @@ dangerApp.type = DangerApplication
 dangerApp.interval = 300
 # Message size (bytes)
 dangerApp.size = 1
-# HotSpot
-hotspotApp.type = HotspotAppplication
+
+# Hotspots application
+hotspotApp.type = HotspotApplication
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 10
+Group1.nrofHosts = 1000
 Group1.bufferSize = 5M
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
@@ -58,7 +56,7 @@ Group1.percentageToSave = 0.95
 Group1.randomPoi = 0.1
 # Message router
 Group1.router = EpidemicDeliverableRouter
-# Nombre d'applications
+# Number of applications
 Group1.nrofApplications = 1
 Group1.application1 = dangerApp
 

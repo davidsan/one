@@ -36,7 +36,7 @@ dangerApp.size = 1
 hotspotApp.type = HotspotAppplication
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 1000
+Group1.nrofHosts = 10
 Group1.bufferSize = 5M
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
@@ -70,6 +70,7 @@ Group2.interface1 = btInterface
 Group2.nrofInterfaces = 1
 # Walking speeds
 Group2.speed = 0.0, 0.0 
+Group2.nrofApplications = 1
 Group2.application1 = hotspotApp
 
 ## Message creation parameters

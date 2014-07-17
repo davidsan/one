@@ -6,7 +6,6 @@ mail="david.san@lip6.fr"
 end_time=43200
 nrof_sim=20
 tick=0.1
-speed=1.5
 walk_prob=0.7
 walk_time=14500
 selfwarned_prob=0.000001
@@ -47,9 +46,6 @@ Options:\n
 
  -t, --tick <delay>\t\tUpdate interval of the simulator (in seconds)\n
  \t\t\t\t(default use \$RANDOM)\n
-
- -s, --speed <speed>\t\tSpeed of hosts\n
- \t\t\t\t(default is $speed)\n
 
  -wp, --walk-prob <prob>\tProbability of walking hosts\n
  \t\t\t\t(default is $walk_prob)\n
@@ -131,7 +127,6 @@ while [[ "$1" != "" ]] ; do
         -e|--end-time)              end_time=$2;            shift 2;;
         -n|--nrof-sim)              nrof_sim=$2;            shift 2;;
         -t|--tick)                  tick=$2;                shift 2;;
-        -s|--speed)                 speed=$2;               shift 2;;
         -wp|--walk-prob)            walk_prob=$2;           shift 2;;
         -wt|--walk-time)            walk_time=$2;           shift 2;;
         -sp|--selfwarned-prob)      selfwarned_prob=$2;     shift 2;;
@@ -219,8 +214,8 @@ Group1.bufferSize = ${buffer_size}
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
 Group1.nrofInterfaces = 1
-# Walking speeds
-Group.speed = ${speed}, ${speed}
+# Walking speeds (2,52 à 7,2 km/h)
+Group.speed = 0.7, 2.0
 # Probability for the node to walk at the beginning
 Group1.walkProb = ${walk_prob}
 # Minimum time the walking node will walk

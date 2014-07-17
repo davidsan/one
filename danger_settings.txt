@@ -40,7 +40,7 @@ Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
 Group1.nrofInterfaces = 1
 # Walking speeds
-Group.speed = 1.5, 1.5
+Group.speed = 0.7, 2.0
 # Probability for the node to walk at the beginning
 Group1.walkProb = 0.7
 # Minimum time the walking node will walk

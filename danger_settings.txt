@@ -34,7 +34,7 @@ dangerApp.size = 1
 hotspotApp.type = HotspotApplication
 
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 1000
+Group1.nrofHosts = 100
 Group1.bufferSize = 5M
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
@@ -55,7 +55,7 @@ Group1.percentageToSave = 0.95
 # Probability to choose a random POI
 Group1.randomPoi = 0.1
 # Message router
-Group1.router = EpidemicDeliverableRouter
+Group1.router = DirectDelivery2Router
 # Number of applications
 Group1.nrofApplications = 1
 Group1.application1 = dangerApp
@@ -70,6 +70,7 @@ Group2.nrofInterfaces = 1
 Group2.speed = 0.0, 0.0 
 Group2.nrofApplications = 1
 Group2.application1 = hotspotApp
+Group2.router = DirectDelivery2Router
 
 ## Message creation parameters
 # How many event generators

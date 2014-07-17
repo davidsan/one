@@ -7,12 +7,12 @@ package routing;
 import core.Connection;
 import core.Settings;
 
+
 /**
- * EpidemicRouter without tryAllMessagesToAllConnections() in update()
- * 
- * @author Virginie Collombon, David San
+ * Router that will deliver messages only to the final recipient. It will also
+ * delete message stored in buffer.
  */
-public class EpidemicDeliverableRouter extends ActiveRouter {
+public class DirectDelivery2Router extends ActiveRouter {
 
 	/**
 	 * Constructor. Creates a new message router based on the settings in the
@@ -21,9 +21,8 @@ public class EpidemicDeliverableRouter extends ActiveRouter {
 	 * @param s
 	 *            The settings object
 	 */
-	public EpidemicDeliverableRouter(Settings s) {
+	public DirectDelivery2Router(Settings s) {
 		super(s);
-		// TODO: read&use epidemic router specific settings (if any)
 	}
 
 	/**
@@ -32,9 +31,8 @@ public class EpidemicDeliverableRouter extends ActiveRouter {
 	 * @param r
 	 *            The router prototype where setting values are copied from
 	 */
-	protected EpidemicDeliverableRouter(EpidemicDeliverableRouter r) {
+	protected DirectDelivery2Router(DirectDelivery2Router r) {
 		super(r);
-		// TODO: copy epidemic settings here (if any)
 	}
 
 	@Override
@@ -63,8 +61,8 @@ public class EpidemicDeliverableRouter extends ActiveRouter {
 	}
 
 	@Override
-	public EpidemicDeliverableRouter replicate() {
-		return new EpidemicDeliverableRouter(this);
+	public DirectDelivery2Router replicate() {
+		return new DirectDelivery2Router(this);
 	}
 
 }

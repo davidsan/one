@@ -93,7 +93,6 @@ public class DangerApplication extends Application {
 	 */
 	@Override
 	public Message handle(Message msg, DTNHost host) {
-
 		/* direct drop the message if host is at evacuation center */
 		if (host.getDangerMode() == DangerMovement.EVAC_MODE) {
 			return null;

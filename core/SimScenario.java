@@ -159,12 +159,14 @@ public class SimScenario implements Serializable {
 		int [] worldSize = s.getCsvInts(MovementModel.WORLD_SIZE, 2);
 		this.worldSizeX = worldSize[0];
 		this.worldSizeY = worldSize[1];
-		
+
 		createHosts();
 		
 		this.world = new World(hosts, worldSizeX, worldSizeY, updateInterval, 
 				updateListeners, simulateConnections, 
 				eqHandler.getEventQueues());
+
+		this.canEndTime = -1.0;
 	}
 	
 	/**

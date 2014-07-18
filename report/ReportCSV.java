@@ -3,7 +3,6 @@ package report;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 
 import core.Settings;
@@ -84,6 +83,21 @@ public abstract class ReportCSV extends Report {
 	 */
 	@Override
 	protected void newEvent() {
+	}
+
+	/**
+	 * Close the buffered writer
+	 */
+	@Override
+	public void done() {
+		super.done();
+		if (out != null) {
+			try {
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 }

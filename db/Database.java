@@ -23,4 +23,9 @@ public class Database {
 		return connect(DEFAULT_DB_FILE);
 	}
 
+	public static Connection connectRAM() throws SQLException,
+			ClassNotFoundException {
+		return connect(":memory:");
+	}
+
 }

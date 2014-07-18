@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- WARNING: Eclipse auto-generated file.
-              Any modifications will be overwritten.
-              To include a user specific buildfile here, simply create one in the same
-              directory with the processing instruction <?eclipse.ant.import?>
-              as the first entry and export the buildfile again. --><project basedir="." default="build" name="one">
+<project basedir="." default="build" name="one">
     <property environment="env"/>
-    <property name="junit.output.dir" value="junit"/>
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.6"/>
     <property name="source" value="1.6"/>
+	<property name="report" value="reports"/>
+	<property name="result" value="results"/>
     <path id="one.classpath">
         <pathelement location="."/>
         <pathelement location="lib/DTNConsoleConnection.jar"/>
         <pathelement location="lib/ECLA.jar"/>
         <pathelement location="lib/hamcrest-core-1.3.jar"/>
         <pathelement location="lib/junit-4.11.jar"/>
+        <pathelement location="lib/sqlite-jdbc-3.7.2.jar"/>
     </path>
     <target name="init">
         <copy includeemptydirs="false" todir=".">
             <fileset dir=".">
-                <exclude name="**/*.ucls"/>
                 <exclude name="**/*.java"/>
             </fileset>
         </copy>
     </target>
     <target name="clean">
-        <delete>
+        <delete verbose="true">
             <fileset dir="." includes="**/*.class"/>
         </delete>
     </target>
-    <target depends="clean" name="cleanall"/>
+    <target depends="clean" name="cleanall">
+    	<delete verbose="true">
+    	       <fileset dir="${basedir}" defaultexcludes="no">
+    	         <include name="**/*~"/>
+    	       </fileset>
+    	</delete>
+        <delete verbose="true" dir="${report}"/>
+        <delete verbose="true" dir="${result}"/>
+    </target>
     <target depends="build-subprojects,build-project" name="build"/>
     <target name="build-subprojects"/>
     <target depends="init" name="build-project">

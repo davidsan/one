@@ -5,10 +5,7 @@
 Scenario.name = danger_scenario
 Scenario.endTime = 43200
 Scenario.nrofHostGroups = 2
-# Attention !
-# Si nrofHostsGroups vaut 1, la carte n'est plus affichée
-# car plus aucun groupe de noeuds possède un mouvement
-# qui utilise sur MapBasedMovement
+
 
 # Wifi interface (802.11a or 802.11g with a stock antenna)
 wifiInterface.type = SimpleBroadcastInterface
@@ -33,14 +30,17 @@ dangerApp.interval = 300
 # Message size (bytes)
 dangerApp.size = 1
 
+# Hotspots application
+hotspotApp.type = HotspotApplication
+
 # group1 (pedestrians) specific settings
-Group1.nrofHosts = 1000
+Group1.nrofHosts = 100
 Group1.bufferSize = 5M
 Group1.movementModel = DangerMovement
 Group1.interface1 = btInterface
 Group1.nrofInterfaces = 1
 # Walking speeds
-Group.speed = 1.5, 1.5
+Group.speed = 0.7, 2.0
 # Probability for the node to walk at the beginning
 Group1.walkProb = 0.7
 # Minimum time the walking node will walk
@@ -51,14 +51,26 @@ Group1.selfwarnedProb = 0.000001
 Group1.prewarnedProb = 0.8
 # Percentage of nodes at evacuation center 
 # required to end the simulation
-Group1.maxselfwarnedProb = 0.9
+Group1.percentageToSave = 0.95
 # Probability to choose a random POI
 Group1.randomPoi = 0.1
 # Message router
-Group1.router = EpidemicDeliverableRouter
-# Nombre d'applications
+Group1.router = DirectDelivery2Router
+# Number of applications
 Group1.nrofApplications = 1
 Group1.application1 = dangerApp
+
+# group2 (hotspot) specific settings
+Group2.nrofHosts = 3
+Group2.bufferSize = 50M
+Group2.movementModel = HotspotMovement
+Group2.interface1 = btInterface
+Group2.nrofInterfaces = 1
+# Walking speeds
+Group2.speed = 0.0, 0.0 
+Group2.nrofApplications = 1
+Group2.application1 = hotspotApp
+Group2.router = DirectDelivery2Router
 
 ## Message creation parameters
 # How many event generators
@@ -77,23 +89,24 @@ Events1.nrofAccidents = 10
 Events1.seed = 0
 
 
+
 ## Movement model settings
 # seed for movement models' pseudo random number generator 
 # (default = 0)
 MovementModel.rngSeed = 0
 # World's size for Movement Models
-MovementModel.worldSize = 1478, 2350
+MovementModel.worldSize = 6000, 6000
 # How long time to move hosts in the world before real simulation
 MovementModel.warmup = 0
 
 
 ## Map based movement -movement model specific settings
 MapBasedMovement.nrofMapFiles = 1
-MapBasedMovement.mapFile1 = data/usantiago2.wkt
+MapBasedMovement.mapFile1 = data/santiago_center.wkt
 
 
 ## Points of Interest for the evacuation centers
-PointsOfInterestEvac.poiFile = data/usantiago2_pois.wkt
+PointsOfInterestEvac.poiFile = data/santiago_center_pois.wkt
 
 
 ## Reports - all report names have to be valid report classes

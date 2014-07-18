@@ -15,10 +15,4 @@ echo "drop table if exists $table_name;" | sqlite3 $db_file
 echo "create table $table_name($headers);" | sqlite3 $db_file
 
 # Import data
-sqlite3 $db_file <<EOF
-.separator ','
-.import $csv_file $table_name
-EOF
-
-# Remove first row (headers from CSV file)
-echo "delete from $table_name where rowid < (select rowid from $table_name limit 1,1);" | sqlite3 $db_file
+tail -n+2 < $csv_file | sqlite3 -separator ',' $db_file ".import /dev/stdin $table_name"

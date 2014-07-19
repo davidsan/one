@@ -11,8 +11,18 @@ db_file=`echo $csv_file | sed -e 's/csv$/db/'`
 # Create table
 table_name=`echo $csv_file | sed -E "s/.*_(.*)ReportCSV.csv/\1/" | tr '[:upper:]' '[:lower:]'`
 headers=`head -n 1 $csv_file`
-echo "drop table if exists $table_name;" | sqlite3 $db_file
-echo "create table $table_name($headers);" | sqlite3 $db_file
+
+sql_file=`mktemp 2>/dev/null || mktemp -t 'sql_file'` || exit 1
+cat > $sql_file <<EOF
+pragma journal_mode=memory;
+pragma synchronous=OFF;
+drop table if exists $table_name;
+create table $table_name($headers);
+.separator ','
+.import /dev/stdin $table_name
+EOF
 
 # Import data
-tail -n+2 < $csv_file | sqlite3 -separator ',' $db_file ".import /dev/stdin $table_name"
+tail -n+2 < $csv_file | sqlite3 $db_file ".read $sql_file"
+
+rm $sql_file

@@ -12,8 +12,7 @@ For more information on the ONE, visit [http://www.netlab.tkk.fi/tutkimus/dtn/th
 
 ## Implementations
 ### Crowd movement
-Crowd movement is implemented with the `DangerMovement` class and his sub-models (`EvacuationCenterMovement`, `HomeMovement`, `RandomPathMapBasedMovement`, `ShortestPathMapBasedPoiMovement`).
-`DangerMessageGenerator` is used to notify prewarned node.
+Crowd movement is implemented with the `DangerMovement` class and his sub-models (`EvacuationCenterMovement`, `HomeMovement`, `RandomPathMapBasedMovement`, `ShortestPathMapBasedPoiMovement`, `SosMovement`).
 
 ### Closed roads
 Closed roads are implemented using `AccidentGenerator` which generate `AccidentEvent`. Those events make changes to the `MapNode`'s instances by calling the close() method.
@@ -29,8 +28,9 @@ This fork is based on version 1.5.1 RC2 of the ONE.
 * `movement.HomeMovement`
 * `movement.RandomPathMapBasedMovement`
 * `movement.ShortestPathMapBasedPoiMovement`
+* `movement.SosMovement`
 * `movement.map.PointsOfInterestEvac`
-* `input.DangerMessageGenerator` (not used)
+* `input.EmptyEvent`
 * `input.AccidentEvent`
 * `input.AccidentGenerator`
 

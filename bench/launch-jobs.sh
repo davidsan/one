@@ -13,7 +13,7 @@ prewarned_prob=0.8
 percentage_to_save=0.95
 random_poi=0.1
 
-router="EpidemicDeliverableRouter"
+router="DirectDelivery2Router"
 accident_delay=0
 accident_prob=1.0
 nrof_accidents=10

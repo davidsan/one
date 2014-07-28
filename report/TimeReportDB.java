@@ -3,12 +3,9 @@ package report;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 import applications.DangerApplication;
-import core.DTNHost;
 import core.SimScenario;
-import core.UpdateListener;
 import db.Queries;
 
 /**
@@ -16,17 +13,12 @@ import db.Queries;
  * 
  * @author Virginie Collombon, David San
  */
-public class TimeReportDB extends ReportDB implements UpdateListener {
+public class TimeReportDB extends ReportDB  {
 
 	protected PreparedStatement statement;
 
 	public TimeReportDB() {
 		super();
-	}
-
-	@Override
-	public void updated(List<DTNHost> hosts) {
-
 	}
 
 	@Override

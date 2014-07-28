@@ -8,7 +8,7 @@ one-directory: path to the ONE simulator's directory\n
 settings: path to the scenario settings file\n
 result-directory: path to the results directory
 ONE simulator task\n"
-[[ $# -lt 2 ]] && echo $usage >&2 && exit 1
+[[ $# -lt 2 ]] && echo -e $usage >&2 && exit 1
 
 one_directory=$1
 settings=$2

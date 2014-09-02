@@ -26,7 +26,6 @@ poi_file=data/santiago_center_pois.wkt
 nrof_pois=3
 map_x=6000
 map_y=6000
-random_seed=`shuf -i1-9999 -n1`
 
 # Usage
 usage="
@@ -78,10 +77,6 @@ Options:\n
 
  -na, --nrof-accidents <number>\tNumber of accidents in the simulation\n
  \t\t\t\t(default is $nrof_accidents)\n
-
- -rs, --random-seed <number>\tSeed for movement and application pseudo random\n
- \t\t\t\tnumber generator\n
- \t\t\t\t(default is $tick)\n
 
  -bs, --buffer-size <size>\tSize of host's buffer (in bytes)\n
  \t\t\t\t(default is $buffer_size)\n
@@ -137,7 +132,6 @@ while [[ "$1" != "" ]] ; do
         -ad|--accident-delay)       accident_delay=$2;      shift 2;;
         -ap|--accident-prob)        accident_prob=$2;       shift 2;;
         -na|--nrof-accidents)       nrof_accidents=$2;      shift 2;;
-        -rs|--random-seed)          random_seed=$2;         shift 2;;
         -bs|--buffer-size)          buffer_size=$2;         shift 2;;
         -ms|--message-size)         message_size=$2;        shift 2;;
         -mi|--reemit-interval)      reemit_interval=$2;     shift 2;;
@@ -182,6 +176,9 @@ for i in `seq $nrof_sim`; do
     mkdir -p $simulation_directory
     # Settings file
     settings=$simulation_directory/$scenario_name.txt
+
+    # Random seed
+    random_seed=$RANDOM
 
     # Generate settings file
     cat > $settings <<EOF

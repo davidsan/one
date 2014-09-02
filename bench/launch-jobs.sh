@@ -26,7 +26,7 @@ poi_file=data/santiago_center_pois.wkt
 nrof_pois=3
 map_x=6000
 map_y=6000
-random_seed=$RANDOM
+random_seed=`shuf -i1-9999 -n1`
 
 # Usage
 usage="

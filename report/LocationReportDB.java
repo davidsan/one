@@ -4,7 +4,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map.Entry;
 
+import util.Tuple;
+import core.Coord;
 import core.DTNHost;
 import core.Settings;
 import core.UpdateListener;
@@ -59,15 +62,17 @@ public class LocationReportDB extends ReportDB implements UpdateListener {
 					/* manually update his own location */
 					host.updateSelfKnownLocation();
 
-					for (DTNHost knownHost : host.getKnownLocations().keySet()) {
+					for (Entry<DTNHost, Tuple<Coord, Integer>> entry : host
+							.getKnownLocations().entrySet()) {
+						DTNHost knownHost = entry.getKey();
+						Tuple<Coord, Integer> tuple = entry.getValue();
+						Coord knownHostLoc = tuple.getKey();
+						int stamp = tuple.getValue();
+
 						int address = host.getAddress();
 						int knownHostAddress = knownHost.getAddress();
-						double knownHostLocationX = knownHost.getLocation()
-								.getX();
-						double knownHostLocationY = knownHost.getLocation()
-								.getY();
-						int stamp = host.getKnownLocations().get(knownHost)
-								.getValue();
+						double knownHostLocationX = knownHostLoc.getX();
+						double knownHostLocationY = knownHostLoc.getY();
 
 						statement.setInt(1, time);
 						statement.setInt(2, address);
